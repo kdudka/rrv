@@ -1,0 +1,216 @@
+% \date{15. kvìtna 2007}
+% \setyear{2007}
+% \author{Kamil Dudka}
+% \title{Knihovna pro~práci s~objekty ve~sdílené~pamìti}
+% \FITproject{BP}
+
+\chapter{Úvod}
+Radiozita je pokroèilá zobrazovací metoda pou¾ívaná ve fotorealistické grafice. Její výpoèet je èasovì nároèný. Tato práce se zabývá jednoduchou implementací výpoètu radiozity, která vyu¾ívá akceleraci zalo¾enou na \texttt{OpenGL}.
+
+Pomocí vzniklého programu byly vypoèítány vzorové scény, které se do této dokumentace neve¹ly -- lze stáhnout z \href{http://dudka.cz/rrv}{{\tt http://dudka.cz/rrv}}. Kromì toho lze z webu stáhnout krátké \href{http://dudka.cz/rrv/files/video/room4.x264.avi?action=download}{video} (asi 20 vteøin), které ukazuje, jak se ¹íøí radiozita v prùbìhu výpoètu.
+
+Nedílnou souèástí této dokumentace je dokumentace API a diagramy tøíd, které jsou dostupné rovnì¾ na webu projektu.
+
+\section{Podíl jednotlivých èlenù týmu na projektu}
+\begin{description}
+ \item[David Baøina, xbarin02]~\\
+    - Výpoèet konfiguraèních faktorù pomocí \texttt{OpenGL}\\
+    - Pøevod primitiv (koule, válec, èajník) na polygonální reprezentaci
+ \item[Kamil Dudka, xdudka00]~\\
+    - Objektový model\\
+    - Dìlení na plo¹ky\\
+    - Mezipamì» pro konfiguraèní faktory\\
+    - Interpolace barev
+ \item[Jakub Filák, xfilak01]~\\
+    - Vstup/výstup XML, DTD\\
+    - Zpracování parametrù pøíkazové øádky
+ \item[Luká¹ Hefka, xhefka00]~\\
+    - Program pro vizualizaci\\
+    - Vzorová vstupní scéna
+ \end{description}
+
+\vfill\hfill {\footnotesize Tento dokument byl vysázen systémem \LaTeX.}
+
+\chapter{Teoretická èást}\label{theory}
+\section{Radiozita}
+ Radiozita\cite{wikiRadiosity} je metoda globální iluminace scény (¹íøení svìtelné energie) pou¾ívaná k renderování 3D scény v poèítaèové grafice. Radiozita jako renderovací metoda byla pøedstavena v roce 1984 výzkumníky na Cornell University. Vychází ze zákona zachování energie. Proto vy¾aduje energeticky uzavøené scény. Nedoká¾e pracovat s prùhlednými objekty, zrcadly a~texturami. Scéna musí být reprezentována polygonálním modelem.
+ 
+ Zobrazovací rovnice vychází z dvousmìrové distribuèní funkce BRDF\cite{RGI}. Plochy nejen odrá¾ejí svìtlo, ale mohou mít i vlastní záøivost. ©íøí se pouze difúzní odraz svìtla.
+ 
+ Vlastní výpoèet mù¾e probíhat buï iteraènì (progresivnì) nebo øe¹ením soustavy rovnic (maticové øe¹ení). Pøed vlastním výpoètem je tøeba polygony ve scénì rozdìlit na malé plo¹ky a spoèítat \textit{konfiguraèní faktory} (vliv ka¾dé plo¹ky na ka¾dou jinou plo¹ku ve scénì). Plo¹ky, které na sebe nevidí mají konfiguraèní faktor 0. Iteraèní výpoèet, který je pou¾it v~na¹em projektu, má výhodu postupného zobrazení výsledku po ka¾dé iteraci.
+ 
+ Radiozita (záøivost) ka¾dé plo¹ky je definována jako:
+ \begin{equation}
+  B_i = E_i + R_i \sum_{j=1}^n B_j F_{ij}
+ \end{equation}
+ 
+ kde:
+ \begin{itemize}
+  \item $B_i$ je radiozita plo¹ky $i$.
+  \item $E_i$ je vyzaøovaná energie této plo¹ky.
+  \item $R_i$ je odrazivost plo¹ky.
+  \item suma reprezentuje souèet energií pøicházejících na plo¹ku $i$ ze v¹ech ostatních plo¹ek.
+  \item $F_{ji}$ je konfiguraèní faktor mezi plo¹kami $i$ a $j$ (vliv plo¹ky $j$ na plo¹ku $i$).
+ \end{itemize}
+
+\section{Výpoèet konfiguraèního faktoru pomocí \texttt{OpenGL}}\label{ffOpenGL}
+Konfiguraèní faktor\cite{Ashdown} (\textit{form factor}) øíká, kolik energie energie plo¹ky (\textit{patche}) $i$ je pøímo pøijato plo¹kou $j$. Plo¹ky vzdálenìj¹í mají od plo¹ky cílové mají na tuto vliv men¹í ne¾~plo¹ky bli¾¹í. Plo¹ky viditelné z cílové plo¹ky ze strany mají men¹í vliv ne¾ plo¹ky le¾ící pøímo pøed cílovou plo¹kou (\textit{Lambertùv kosinový zákon}). K výpoètu konfiguraèního faktoru je tøeba vykreslit scénu z pohledu cílové plo¹ky ($i$) s rozsvícenou plo¹kou zdrojovou ($j$). Toto vykreslení (vyrenderování) scény je tøeba provést pro v¹echny dvojice plo¹ek ve scénì. Vykreslením v¹ech zdrojových plo¹ek rozdílnou barvou ke ka¾dé cílové plo¹ce najednou lze výpoèet znaènì urychlit. Slo¾itost klesá z kvadratické (poèet plo¹ek na druhou) na lineární. Z výsledné vyrenderované bitmapy se pak spoèítá form factor pro v¹echny zdrojové plo¹ky viditelné v této bitmapì k plo¹ce cílové (z jejího¾ pohledu byla scéna renderována).
+
+Pøi vlastním renderovaní\cite{HugoElias} je potøeba vidìt z pohledu cílové plo¹ky celých $180^\circ$ svìta le¾ícího pøed touto plo¹kou. Dále je tøeba aplikovat Lambertùv kosinový zákon a tím sní¾it vliv plo¹ek, které se nacházejí z boku cílové plo¹ky, oproti plo¹kám le¾ících pøímo naproti cílové plo¹ky. Èím více z boku zdrojová plo¹ka le¾í, tím ménì svìtla z ní cílová plo¹ka pøijme.
+
+K vyrenderováni $180^\circ$ scény se pou¾ívá vyrenderováni do tzv. \textit{polokrychle} (hemicube). To znamená vyrenderováni scény pøi pohledu ze støedu patche do pøední stìny a do~4~boèních polostìn. Renderuje se s úhlem pohledu $90^\circ$ (perspektiva). Vyrenderováni pøední stìny se kamera umístí do støedu cílového patche a bude se dívat ve smìru normálového vektoru tohoto patche. K renderování je pou¾ito \texttt{OpenGL}, konkrétnì funkce \texttt{gluLookAt()} z knihovny \texttt{GLU}. \quotedblbase{UP\textquotedblleft} vektor je zvolen rovnobì¾nì s jednou ze stran trojúhelníkového patche.
+
+Pøi renderování boèních stran se kamera opìt dívá ze støedu patche a renderuje se opìt s úhlem pohledu $90^\circ$. Smìr pohledu je ov¹em kolmý na normálový vektor (\quotedblbase{UP\textquotedblleft} vektor z renderování pøední stìny). Pro renderování v¹ech 4 stran se kamera postupnì otáèí po~$90^\circ$. Z výsledné bitmapy je podstatná pouze èást nad horizontem cílového trojúhelníku (tzn. polovina boèní stìny). V¹echna renderování probíhají postupnì do jediného framebufferu. Oblast framebufferu, do které se bude kreslit, se nastavuje funkcí \texttt{glViewport()}. Pro dal¹í zpracování je dùle¾ité, aby na sebe pohledy do stran polokrychle správnì navazovaly (správné \quotedblbase{UP\textquotedblleft} vektory). Po dokonèení renderování je ve framebufferu zobrazena rozbalená krychle (tvoøí køí¾). Podstatná je pouze vnitøní èást tohoto køí¾e (bez spodních èástí boèních pohledù). V této oblasti je nyní nutné zohlednit Lambertùv kosinový zákon.
+
+Velmi jednodu¹e øeèeno, Lambertùv kosinový zákon øíká, ¾e paprsek dopadající na støed plo¹ky kolmo má na její osvìtlení vliv nejvìt¹í. Paprsek dopadající pod nìjakým úhlem má vliv men¹í úmìrnì tomuto úhlu (kosinus tohoto úhlu). Paprsek dopadající témìø rovnobì¾nì s povrchem plo¹ky má vliv témìø zcela zanedbatelný.
+
+Pøed vlastním poèítáním konfiguraèních faktorù z vyrenderované bitmapy je nutné pøenést obsah framebufferu do pamìti pomocí funkce \texttt{glReadPixels()}. Dále ji bitmapa postupnì procházena po pixelech. Barva ka¾dého pixelu udává, kterou zdrojovou plo¹ku v~tomto místì cílová plo¹ka vidí (barva pixelu je indexem zdrojové plo¹ky). Pouhým sèítáním poètu pixelù ve scénì dané barvy by se spoèítal konfiguraèní faktor nezohledòující Lambertùv kosinový zákon (èím více pixelù ze zdrojové plo¹ky je vidìno plo¹kou cílovou, tím vìt¹í mají na sebe vliv). Podle pozice $(x,y)$ v bitmapì je spoèten vliv (koeficient) daného pixelu na celkový form factor k dané zdrojové plo¹ce. Nejvìt¹í vliv mají pixely le¾ící ve~støedu bitmapy (støedu pøední stìny polokrychle), kde je tento koeficient roven $1$. Nejmen¹í vliv (koeficient roven $0$) mají pixely na vnìj¹ích hranách boèních polostìn. Tento koeficient je poèítán jako souèin kosinù pozice $x$ a $y$, kde støed bitmapy má $x$ i $y$ rovno nule. Smìrem ke~stranám se $x$ i $y$ zmen¹uje (doleva a nahoru) a zvìt¹uje (doprava a dolù) a¾ k hodnotì~$\frac{\pi}{2}$.
+
+\chapter{Návrh øe¹ení}\label{design}
+Výpoèet radiozity je èasovì nároèný a klade vysoké nároky na výkon stroje. Hlavními cíli návrhu tedy bylo:
+\begin{itemize}
+ \item Co nejvíce urychlit výpoèet -- vyu¾ití HW akcelerace, maximální vyu¾ití dostupné pamìti, ...
+ \item Mo¾nost pracovat s mezivýsledky -- pro co nejrychlej¹í odhalení nedostatkù ve vstupní scénì nebo zvolených parametrech výpoètu.
+ \item Mo¾nost navázat na døíve pøeru¹ený výpoèet -- v pøípadì výpadku elektøiny, pádu systému, ...
+\end{itemize}
+
+\section{Reprezentace scény}
+Výpoèet radiozity pracuje s polygonálním modelem -- na nejni¾¹í úrovni jsou tedy tìlesa ve~scénì reprezentována mno¾inou polygonù (trojúhelníkù). Jednomu trojúhelníku odpovídá struktura \texttt{Triangle}. Na rozdíl od bì¾ných polygonálním modelù v¹ak nezadáváme pøímo barvu polygonu, kterou vidí u¾ivatel. Tato barva je vypoèítána pomocí radiozity. Zadávají se místo toho dvì slo¾ky:
+\begin{itemize}
+ \item \texttt{emission} -- barva, kterou polygon vyzaøuje. Pou¾ívá se pouze pro zdroje svìtla, tìlesa, která sama o sobì nezáøí, mají tuto slo¾ku nulovou.
+ \item \texttt{reflectivity} -- barva, kterou polygon odrá¾í. Jedná se tedy o barvu tìlesa tak, jak ji vnímáme intuitivnì.
+\end{itemize}
+
+Pøi zadávání scény u¾ivatelem v¹ak nemusí být v¾dy práce s jednotlivými polygony zcela intuitivní. Proto definuje objektový model nìkterá základní primitiva -- krychle, koule, válec a èajník\footnote{Polygonální reprezentaci èajníku lze stáhnout z \href{http://home.student.uu.se/yuca7825/Ass2_YuCao_YaoWang.zip}{http://home.student.uu.se/yuca7825/Ass2\_YuCao\_YaoWang.zip}}. Ka¾dé primitivum je reprezentováno samostatnou tøídou, která zapouzdøuje pøevod na polygonální model.
+
+U¾ivatel má tedy dvì mo¾nosti, jak reprezentovat tìlesa ve scénì -- polygonálnì nebo pomocí primitiv. Tyto pøístupy jsou z pohledu výpoètu zamìnitelné -- proto je nad nimi definována abstraktní tøída \texttt{Entity}. Tøída \texttt{TriangleSet} reprezentuje kontejner polygonù na nízké úrovni.
+
+Nad jednotlivými tìlesy je mo¾né provádìt bì¾né transformace ve 3D -- k tomu slou¾í tøída \texttt{TransformMatrix} a metoda \texttt{setTransformMatrix} tøídy \texttt{Entity}. Èást objektového modelu reprezentující tìleso je zjednodu¹enì znázornìna na obr. \ref{class_Entity}.
+\begin{figure}[h]
+  \begin{center}\includegraphics[scale=0.65]{img/class_Entity.png}\end{center}
+  \caption{Abstraktní tøída \texttt{Entity}}\label{class_Entity}
+\end{figure}
+
+Scéna je tedy z pohledu u¾ivatele tvoøena oddìlenými tìlesy. V¹echny tìlesa ve scénì jsou spravovány tøídou \texttt{Scene}. Tato tøída, mimo jiné, umo¾òuje scénu jako celek naèíst ze~vstupního XML souboru\footnote{DTD pro reprezentaci scény je na adrese \href{http://dudka.cz/dtd/scene.dtd}{http://dudka.cz/dtd/scene.dtd}} a zapsat do výstupního XML souboru. Tøída  \texttt{EntitySet} reprezentuje kontejner entit na nízké úrovni. Kompozice tøídy \texttt{Scene} je znázornìna na obr. \ref{class_Scene}.
+\begin{figure}[h]
+  \begin{center}\includegraphics[scale=0.65]{img/class_Scene.png}\end{center}
+  \caption{Tøída \texttt{Scene} -- reprezentace scény}\label{class_Scene}
+\end{figure}
+
+Reprezentace scény pomocí oddìlených tìles je vhodná pro u¾ivatele a také pro nìkteré pomocné výpoèty (napø. interpolace barev). Pro výpoèet radiozity v¹ak tato reprezentace vhodná není. Radiozita uva¾uje vliv ka¾dé plo¹ky na ostatní plo¹ky -- bez ohledu na to, kterému tìlesu plo¹ky patøí. Pro tento úèel byly vytvoøeny enumerátory pro pøístup k~jednotlivým plo¹kám. Situaci znázoròuje obr. \ref{class_diagram_enumerators}.
+\begin{figure}[h]
+  \begin{center}\includegraphics[scale=0.45]{img/class_diagram_enumerators.png}\end{center}
+  \caption{Enumerátory -- tøídy pro pøístup k jednotlivým plo¹kám}\label{class_diagram_enumerators}
+\end{figure}
+
+Základem je tøída \texttt{PatchSequenceEnumerator}, která implementuje sekvenèní prùchod pøes v¹echny plo¹ky ve scénì. K indexovanému pøístupu k plo¹kám slou¾í tøída \texttt{PatchRandom\-AccessEnumerator}, která se konstruuje z ji¾ existující instance sekvenèního enumerátoru. Tato tøída alokuje vìt¹í mno¾ství pamìti, proto je vhodné její instanci sdílet mezi v¹emi objekty, které vy¾adují indexovaný pøístup k plo¹kám.
+
+\section{Výpoèet radiozity}
+Pøed vlastním výpoètem radiozity je nutné rozdìlit trojúhelníky z vstupní scény na plo¹ky po¾adované velikosti. K tomu úèelu slou¾í metoda \texttt{divide} tøídy \texttt{Scene}, která odstartuje rekurzivní dìlení trojúhelníkù. Rekurzivní dìlení je v¾dy zastaveno pøi dosa¾ení po¾adované velikosti (obsahu) trojúhelníku. Pro výpoèet obsahu trojúhelníku je pou¾itý Heronùv vzo\-rec\cite{heron}:
+\begin{equation}
+ S = \sqrt{s(s-a)(s-b)(s-c)}
+\end{equation}
+kde
+\begin{equation}
+ s=\frac{a+b+c}{2}
+\end{equation}
+
+Vlastní výpoèet radiozity je zaji¹»ován tøídou \texttt{RadiosityRenderer}. Instance této tøídy se tvoøí metodou \texttt{createRadiosityRenderer} tøídy \texttt{Scene}, které se pøedají parametry výpoè\-tu. Vztahy objektù pro výpoèet radiozity jsou zachyceny na obr. \ref{class_RadiosityRenderer}
+\begin{figure}[h]
+  \begin{center}\includegraphics[scale=0.5]{img/class_RadiosityRenderer.png}\end{center}
+  \caption{Tøída \texttt{RadiosityRenderer} -- reprezentace scény}\label{class_RadiosityRenderer}
+\end{figure}
+
+Z pohledu u¾ivatele trvá výpoèet radiozity vìènost -- je tedy na místì prùbìh výpoètu sledovat a nìjak na nìj reagovat. K tomuto úèelu byl pou¾it návrhový vzor \textit{observer}, pøièem¾ tøída \texttt{RadiosityRenderer} je zde v roli sledovaného objektu. V souèasné verzi projektu jsou implementovány dva observery (pozorovatelé) -- \texttt{ConsoleProgressIndicator} a \texttt{ContinousSaver}. Jednotlivé pozorovatele je mo¾né za bìhu pøipojovat a odpojovat. Tøída \texttt{ConsoleProgressIndicator} bìhem výpoètu vypisuje do konzole základní informace o prùbìhu. Tøída \texttt{ContinousSaver} ukládá mezivýsledky do souboru s pøedem nastavenou frekvencí. Frekvence ukládání se v prùbìhu výpoètu sni¾uje, co¾ odpovídá sni¾ujícím se zmìnám radiozity ve~scénì. Tyto mezivýsledky je mo¾né pou¾ít napøíklad pro generování videa -- viz. kapitola \ref{results}.
+
+Jádrem výpoètu radiozity je výpoèet konfiguraèních faktorù -- tento výpoèet zaji¹»uje tøída \texttt{FormFactorEngine}. Její implementace pou¾ívá \texttt{OpenGL} pro urychlení výpoètu -- viz. kapitola \ref{ffOpenGL}. Tento výpoèet je v¹ak (zejména pro scény s velkým poètem plo¹ek) nároèný a je tedy nejslab¹ím místem aplikace z hlediska výkonu.
+
+Nabízí se tedy øe¹ení: ukládat si vypoètené konfiguraèní faktory do pamìti mezi jednotlivými prùchody. Mno¾ství potøebné pamìti v¹ak roste s kvadrátem k poètu plo¹ek ve~scénì a pro netriviální scénu se v¹echny konfiguraèní faktory do pamìti nevlezou. Rozum\-ným kompromisem je uchovávat v mezipamìti tolik konfiguraèních faktorù, kolik se jich tam vleze a to co mo¾ná nejefektivnìj¹ím zpùsobem.
+
+Mezipamì» pro vypoètené konfiguraèní faktory zaji¹»uje tøída \texttt{PatchCache}\footnote{Spolu s hodnotou konfiguraèního faktoru je potøeba uchovávat odkaz na plo¹ku, ke které se konfiguraèní faktor vztahuje.}. Tato mezipamì» je hierarchická -- konfiguraèní faktory v¹ech plo¹ek ovlivòujících jednu konkrétní plo¹ku se shlukují v objektech tøídy \texttt{PatchCacheLine}. Poèet potøebných objektù \texttt{Patch\-Cache\-Line} tvoøících mezipamì» je zøejmì stejný jako poèet plo¹ek ve scénì.
+
+Jednotlivé objekty \texttt{PatchCacheLine} spolu potom soutì¾í o ulo¾ení v mezipamìti. Krité\-riem je pøitom poèet ulo¾ených konfiguraèních faktorù uvnitø objektu (a tím pádem velikost objektu v pamìti). Vy¹¹í prioritu pro uchování pamìti mají objekty s ni¾¹í velikostí. Objekty s vy¹¹í velikostí je efektivnìj¹í znovu vypoèítat. Diagram tøíd tvoøících mezipamì» je na~obr.~\ref{class_PatchCache}. Prioritní fronta je implementována pomocí stejnojmenného STL kontejneru\cite{Stroustrup}.
+\begin{figure}[h]
+  \begin{center}\includegraphics[scale=0.5]{img/class_PatchCache.png}\end{center}
+  \caption{Tøída \texttt{PatchCache} -- mezipamì» pro konfiguraèní faktory}\label{class_PatchCache}
+\end{figure}
+
+\section{Vizualizace}
+Vizualizaci scény má na starosti tøída \texttt{Visualizer}. Vizualizaci je mo¾né provádìt dvìma zpùsoby:
+\begin{enumerate}
+ \item \textbf{Interaktivnì} -- u¾ivatel mù¾e mìnit pozici kamery, pøepínat mezi rùznými zpùsoby zobrazení a ukládat aktuální pohled jako obrázek.
+ \item \textbf{Dávkovì} -- zobrazená scéna se ulo¾í jako obrázek do souboru a program skonèí.
+\end{enumerate}
+
+Interaktivní vizualizaci zaji¹»uje statická metoda \texttt{visualize}, dávkovou vizualizaci za\-ji¹»u\-je statická metoda \texttt{takeScreenshot}. Tyto metody mají jednu zvlá¹tnost -- po jejich zavolání se u¾ nikdy nevrátí øízení zpìt\footnote{Tohle chování je dáno rozhraním knihovny GLUT, kterou tøída pou¾ívá.} a program je ukonèen funkcí \texttt{std::exit()}. Pøi~návrhu je potøeba na tuto vlastnost brát ohled a zajistit správné uvolnìní pamìti a ostatních zdrojù.
+
+Výsledkem radiozity jsou hodnoty barev pro jednotlivé plo¹ky. Aby u¾ivatel nevidìl ru¹ivé pøechody barev mezi plo¹kami, je potøeba provést interpolaci barev. Nejprve jsou prùmìrováním vypoèteny barvy pro jednotlivé vrcholy plo¹ek (metoda \texttt{Entity::compute\-VertexColors()}), samotnou interpolaci potom provádí \texttt{OpenGL} bìhem vykreslování scény.
+
+\chapter{Implementace}\label{implementation}
+Celý projekt byl implementován v jazyce C++, vyu¾ívá knihovny standardu \texttt{OpenGL} a~knihovnu \texttt{GLUT}. Volnì ¹iøitelný parser XML\cite{xmlParser} je souèástí archivu. Automatické sestavení na~rùzných platformách zaji¹»uje multiplatformní make systém \href{http://www.cmake.org/HTML/Index.html}{CMake}. Jak bylo naznaèeno v návrhu, sestavují se dva spustitelné soubory:
+
+\begin{description}
+ \item[\textbf{rrv-compute}] je program pro výpoèet radiozity. Výpis parametrù je mo¾né vypsat pøepína\-èem \texttt{--help}, povinným parametrem je \texttt{--filein} následovaný jménem vstupního souboru. Vstupní soubor mù¾e být vytvoøený u¾ivatelem, nebo to mù¾e být mezivýs\-ledek výpoètu, na který chceme navázat.
+ 
+ Dal¹ím dùle¾itým parametrem je \texttt{--divide}, který urèuje nejvy¹¹í pøípustný obsah plo¹ky ve scénì bìhem rekurzivního dìlení na plo¹ky. Èím ni¾¹í èíslo nastavíme, tím je výstup kvalitnìj¹í. Zároveò v¹ak roste doba výpoètu, proto je dobré najít vhodnou hodnotu experimentálnì.
+ 
+ Výpoèet je mo¾né urychlit nastavením vhodné hodnoty parametru \texttt{--cache}. Tento parametr urèuje maximální prostor vyhrazený pro mezipamì». Konfiguraèní faktory, které se do mezipamìti nevlezou je nutné poèítat v ka¾dém prùchodu znovu, co¾ zpomaluje výpoèet. V praxi v¹ak není vhodné nastavovat velikost mezipamìti vy¹¹í ne¾ je velikost fyzické pamìti.
+ 
+ \item[\textbf{rrv-visualize}] je program pro vizualizaci scény. Pomocí tohoto programu je mo¾né vizua\-lizovat vstupní scénu, jakýkoliv mezivýsledek i finální scénu s vypoètenou radiozitou. Jak bylo zmínìno v návrhu, pracuje ve dvou re¾imech. Výchozí je interaktivní re¾im, dávkový re¾im se zapíná volbou \texttt{--screenshot on}. Povinným parametrem je opìt \texttt{--filein} následovaný jménem vstupního souboru.
+ 
+ Pozici kamery lze v interaktivním re¾imu mìnit my¹í. Levým tlaèítkem se otáèí scéna, pravým tlaèítkem se kamera pøibli¾uje/oddaluje a kurzorovými ¹ipkami se kamera posouvá. Dále je mo¾né mìnit zpùsob zobrazení plo¹ek a zobrazení barev pomocí následujících kláves:
+ 
+ \sffamily
+ \begin{tabular}{|r|l|}\hline
+  Klávesa&Funkce\\\hline
+  1&pouze vrcholy\\
+  2&pouze hranice polygonù\\
+  3&vyplnìné polygony\\
+  7&zmen¹it ¹íøku bodù/èar\\
+  8&zvìt¹it ¹íøku bodù/èar\\\hline
+  Z&barva odrazu\\
+  X&barva zdroje svìtla\\
+  C&barva odrazu + barva zdroje svìtla\\
+  V&vypoètená radiozita (bez interpolace, barva plo¹ek)\\
+  B&vypoètená radiozita (jednoúrovòová interpolace)\\
+  N&vypoètená radiozita (jednoúrovòová interpolace, barva plo¹ek)\\
+  M&vypoètená radiozita (dvojúrovòová interpolace)\\\hline
+  
+ \end{tabular}
+ \end{description}
+ 
+\section{Sestavení a instalace}
+Pro úspì¹né sestavení je potøeba mít nainstalovanou knihovnu GLUT, knihovny OpenGL, CMake a podporovaný pøekladaè. Vlastní sestavení a instalace jsou velmi jednoduché a~pøí\-moèaré:
+\begin{verbatim}
+$ cmake .
+$ make
+$ make install
+\end{verbatim} 
+
+Sestavení bylo testováno na operaèních systémech Linux, FreeBSD, Windows XP a Windows Vista. Na systémech Windows jsou podporovány pøekladaèe MinGW a Microsoft Visual Studio 2005.
+
+Pro výpoèet konfiguraèního faktoru se pou¾ívá akcelerátor grafické karty, pøièem¾ èíslo plo¹ky se kóduje jako barva. Pokud provádí grafická karta vyhlazování (aplikace vyhlazování sama nezapíná), bude výsledek nesmyslný. \textbf{Proto v nastavení grafické karty nesmí být zapnutá volba vynuceného vyhlazování.}
+
+\chapter{Výsledky}\label{results}
+Výpoèet radiozity byl testován na nìkolika vzorových scénách, které jsou souèástí archivu. Vzhledem k omezením na velikost odevzdávaného souboru (a tím pádem i dokumentace) nebylo mo¾né umístit do této dokumentace výsledky jako obrázky. Náhled scény s vypoèí\-tanou radiozitou je na obr. \ref{room4}.
+
+Na webu projektu \href{http://dudka.cz/rrv}{{\tt http://dudka.cz/rrv}} je spousta obrázkù z prùbìhu výpoètu. Také jsou tam ke sta¾ení XML soubory s vypoètenou radiozitou, tak¾e je mo¾né si prohléd\-nout ji¾ spoèítanou scénu. Kromì toho lze z webu stáhnout krátké \href{http://dudka.cz/rrv/files/video/room4.x264.avi?action=download}{video} (asi 20 vteøin), které ukazuje, jak se ¹íøí radiozita v prùbìhu výpoètu.
+
+\begin{figure}[h]
+  \begin{center}\includegraphics{img/room4.png}\end{center}
+  \caption{Scéna s vypoèítanou radiozitou -- originální obrázek naleznete na~\href{http://dudka.cz/rrv}{{\tt http://dudka.cz/rrv}}}\label{room4}
+\end{figure}
+
+\chapter{Závìr}
+Pøesto¾e je implementace výpoètu radiozity pomìrnì jednoduchá, poskytuje pìkné výsledky. Navíc je díky HW akceleraci výpoèet rychlý. Konkrétní doba výpoètu závisí na slo¾itosti vstup\-ní scény a zvolených parametrech. Pøi testování se doba výpoètu pohybovala v rozmezí nìkolika minut a¾ nìkolika dní.
+
+Byly splnìny v¹echny po¾adavky zadání i hlavní cíle návrhu. Navíc bylo pomocí této implementace výpoètu radiozity vytvoøeno zajímavé video. Hlavní výhoda projektu oproti bì¾nì dostupným implementacím v¹ak spoèívá v jeho jednoduchosti.
+
+% ----------------------------------------------
+% Pou¾itá literatura
+\bibliographystyle{./czechiso}
+\begin{flushleft}
+\bibliography{proj_doc}
+\end{flushleft}
+
+\end{document}

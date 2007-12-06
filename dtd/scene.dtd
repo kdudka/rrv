@@ -1,0 +1,219 @@
+<!--
+/**
+ * @file scene.dtd
+ * DTD for RadOb project's input data
+ * RadOb is free radiosity renderer and visualiser
+ * available at http://dudka.cz/devel-PGR
+ * @author Kamil Dudka <xdudka00@gmail.com>
+ * @author Jakub Filak <filak.jakub@gmail.com>
+ */
+-->
+<!--
+    Root element. Obligatory child elements are head and body.
+    (similar to HTML)
+    
+    There are no attributes for now.
+    -->
+<!ELEMENT scene         (head,body)>
+
+<!--
+    Head section of scene. Inside this element can be object's definitions.
+    -->
+<!ELEMENT head          (objectdef)+>
+
+<!--
+    Object's definition. Each object can contain primitive shapes.
+    
+    name                Object name used for further references.
+    file                Name of file where object is defined. When attribute is used then 
+                        definition of object in actual file is replaced from other file.
+    -->
+<!ELEMENT objectdef     (triangleset|cuboid|barrel|globe|teapot)+>
+<!ATTLIST objectdef
+          name          CDATA #REQUIRED
+          file          CDATA #IMPLIED
+          >
+
+<!--
+    Standalone triangle or 1st triangle inside triangleset element.
+    
+    radiosity           triangle's color given as three float numbers
+    emission            triangle's emission given as three float numbers
+    reflectivity        triangle's reflectivity given as three float numbers
+    -->
+<!ELEMENT triangle      (vertex+)>
+<!ATTLIST triangle
+          radiosity     CDATA #IMPLIED
+          emission      CDATA #IMPLIED
+          reflectivity  CDATA #IMPLIED
+          >
+
+<!--
+    2nd or any next one triangle inside triangleset element.
+    Using sematic from opengl when constat GL_TRIANGLES_QUADS is used.
+    
+    
+    radiosity           triangle's color given as three float numbers
+    emission            triangle's emission given as three float numbers
+    reflectivity        triangle's reflectivity given as three float numbers
+    -->
+<!ELEMENT trianglenext  (vertex)>
+<!ATTLIST trianglenext
+          radiosity     CDATA #IMPLIED
+          emission      CDATA #IMPLIED
+          reflectivity  CDATA #IMPLIED
+          >
+
+<!--
+    A set of triangles with common edges. (format known from OpenGL API)
+    Obligatory child element is 'triangle'.
+    
+    radiosity           triangle's color given as three float numbers
+    emission            triangle's emission given as three float numbers
+    reflectivity        triangle's reflectivity given as three float numbers
+    -->
+<!ELEMENT triangleset   (triangle,trianglenext*)>
+<!ATTLIST triangleset
+          name          CDATA #IMPLIED
+          radiosity     CDATA #IMPLIED
+          emission      CDATA #IMPLIED
+          reflectivity  CDATA #IMPLIED
+          >
+
+<!--
+    Triangle's vertex.
+    There can't be any child elements.
+    
+    x                   vertex's x axis
+    y                   vertex's y axis
+    z                   vertex's z axis
+    -->
+<!ELEMENT vertex        EMPTY>
+<!ATTLIST vertex
+          x             CDATA #REQUIRED
+          y             CDATA #REQUIRED
+          z             CDATA #REQUIRED
+          >
+
+<!--
+    Cuboid (primitive shape)
+    
+    radiosity           triangle's color given as three float numbers
+    emission            triangle's emission given as three float numbers
+    reflectivity        triangle's reflectivity given as three float numbers
+    -->
+<!ELEMENT cuboid        EMPTY>
+<!ATTLIST cuboid
+          name          CDATA #IMPLIED
+          radiosity     CDATA #IMPLIED
+          emission      CDATA #IMPLIED
+          reflectivity  CDATA #IMPLIED
+          >
+
+<!--
+    Barell (primitive shape)
+    
+    radiosity           triangle's color given as three float numbers
+    emission            triangle's emission given as three float numbers
+    reflectivity        triangle's reflectivity given as three float numbers
+    -->
+<!ELEMENT barrel        EMPTY>
+<!ATTLIST barrel
+          name          CDATA #IMPLIED
+          radiosity     CDATA #IMPLIED
+          emission      CDATA #IMPLIED
+          reflectivity  CDATA #IMPLIED
+          >
+
+<!--
+    Globe (primitive shape)
+    
+    radiosity           triangle's color given as three float numbers
+    emission            triangle's emission given as three float numbers
+    reflectivity        triangle's reflectivity given as three float numbers
+    -->
+<!ELEMENT globe         EMPTY>
+<!ATTLIST globe
+          name          CDATA #IMPLIED
+          radiosity     CDATA #IMPLIED
+          emission      CDATA #IMPLIED
+          reflectivity  CDATA #IMPLIED
+          >
+
+<!--
+    Teapot (primitive shape)
+    
+    radiosity           triangle's color given as three float numbers
+    emission            triangle's emission given as three float numbers
+    reflectivity        triangle's reflectivity given as three float numbers
+    -->
+<!ELEMENT teapot        EMPTY>
+<!ATTLIST teapot
+          name          CDATA #IMPLIED
+          radiosity     CDATA #IMPLIED
+          emission      CDATA #IMPLIED
+          reflectivity  CDATA #IMPLIED
+          >
+
+<!--
+    Body section of scene. There can be object's references or its trasformations.
+    -->
+<!ELEMENT body          (object|rotate|translate|scale|shear)+>
+
+<!--
+    Object's reference. Object has to be defined inside head section.
+    -->
+<!ELEMENT object        EMPTY>
+<!ATTLIST object
+          name          CDATA #REQUIRED
+          >
+
+<!--
+    Rotation (transformation)
+    
+    angle               angle of rotation
+    dx, dy, dz          rotation's vector
+    -->
+<!ELEMENT rotate        (object|rotate|translate|scale|shear)+>
+<!ATTLIST rotate
+          angle         CDATA #IMPLIED
+          dx            CDATA #IMPLIED
+          dy            CDATA #IMPLIED
+          dz            CDATA #IMPLIED
+          >
+
+<!--
+    Translation (transformation)
+    
+    dx, dy, dz          translation vector
+    -->
+<!ELEMENT translate     (object|rotate|translate|scale|shear)+>
+<!ATTLIST translate
+          dx            CDATA #IMPLIED
+          dy            CDATA #IMPLIED
+          dz            CDATA #IMPLIED
+          >
+
+<!--
+    Scale (transformation)
+    
+    dx, dy, dz          scale vector
+    -->
+<!ELEMENT scale         (object|rotate|translate|scale|shear)+>
+<!ATTLIST scale
+          dx            CDATA #IMPLIED
+          dy            CDATA #IMPLIED
+          dz            CDATA #IMPLIED
+          >
+
+<!--
+    Shear (transformation)
+    
+    dx, dy, dz          shear vector
+    -->
+<!ELEMENT shear         (object|rotate|translate|scale|shear)+>
+<!ATTLIST shear
+          dx            CDATA #IMPLIED
+          dy            CDATA #IMPLIED
+          dz            CDATA #IMPLIED
+          >

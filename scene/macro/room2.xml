@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE scene SYSTEM "http://dudka.cz/dtd/scene.dtd">
+<scene>
+	<head>
+		<objectdef name="xyplane">
+			<triangleset name="first" reflectivity=".9,.9,.9">
+				<triangle>
+					<vertex x="10.0"  y="-10.0" z="0.0"/>
+					<vertex x="10.0"  y="10.0"  z="0.0"/>
+					<vertex x="-10.0" y="-10.0" z="0.0"/>
+				</triangle>
+				<trianglenext>
+					<vertex x="-10.0" y="10.0"  z="0.0"/>
+				</trianglenext>
+			</triangleset>
+		</objectdef>
+		<objectdef name="xyplane-green">
+			<triangleset reflectivity=".6,.6,.6">
+				<triangle>
+					<vertex x="10.0"  y="-10.0" z="0.0"/>
+					<vertex x="10.0"  y="10.0"  z="0.0"/>
+					<vertex x="-10.0" y="-10.0" z="0.0"/>
+				</triangle>
+				<trianglenext>
+					<vertex x="-10.0" y="10.0"  z="0.0"/>
+				</trianglenext>
+			</triangleset>
+		</objectdef>
+		<objectdef name="black-barrel">
+			<barrel reflectivity='.1,.1,.1'/>
+		</objectdef>
+		<objectdef name="light-source">
+			<cuboid emission='1,1,1'/>
+		</objectdef>
+		<!--<objectdef name='table'>
+			<cuboid emission='0,0,.3' reflectivity='0,0,0' radiosity='0,0,0'/>
+		</objectdef>-->
+		<objectdef name='teapot'>
+			<teapot reflectivity='.8,.8,0'/>
+		</objectdef>
+		<!--<objectdef name='light'>
+			<barrel emission='.5,.5,.6' reflectivity='0,0,0' radiosity='0,0,0'/>
+		</objectdef>-->
+	</head>
+	<body>
+		<apply-macro name="viewScene"/>
+		
+		<!-- Scene definition -->
+		<macro name="scene">
+			<!-- Room -->
+			<apply-macro name="room"/>
+			
+			<!-- Light 1 -->
+			<translate dy='6' dz='4'>
+				<apply-macro name="light"/>
+			</translate>
+			
+			<!-- Light 2 -->
+			<translate dy='6' dz='-4'>
+				<apply-macro name="light"/>
+			</translate>
+			
+			<!-- Teapot -->
+			<translate dy='-8' dz='5'>
+				<rotate angle='45' dy='-1'>
+					<scale dx='2' dy='2' dz='2'>
+						<object name='teapot'/>
+					</scale>
+				</rotate>
+			</translate>
+		</macro>
+		
+		<!-- View definition -->
+		<macro name="viewScene">
+			<translate dx='-2'>
+				<rotate angle='60' dy='1'>
+					<scale dx='1.5' dy='1.5' dz='1.8'>
+						<apply-macro name="scene"/>					
+					</scale>
+				</rotate>
+			</translate>
+		</macro>
+		
+		<!-- Room definition -->
+		<macro name="room">
+			<translate dx='10'>
+				<rotate angle="90" dx="0" dy="1" dz="0">
+					<object name="xyplane"/>
+				</rotate>
+			</translate>
+			<translate dx='-10'>
+				<rotate angle="90" dx="0" dy="-1" dz="0">
+					<object name="xyplane"/>
+				</rotate>
+			</translate>
+			<translate dz='-10'>
+					<object name="xyplane"/>
+			</translate>
+			<translate dz='10'>
+				<rotate angle="180" dx="0" dy="1" dz="0">
+					<object name="xyplane"/>
+				</rotate>
+			</translate>
+			<translate dy='10'>
+				<rotate angle="90" dx="1" dy="0" dz="0">
+					<object name="xyplane"/>
+				</rotate>
+			</translate>
+			<translate dy='-10'>
+				<rotate angle="90" dx="-1" dy="0" dz="0">
+					<object name="xyplane-green"/>
+				</rotate>
+			</translate>
+		</macro>
+		
+		<!-- Light definition -->
+		<macro name="light">
+			<translate dx='-1.5' dy='2'>
+				<scale dx='1' dz='1' dy='4'>
+					<object name='black-barrel'/>
+				</scale>
+			</translate>
+			<translate dx='1.5' dy='2'>
+				<scale dx='1' dz='1' dy='4'>
+					<object name='black-barrel'/>
+				</scale>
+			</translate>
+			<translate dy='-1'>
+				<scale dx='6' dz='4' dy='2'>
+					<object name='light-source'/>
+				</scale>
+			</translate>
+		</macro>
+	</body>
+</scene>

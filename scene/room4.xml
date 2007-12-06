@@ -1,0 +1,1019 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE scene SYSTEM "http://dudka.cz/dtd/scene.dtd">
+<scene>
+	<head>
+		<objectdef name="xyplane">
+			<triangleset name="first" reflectivity=".86,.83,.89">
+				<triangle>
+					<vertex x="20.0"  y="-15.0" z="0.0"/>
+					<vertex x="20.0"  y="15.0"  z="0.0"/>
+					<vertex x="-20.0" y="-15.0" z="0.0"/>
+				</triangle>
+				<trianglenext>
+					<vertex x="-20.0" y="15.0"  z="0.0"/>
+				</trianglenext>
+			</triangleset>
+		</objectdef>
+		<objectdef name="xyplane-green">
+			<triangleset reflectivity=".6,.6,.6">
+				<triangle>
+					<vertex x="20.0"  y="-20.0" z="0.0"/>
+					<vertex x="20.0"  y="20.0"  z="0.0"/>
+					<vertex x="-20.0" y="-20.0" z="0.0"/>
+				</triangle>
+				<trianglenext>
+					<vertex x="-20.0" y="20.0"  z="0.0"/>
+				</trianglenext>
+			</triangleset>
+		</objectdef>
+		<objectdef name="xyplane-ceiling">
+			<triangleset reflectivity=".8,.8,.8">
+				<triangle>
+					<vertex x="20.0"  y="-20.0" z="0.0"/>
+					<vertex x="20.0"  y="20.0"  z="0.0"/>
+					<vertex x="-20.0" y="-20.0" z="0.0"/>
+				</triangle>
+				<trianglenext>
+					<vertex x="-20.0" y="20.0"  z="0.0"/>
+				</trianglenext>
+			</triangleset>
+		</objectdef>
+
+		<objectdef name="black-barrel">
+			<barrel reflectivity='.2,.2,.2'/>
+		</objectdef>
+		<objectdef name="light-source">
+			<cuboid emission='5,5,5.5'/>
+		</objectdef>
+		
+		<!-- Table -->
+		<objectdef name="foot">
+			<cuboid reflectivity='.3, 0, 0'/>
+		</objectdef>
+		<objectdef name="stay">
+			<cuboid reflectivity='.70,.60,.36'/>
+		</objectdef>
+		<objectdef name="desk">
+			<cuboid reflectivity='.70,.60,.36'/>
+		</objectdef>
+
+		<!-- Rack -->
+		<objectdef name="main_desk">
+			<cuboid reflectivity='.3,.0,.0'/>
+		</objectdef>
+		<objectdef name="side_desk">
+			<cuboid reflectivity='.3,.0,.0'/>
+		</objectdef>
+
+		<!-- Closet -->
+		<objectdef name="closet_desk">
+			<cuboid reflectivity='.7,.6,.36'/>
+		</objectdef>
+		<objectdef name="closet_side">
+			<cuboid reflectivity='.5,.5,.5'/>
+		</objectdef>
+		<objectdef name="closet_back">
+			<cuboid reflectivity='.5,.5,.5'/>
+		</objectdef>
+		<objectdef name="closet_door">
+			<cuboid reflectivity='.7,.6,.36'/>
+		</objectdef>
+		<objectdef name="closet_handle">
+			<barrel reflectivity='.2,.2,.2'/>
+		</objectdef>
+
+		<!-- chair -->
+		<objectdef name="chair_foot">
+			<cuboid reflectivity='.3, 0, 0'/>
+		</objectdef>
+		<objectdef name="chair_stay">
+			<cuboid reflectivity='.3, .0, .0'/>
+		</objectdef>
+		<objectdef name="chair_desk">
+			<cuboid reflectivity='.70, .60, .36'/>
+		</objectdef>
+	
+		<!-- Big Lamp -->
+		<objectdef name="biglamp_base">
+			<barrel reflectivity='.2,.2,.2'/>
+		</objectdef>
+		<objectdef name="biglamp_staff">
+			<barrel reflectivity='.3,.3,.3'/>
+		</objectdef>
+		<objectdef name="biglamp_box">
+			<cuboid reflectivity='.05,.05,.05'/>
+		</objectdef>
+		<objectdef name="biglamp_bulb">
+			<globe emission='90,90,90'/>
+		</objectdef>
+		<objectdef name="biglamp_shader">
+			<triangleset reflectivity='.15,.15,.15'>
+				<triangle>
+					<vertex x="-0.5"  y="0.0" z="0.0"/>
+					<vertex x="-4.83"  y="5.0" z="0.0"/>
+					<vertex x="-0.5"  y="5.0" z="0.0"/>
+				</triangle>
+			</triangleset>
+			<triangleset reflectivity='.15,.15,.15'>
+				<triangle>
+					<vertex x="4.83"  y="5.0" z="0.0"/>
+					<vertex x="0.5"  y="0.0" z="0.0"/>
+					<vertex x="0.5"  y="5.0" z="0.0"/>
+				</triangle>
+			</triangleset>
+			<triangleset reflectivity='.15,.15,.15'>
+				<triangle>
+					<vertex x="-0.5"  y="0.0" z="0.0"/>
+					<vertex x="-0.5"  y="0.8" z="0.0"/>
+					<vertex x="0.5"  y="0.0" z="0.0"/>
+				</triangle>
+				<trianglenext>
+					<vertex x="0.5" y="0.8"  z="0.0"/>
+				</trianglenext> 
+			</triangleset>
+			<triangleset reflectivity='.15,.15,.15'>
+				<triangle>
+					<vertex x="-0.5"  y="1.0" z="0.0"/>
+					<vertex x="-0.5"  y="1.8" z="0.0"/>
+					<vertex x="0.5"  y="1.0" z="0.0"/>
+				</triangle>
+				<trianglenext>
+					<vertex x="0.5" y="1.8"  z="0.0"/>
+				</trianglenext> 
+			</triangleset>
+			<triangleset reflectivity='.15,.15,.15'>
+				<triangle>
+					<vertex x="-0.5"  y="2.0" z="0.0"/>
+					<vertex x="-0.5"  y="2.8" z="0.0"/>
+					<vertex x="0.5"  y="2.0" z="0.0"/>
+				</triangle>
+				<trianglenext>
+					<vertex x="0.5" y="2.8"  z="0.0"/>
+				</trianglenext> 
+			</triangleset>
+			<triangleset reflectivity='.15,.15,.15'>
+				<triangle>
+					<vertex x="-0.5"  y="3.0" z="0.0"/>
+					<vertex x="-0.5"  y="3.8" z="0.0"/>
+					<vertex x="0.5"  y="3.0" z="0.0"/>
+				</triangle>
+				<trianglenext>
+					<vertex x="0.5" y="3.8"  z="0.0"/>
+				</trianglenext> 
+			</triangleset>
+			<triangleset reflectivity='.15,.15,.15'>
+				<triangle>
+					<vertex x="-0.5"  y="4.0" z="0.0"/>
+					<vertex x="-0.5"  y="5.0" z="0.0"/>
+					<vertex x="0.5"  y="4.0" z="0.0"/>
+				</triangle>
+				<trianglenext>
+					<vertex x="0.5" y="5.0"  z="0.0"/>
+				</trianglenext> 
+			</triangleset>
+			<!-- back side  -->
+			<triangleset reflectivity='.5,.5,.5'>
+				<triangle>
+					<vertex x="-4.83"  y="5.0" z="0.0"/>
+					<vertex x="-0.5"  y="0.0" z="0.0"/>
+					<vertex x="-0.5"  y="5.0" z="0.0"/>
+				</triangle>
+			</triangleset>
+			<triangleset reflectivity='.5,.5,.5'>
+				<triangle>
+					<vertex x="0.5"  y="0.0" z="0.0"/>
+					<vertex x="4.83"  y="5.0" z="0.0"/>
+					<vertex x="0.5"  y="5.0" z="0.0"/>
+				</triangle>
+			</triangleset>
+			<triangleset reflectivity='.5,.5,.5'>
+				<triangle>
+					<vertex x="-0.5"  y="0.8" z="0.0"/>
+					<vertex x="-0.5"  y="0.0" z="0.0"/>
+					<vertex x="0.5" y="0.8"  z="0.0"/>
+				</triangle>
+				<trianglenext>
+					<vertex x="0.5"  y="0.0" z="0.0"/>
+				</trianglenext> 
+			</triangleset>
+			<triangleset reflectivity='.5,.5,.5'>
+				<triangle>
+					<vertex x="-0.5"  y="1.8" z="0.0"/>
+					<vertex x="-0.5"  y="1.0" z="0.0"/>
+					<vertex x="0.5" y="1.8"  z="0.0"/>
+				</triangle>
+				<trianglenext>
+					<vertex x="0.5"  y="1.0" z="0.0"/>
+				</trianglenext> 
+			</triangleset>
+			<triangleset reflectivity='.5,.5,.5'>
+				<triangle>
+					<vertex x="-0.5"  y="2.8" z="0.0"/>
+					<vertex x="-0.5"  y="2.0" z="0.0"/>
+					<vertex x="0.5" y="2.8"  z="0.0"/>
+				</triangle>
+				<trianglenext>
+					<vertex x="0.5"  y="2.0" z="0.0"/>
+				</trianglenext> 
+			</triangleset>
+			<triangleset reflectivity='.5,.5,.5'>
+				<triangle>
+					<vertex x="-0.5"  y="3.8" z="0.0"/>
+					<vertex x="-0.5"  y="3.0" z="0.0"/>
+					<vertex x="0.5" y="3.8"  z="0.0"/>
+				</triangle>
+				<trianglenext>
+					<vertex x="0.5"  y="3.0" z="0.0"/>
+				</trianglenext> 
+			</triangleset>
+			<triangleset reflectivity='.5,.5,.5'>
+				<triangle>
+					<vertex x="-0.5"  y="5.0" z="0.0"/>
+					<vertex x="-0.5"  y="4.0" z="0.0"/>
+					<vertex x="0.5" y="5.0"  z="0.0"/>
+				</triangle>
+				<trianglenext>
+					<vertex x="0.5"  y="4.0" z="0.0"/>
+				</trianglenext> 
+			</triangleset>
+		</objectdef>
+
+
+		<!-- Lamp -->
+		<objectdef name="lamp_base">
+			<barrel reflectivity='.2,.2,.2'/>
+		</objectdef>
+		<objectdef name="lamp_staff">
+			<barrel reflectivity='.3,.3,.3'/>
+		</objectdef>
+		<objectdef name="lamp_toggle">
+			<barrel reflectivity='.2,.2,.2'/>
+		</objectdef>
+		<objectdef name="lamp_box">
+			<triangleset reflectivity='.2,.2,.2'>
+				<triangle>
+					<vertex x="-2.5"  y="0.0" z="-2.5"/>
+					<vertex x="-2.5"  y="5.0" z="-2.5"/>
+					<vertex x="2.5"  y="0.0" z="-2.5"/>
+				</triangle>
+				<trianglenext>
+					<vertex x="2.5" y="5.0"  z="-2.5"/>	
+				</trianglenext> 
+			</triangleset>
+			<triangleset reflectivity='.2,.2,.2'>
+				<triangle>
+					<vertex x="-2.5"  y="5.0" z="2.5"/>
+					<vertex x="-2.5"  y="0.0" z="2.5"/>
+					<vertex x="2.5" y="5.0"  z="2.5"/>	
+				</triangle>
+				<trianglenext>
+					<vertex x="2.5"  y="0.0" z="2.5"/>
+				</trianglenext> 
+			</triangleset>
+			<triangleset reflectivity='.2,.2,.2'>
+				<triangle>
+					<vertex x="-2.5"  y="5.0" z="-2.5"/>
+					<vertex x="-2.5"  y="0.0" z="-2.5"/>
+					<vertex x="-2.5" y="5.0"  z="2.5"/>	
+				</triangle>
+				<trianglenext>
+					<vertex x="-2.5"  y="0.0" z="2.5"/>
+				</trianglenext> 
+			</triangleset>
+			<triangleset reflectivity='.2,.2,.2'>
+				<triangle>
+					<vertex x="2.5"  y="0.0" z="-2.5"/>
+					<vertex x="2.5"  y="5.0" z="-2.5"/>
+					<vertex x="2.5"  y="0.0" z="2.5"/>
+				</triangle>
+				<trianglenext>
+					<vertex x="2.5" y="5.0"  z="2.5"/>	
+				</trianglenext> 
+			</triangleset>
+			<triangleset reflectivity='.2,.2,.2'>
+				<triangle>
+					<vertex x="-2.5"  y="0.0" z="2.5"/>
+					<vertex x="-2.5"  y="0.0" z="-2.5"/>
+					<vertex x="2.5" y="0.0"  z="2.5"/>	
+				</triangle>
+				<trianglenext>
+					<vertex x="2.5"  y="0.0" z="-2.5"/>
+				</trianglenext> 
+			</triangleset>
+	
+			<!-- back side -->
+			
+			<triangleset reflectivity='.2,.2,.2'>
+				<triangle>
+					<vertex x="-2.5"  y="5.0" z="-2.5"/>
+					<vertex x="-2.5"  y="0.0" z="-2.5"/>
+					<vertex x="2.5" y="5.0"  z="-2.5"/>	
+				</triangle>
+				<trianglenext>
+					<vertex x="2.5"  y="0.0" z="-2.5"/>
+				</trianglenext> 
+			</triangleset>
+			<triangleset reflectivity='.2,.2,.2'>
+				<triangle>
+					<vertex x="-2.5"  y="0.0" z="2.5"/>
+					<vertex x="-2.5"  y="5.0" z="2.5"/>
+					<vertex x="2.5"  y="0.0" z="2.5"/>
+				</triangle>
+				<trianglenext>
+					<vertex x="2.5" y="5.0"  z="2.5"/>	
+				</trianglenext> 
+			</triangleset>
+			<triangleset reflectivity='.2,.2,.2'>
+				<triangle>
+					<vertex x="-2.5"  y="0.0" z="-2.5"/>
+					<vertex x="-2.5"  y="5.0" z="-2.5"/>
+					<vertex x="-2.5"  y="0.0" z="2.5"/>
+				</triangle>
+				<trianglenext>
+					<vertex x="-2.5" y="5.0"  z="2.5"/>	
+				</trianglenext> 
+			</triangleset>
+			<triangleset reflectivity='.2,.2,.2'>
+				<triangle>
+					<vertex x="2.5"  y="5.0" z="-2.5"/>
+					<vertex x="2.5"  y="0.0" z="-2.5"/>
+					<vertex x="2.5" y="5.0"  z="2.5"/>	
+				</triangle>
+				<trianglenext>
+					<vertex x="2.5"  y="0.0" z="2.5"/>
+				</trianglenext> 
+			</triangleset>
+			<triangleset reflectivity='.2,.2,.2'>
+				<triangle>
+					<vertex x="-2.5"  y="0.0" z="-2.5"/>
+					<vertex x="-2.5"  y="0.0" z="2.5"/>
+					<vertex x="2.5"  y="0.0" z="-2.5"/>
+				</triangle>
+				<trianglenext>
+					<vertex x="2.5" y="0.0"  z="2.5"/>	
+				</trianglenext> 
+			</triangleset>
+
+
+		</objectdef>
+		<objectdef name="lamp_bulb">
+			<globe emission='400,400,300'/>
+		</objectdef>
+		<objectdef name="lamp_strap">
+			<barrel reflectivity='.15,.15,.15'/>
+		</objectdef>
+		<objectdef name="lamp_shader">
+			<triangleset reflectivity='.2,.2,.2'>
+				<triangle>
+					<vertex x="-2.5"  y="0.0" z="0.0"/>
+					<vertex x="-3.5"  y="5.0" z="0.0"/>
+					<vertex x="-2.5"  y="5.0" z="0.0"/>
+				</triangle>
+			</triangleset>
+			<triangleset reflectivity='.2,.2,.2'>
+				<triangle>
+					<vertex x="3.5"  y="5.0" z="0.0"/>
+					<vertex x="2.5"  y="0.0" z="0.0"/>
+					<vertex x="2.5"  y="5.0" z="0.0"/>
+				</triangle>
+			</triangleset>
+			<triangleset reflectivity='.2,.2,.2'>
+				<triangle>
+					<vertex x="-2.5"  y="0.0" z="0.0"/>
+					<vertex x="-2.5"  y="0.8" z="0.0"/>
+					<vertex x="2.5"  y="0.0" z="0.0"/>
+				</triangle>
+				<trianglenext>
+					<vertex x="2.5" y="0.8"  z="0.0"/>
+				</trianglenext> 
+			</triangleset>
+			<triangleset reflectivity='.2,.2,.2'>
+				<triangle>
+					<vertex x="-2.5"  y="1.0" z="0.0"/>
+					<vertex x="-2.5"  y="1.8" z="0.0"/>
+					<vertex x="2.5"  y="1.0" z="0.0"/>
+				</triangle>
+				<trianglenext>
+					<vertex x="2.5" y="1.8"  z="0.0"/>
+				</trianglenext> 
+			</triangleset>
+			<triangleset reflectivity='.2,.2,.2'>
+				<triangle>
+					<vertex x="-2.5"  y="2.0" z="0.0"/>
+					<vertex x="-2.5"  y="2.8" z="0.0"/>
+					<vertex x="2.5"  y="2.0" z="0.0"/>
+				</triangle>
+				<trianglenext>
+					<vertex x="2.5" y="2.8"  z="0.0"/>
+				</trianglenext> 
+			</triangleset>
+			<triangleset reflectivity='.2,.2,.2'>
+				<triangle>
+					<vertex x="-2.5"  y="3.0" z="0.0"/>
+					<vertex x="-2.5"  y="3.8" z="0.0"/>
+					<vertex x="2.5"  y="3.0" z="0.0"/>
+				</triangle>
+				<trianglenext>
+					<vertex x="2.5" y="3.8"  z="0.0"/>
+				</trianglenext> 
+			</triangleset>
+			<triangleset reflectivity='.2,.2,.2'>
+				<triangle>
+					<vertex x="-2.5"  y="4.0" z="0.0"/>
+					<vertex x="-2.5"  y="5.0" z="0.0"/>
+					<vertex x="2.5"  y="4.0" z="0.0"/>
+				</triangle>
+				<trianglenext>
+					<vertex x="2.5" y="5.0"  z="0.0"/>
+				</trianglenext> 
+			</triangleset>
+			<!-- back side  -->
+			<triangleset reflectivity='.2,.2,.2'>
+				<triangle>
+					<vertex x="-3.5"  y="5.0" z="0.0"/>
+					<vertex x="-2.5"  y="0.0" z="0.0"/>
+					<vertex x="-2.5"  y="5.0" z="0.0"/>
+				</triangle>
+			</triangleset>
+			<triangleset reflectivity='.2,.2,.2'>
+				<triangle>
+					<vertex x="2.5"  y="0.0" z="0.0"/>
+					<vertex x="3.5"  y="5.0" z="0.0"/>
+					<vertex x="2.5"  y="5.0" z="0.0"/>
+				</triangle>
+			</triangleset>
+			<triangleset reflectivity='.2,.2,.2'>
+				<triangle>
+					<vertex x="-2.5"  y="0.8" z="0.0"/>
+					<vertex x="-2.5"  y="0.0" z="0.0"/>
+					<vertex x="2.5" y="0.8"  z="0.0"/>
+				</triangle>
+				<trianglenext>
+					<vertex x="2.5"  y="0.0" z="0.0"/>
+				</trianglenext> 
+			</triangleset>
+			<triangleset reflectivity='.2,.2,.2'>
+				<triangle>
+					<vertex x="-2.5"  y="1.8" z="0.0"/>
+					<vertex x="-2.5"  y="1.0" z="0.0"/>
+					<vertex x="2.5" y="1.8"  z="0.0"/>
+				</triangle>
+				<trianglenext>
+					<vertex x="2.5"  y="1.0" z="0.0"/>
+				</trianglenext> 
+			</triangleset>
+			<triangleset reflectivity='.2,.2,.2'>
+				<triangle>
+					<vertex x="-2.5"  y="2.8" z="0.0"/>
+					<vertex x="-2.5"  y="2.0" z="0.0"/>
+					<vertex x="2.5" y="2.8"  z="0.0"/>
+				</triangle>
+				<trianglenext>
+					<vertex x="2.5"  y="2.0" z="0.0"/>
+				</trianglenext> 
+			</triangleset>
+			<triangleset reflectivity='.2,.2,.2'>
+				<triangle>
+					<vertex x="-2.5"  y="3.8" z="0.0"/>
+					<vertex x="-2.5"  y="3.0" z="0.0"/>
+					<vertex x="2.5" y="3.8"  z="0.0"/>
+				</triangle>
+				<trianglenext>
+					<vertex x="2.5"  y="3.0" z="0.0"/>
+				</trianglenext> 
+			</triangleset>
+			<triangleset reflectivity='.2,.2,.2'>
+				<triangle>
+					<vertex x="-2.5"  y="5.0" z="0.0"/>
+					<vertex x="-2.5"  y="4.0" z="0.0"/>
+					<vertex x="2.5" y="5.0"  z="0.0"/>
+				</triangle>
+				<trianglenext>
+					<vertex x="2.5"  y="4.0" z="0.0"/>
+				</trianglenext> 
+			</triangleset>
+		</objectdef>
+                <objectdef name='teapot'>
+                        <teapot reflectivity='.5,.0,0'/>
+                </objectdef>	
+                <objectdef name='teapot2'>
+                        <teapot reflectivity='.8,.8,0'/>
+                </objectdef>	
+	</head>
+	<body>
+		<translate dy='2'>
+			<rotate angle='20' dx='1' dy='-1'>
+			
+				<translate dz='6'>
+					<rotate angle='120' dy='1'>
+						<scale dx='1' dy='1' dz='1'>
+
+													<!-- Ceiling -->
+							<translate dy='15'>
+								<rotate angle="270" dx="-1" dy="0" dz="0">
+									<object name="xyplane-ceiling"/>
+								</rotate>
+							</translate>
+							
+							<!-- Light 1 -->
+							<translate dy='10.5' dz='6'>
+								<translate dx='-1.5' dy='2'>
+									<scale dx='1' dz='1' dy='4'>
+										<object name='black-barrel'/>
+									</scale>
+								</translate>
+								<translate dx='1.5' dy='2'>
+									<scale dx='1' dz='1' dy='4'>
+										<object name='black-barrel'/>
+									</scale>
+								</translate>
+								<translate dy='-1'>
+									<scale dx='6' dz='4' dy='2'>
+										<object name='light-source'/>
+									</scale>
+								</translate>
+							</translate>
+							
+							<!-- Light 2 -->
+							<translate dy='10.5' dz='-6'>
+								<translate dx='-1.5' dy='2'>
+									<scale dx='1' dz='1' dy='4'>
+										<object name='black-barrel'/>
+									</scale>
+								</translate>
+								<translate dx='1.5' dy='2'>
+									<scale dx='1' dz='1' dy='4'>
+										<object name='black-barrel'/>
+									</scale>
+								</translate>
+								<translate dy='-1'>
+									<scale dx='6' dz='4' dy='2'>
+										<object name='light-source'/>
+									</scale>
+								</translate>
+							</translate>
+		
+							<!-- Racks -->
+							<translate dx='-19' dy='4' dz='-9'>
+								<rotate angle="180" dx="0" dy="-1" dz="0">
+									<translate dx='0' dy='0' dz='0'>							
+										<scale dx='2.5' dz='12' dy='0.3'>
+											<object name='main_desk'/>
+										</scale>
+									</translate>	
+									<translate dx='0' dy='0.5' dz='-6'>							
+										<scale dx='2.5' dz='0.3' dy='2.2'>
+											<object name='side_desk'/>
+										</scale>
+									</translate>	
+									<translate dx='0' dy='0.5' dz='6'>							
+										<scale dx='2.5' dz='0.3' dy='2.2'>
+											<object name='side_desk'/>
+										</scale>
+									</translate>
+								</rotate>
+							</translate>
+							<translate dx='8' dy='4' dz='19'>
+								<rotate angle="90" dx="0" dy="-1" dz="0">
+									<translate dx='0' dy='0' dz='0'>							
+										<scale dx='2.5' dz='12' dy='0.3'>
+											<object name='main_desk'/>
+										</scale>
+									</translate>	
+									<translate dx='0' dy='0.5' dz='-6'>							
+										<scale dx='2.5' dz='0.3' dy='2.2'>
+											<object name='side_desk'/>
+										</scale>
+									</translate>	
+									<translate dx='0' dy='0.5' dz='6'>							
+										<scale dx='2.5' dz='0.3' dy='2.2'>
+											<object name='side_desk'/>
+										</scale>
+									</translate>
+								</rotate>
+							</translate>
+		
+							<!-- Teapot on the rack -->
+							<translate dx='8' dy='4' dz='19'>
+								<scale dx='0.5' dy='0.5' dz='0.5'>
+									<object name='teapot2'/>
+								</scale>
+							</translate>
+							
+							<!-- Floor -->
+							<translate dy='-15'>
+								<rotate angle="90" dx="-1" dy="0" dz="0">
+									<object name="xyplane-green"/>
+								</rotate>
+							</translate>
+							
+						<!-- big lamp -->				
+						<translate dx='14' dy='0' dz='14'>
+							<translate dx='0' dz='0' dy='-15'>							
+								<scale dx='5' dz='5' dy='0.4'>
+									<object name='biglamp_base'/>
+								</scale>
+							</translate>
+							<translate dx='0' dy='-9' dz='0'>
+								<scale dx='0.3' dz='0.3' dy='11.5'>
+									<object name='biglamp_staff'/>
+								</scale>
+							</translate>
+							<translate dx='0' dy='-5' dz='0'>
+								<translate dx='0' dy='2' dz='0'>
+									<scale dx='1.2' dz='1.2' dy='0.8'>
+										<object name='biglamp_box'/>
+									</scale>
+								</translate>
+								<translate dx='0' dy='3.4' dz='0'>
+									<scale dx='1.7' dz='1.7' dy='1.7'>
+										<object name='biglamp_bulb'/>
+									</scale>
+								</translate>
+								<scale dx='0.9' dy='0.9' dz='0.9'>
+									<translate dx='0' dy='2' dz='0.5'>
+										<rotate angle="60" dx="1" dy="0" dz="0">	
+											<object name='biglamp_shader'/>
+										</rotate>
+									</translate>	
+									<rotate angle="90" dx="0" dy="1" dz="0">	
+										<translate dx='0' dy='2' dz='0.5'>
+											<rotate angle="60" dx="1" dy="0" dz="0">	
+												<object name='biglamp_shader'/>
+											</rotate>
+										</translate>	
+									</rotate>
+									<rotate angle="180" dx="0" dy="1" dz="0">	
+										<translate dx='0' dy='2' dz='0.5'>
+											<rotate angle="60" dx="1" dy="0" dz="0">	
+												<object name='biglamp_shader'/>
+											</rotate>
+										</translate>	
+									</rotate>
+									<rotate angle="270" dx="0" dy="1" dz="0">	
+										<translate dx='0' dy='2' dz='0.5'>
+											<rotate angle="60" dx="1" dy="0" dz="0">	
+												<object name='biglamp_shader'/>
+											</rotate>
+										</translate>	
+									</rotate>
+								</scale>
+							</translate>
+						</translate>
+
+							<!-- Closet -->
+							<translate dx='-15' dy='0' dz='8'>
+								<translate dx='0' dy='-14' dz='0'>							
+									<scale dx='7' dz='12' dy='0.3'>
+										<object name='closet_desk'/>
+									</scale>
+								</translate>	
+								<translate dx='0' dy='-9' dz='0'>							
+									<scale dx='7' dz='12' dy='0.3'>
+										<object name='closet_desk'/>
+									</scale>
+								</translate>	
+								<translate dx='0' dy='-4' dz='0'>							
+									<scale dx='7' dz='12' dy='0.3'>
+										<object name='closet_desk'/>
+									</scale>
+								</translate>	
+								<translate dx='0' dy='1' dz='0'>							
+									<scale dx='7' dz='12' dy='0.3'>
+										<object name='closet_desk'/>
+									</scale>
+								</translate>
+								<translate dx='0' dy='6' dz='0'>							
+									<scale dx='7' dz='12' dy='0.3'>
+										<object name='closet_side'/>
+									</scale>
+								</translate>
+								<translate dx='-3.3' dy='-14.6' dz='0'>							
+									<scale dx='0.3' dz='12' dy='1'>
+										<object name='closet_side'/>
+									</scale>
+								</translate>	
+								<translate dx='3.3' dy='-14.6' dz='0'>							
+									<scale dx='0.3' dz='12' dy='1'>
+										<object name='closet_side'/>
+									</scale>
+								</translate>	
+								<translate dx='0' dy='-4.45' dz='6.17'>							
+									<scale dx='7' dz='0.3' dy='21.3'>
+										<object name='closet_side'/>
+									</scale>
+								</translate>	
+								<translate dx='0' dy='-4.45' dz='-6.17'>							
+									<scale dx='7' dz='0.3' dy='21.3'>
+										<object name='closet_side'/>
+									</scale>
+								</translate>	
+								<translate dx='-3.5' dy='-4.45' dz='0'>
+									<scale dx='0.1' dz='12.5' dy='21.3'>
+										<object name='closet_back'/>
+									</scale>
+								</translate>	
+								<translate dx='-3.5' dy='-4.45' dz='0'>
+									<scale dx='0.1' dz='12.5' dy='21.3'>
+										<object name='closet_back'/>
+									</scale>
+								</translate>
+								<translate dx='3.7' dy='-4' dz='-3.2'>
+									<scale dx='0.3' dz='6.3' dy='20.3'>
+										<object name='closet_door'/>
+									</scale>
+								</translate>	
+								<translate dx='4.1' dy='-3.5' dz='-1'>
+									<rotate angle="90" dx="0" dy="0" dz="-1">
+										<translate dx='0' dy='0' dz='0'>
+											<scale dx='0.5' dz='0.5' dy='0.5'>
+												<object name='closet_handle'/>
+											</scale>
+										</translate>		
+										<translate dx='0' dy='0.3' dz='0'>
+											<scale dx='0.7' dz='0.7' dy='0.2'>
+												<object name='closet_handle'/>
+											</scale>
+										</translate>		
+									</rotate>
+								</translate>	
+								<translate dx='5.5' dy='0' dz='-1'>
+									<rotate angle="45" dx="0" dy="1" dz="0">
+										<translate dx='3.7' dy='-4' dz='3.2'>
+											<scale dx='0.3' dz='6.3' dy='20.3'>
+												<object name='closet_door'/>
+											</scale>
+										</translate>	
+										<translate dx='4.1' dy='-3.5' dz='1'>
+											<rotate angle="90" dx="0" dy="0" dz="-1">
+												<translate dx='0' dy='0' dz='0'>
+													<scale dx='0.5' dz='0.5' dy='0.5'>
+														<object name='closet_handle'/>
+													</scale>
+												</translate>		
+												<translate dx='0' dy='0.3' dz='0'>
+													<scale dx='0.7' dz='0.7' dy='0.2'>
+														<object name='closet_handle'/>
+													</scale>
+												</translate>		
+											</rotate>
+										</translate>	
+									</rotate>
+								</translate>
+							</translate>
+	
+						<!-- chair -->
+						<translate dx='-4' dy='-12.7' dz='-9'>
+							<rotate angle='200' dy='1'>	
+								<scale dx='1.2' dy='1.2' dz='1.2'>
+									<translate dx='-2' dy='0' dz='-2'>							
+										<scale dx='0.4' dz='0.4' dy='4.5'>
+											<object name='chair_foot'/>
+										</scale>
+									</translate>
+									<translate dx='-2' dy='0' dz='2'>							
+										<scale dx='0.4' dz='0.4' dy='4.5'>
+											<object name='chair_foot'/>
+										</scale>
+									</translate>
+									<translate dx='2' dy='0' dz='-2'>							
+										<scale dx='0.4' dz='0.4' dy='4.5'>
+											<object name='chair_foot'/>
+										</scale>
+									</translate>
+									<translate dx='2' dy='0' dz='2'>							
+										<scale dx='0.4' dz='0.4' dy='4.5'>
+											<object name='chair_foot'/>
+										</scale>
+									</translate>
+									<translate dx='0' dy='1' dz='2'>							
+										<scale dx='4' dz='0.3' dy='0.3'>
+											<object name='chair_stay'/>
+										</scale>
+									</translate>
+									<translate dx='0' dy='1' dz='-2'>							
+										<scale dx='4' dz='0.3' dy='0.3'>
+											<object name='chair_stay'/>
+										</scale>
+									</translate>
+									<translate dx='0' dy='2' dz='0'>							
+										<scale dx='4.5' dz='4.5' dy='0.6'>
+											<object name='chair_desk'/>
+										</scale>
+									</translate>
+									<translate dx='0.3' dy='0' dz='0'>							
+										<rotate angle="-5" dx="0" dy="0" dz="-1">	
+											<translate dx='-2.1' dy='5' dz='-1.7'>							
+												<scale dx='0.4' dz='0.4' dy='5.5'>
+													<object name='chair_foot'/>
+												</scale>
+											</translate>
+											<translate dx='-2.1' dy='5' dz='1.7'>							
+												<scale dx='0.4' dz='0.4' dy='5.5'>
+													<object name='chair_foot'/>
+												</scale>
+											</translate>
+											<translate dx='-2.1' dy='7' dz='0'>							
+												<scale dx='0.4' dz='3' dy='0.6'>
+													<object name='chair_foot'/>
+												</scale>
+											</translate>
+											<translate dx='-2.1' dy='4' dz='0'>							
+												<scale dx='0.4' dz='3' dy='0.6'>
+													<object name='chair_foot'/>
+												</scale>
+											</translate>
+											<translate dx='-2.1' dy='5.5' dz='0'>							
+												<scale dx='0.25' dz='0.25' dy='2.5'>
+													<object name='chair_foot'/>
+												</scale>
+											</translate>
+											<translate dx='-2.1' dy='5.5' dz='-0.7'>							
+												<scale dx='0.25' dz='0.25' dy='2.5'>
+													<object name='chair_foot'/>
+												</scale>
+											</translate>
+											<translate dx='-2.1' dy='5.5' dz='0.7'>							
+												<scale dx='0.25' dz='0.25' dy='2.5'>
+													<object name='chair_foot'/>
+												</scale>
+											</translate>
+										</rotate>
+									</translate>
+								</scale>
+							</rotate>
+						</translate>
+					
+						
+						<!-- Table -->
+						<translate dx='-12' dy='-11'  dz='-10'>
+							<rotate dy='-1' angle='90'>
+								<translate dx='-5' dy='0' dz='-5'>							
+									<scale dx='1' dz='1' dy='8'>
+										<object name='foot'/>
+									</scale>
+								</translate>
+								<translate dx='-5' dy='0' dz='5'>							
+									<scale dx='1' dz='1' dy='8'>
+										<object name='foot'/>
+									</scale>
+								</translate>
+								<translate dx='5' dy='0' dz='5'>							
+									<scale dx='1' dz='1' dy='8'>
+										<object name='foot'/>
+									</scale>
+								</translate>
+								<translate dx='5' dy='0' dz='-5'>							
+									<scale dx='1' dz='1' dy='8'>
+										<object name='foot'/>
+									</scale>
+								</translate>
+								<translate dx='-5' dy='3' dz='0'>							
+									<scale dx='0.3' dz='9' dy='1'>
+										<object name='stay'/>
+									</scale>
+								</translate>
+								<translate dx='5' dy='3' dz='0'>							
+									<scale dx='0.3' dz='9' dy='1'>
+										<object name='stay'/>
+									</scale>
+								</translate>
+								<translate dx='0' dy='3' dz='5'>							
+									<scale dx='9' dz='0.3' dy='1'>
+										<object name='stay'/>
+									</scale>
+								</translate>
+								<translate dx='0' dy='3' dz='-5'>							
+									<scale dx='9' dz='0.3' dy='1'>
+										<object name='stay'/>
+									</scale>
+								</translate>
+								<translate dx='0' dy='4' dz='0'>							
+									<scale dx='12' dz='12' dy='0.3'>
+										<object name='stay'/>
+									</scale>
+								</translate>
+								<!-- Teapot on the table -->
+								<translate dx='2' dy='4' dz='-2'>
+									<rotate angle='110' dy='-1'>
+										<scale dx='0.8' dy='0.8' dz='0.8'>
+											<object name='teapot'/>
+										</scale>
+									</rotate>
+								</translate>
+							<!-- Lamp -->
+							<translate dx='-3' dy='9.3' dz='2'>
+								<rotate angle="45" dx="0" dy="1" dz="0">	
+									<translate dx='0' dy='-5' dz='0'>
+										<scale dx='2.5' dz='2.5' dy='0.2'>
+											<object name='lamp_base'/>
+										</scale>
+									</translate>	
+									<translate dx='0' dy='-2.5' dz='0'>
+										<scale dx='0.2' dz='0.2' dy='5'>
+											<object name='lamp_staff'/>
+										</scale>
+									</translate>
+									<translate dx='2.3' dy='-0.5' dz='0'>
+										<rotate angle="90" dx="0" dy="0" dz="-1">	
+											<translate dx='0' dy='-2.5' dz='0'>
+												<scale dx='0.3' dz='0.3' dy='0.7'>
+													<object name='lamp_toggle'/>
+												</scale>
+											</translate>	
+										</rotate>
+									</translate>	
+									<translate dx='-0.3' dy='-1.05' dz='1.5'>
+										<rotate angle="110" dx="1" dy="0" dz="0">	
+											<translate dx='0' dy='-2.5' dz='0'>
+												<scale dx='0.2' dz='0.2' dy='3'>
+													<object name='lamp_staff'/>
+												</scale>
+											</translate>
+										</rotate>
+									</translate>	
+									<translate dx='0' dy='0.5' dz='-2.5'>
+										<rotate angle="-150" dx="1" dy="0" dz="0">	
+											<rotate angle="-90" dx="0" dy="1" dz="0">	
+												<scale dx='0.2' dz='0.2' dy='0.2'>
+													<translate dx='0' dy='-4.0' dz='0'>
+														<scale dx='1' dz='1' dy='1.5'>
+															<object name='lamp_box'/>
+														</scale>
+													</translate>
+													<translate dx='0' dy='3.5' dz='2.5'>
+														<rotate angle="10" dx="1" dy="0" dz="0">	
+															<object name='lamp_shader'/>
+														</rotate>
+													</translate>	
+													<rotate angle="90" dx="0" dy="1" dz="0">	
+														<translate dx='0' dy='3.5' dz='2.5'>
+															<rotate angle="10" dx="1" dy="0" dz="0">	
+																<object name='lamp_shader'/>
+															</rotate>
+														</translate>	
+													</rotate>
+													<rotate angle="180" dx="0" dy="1" dz="0">	
+														<translate dx='0' dy='3.5' dz='2.5'>
+															<rotate angle="10" dx="1" dy="0" dz="0">	
+																<object name='lamp_shader'/>
+															</rotate>
+														</translate>	
+													</rotate>
+													<rotate angle="270" dx="0" dy="1" dz="0">	
+														<translate dx='0' dy='3.5' dz='2.5'>
+															<rotate angle="10" dx="1" dy="0" dz="0">	
+																<object name='lamp_shader'/>
+															</rotate>
+														</translate>	
+													</rotate>
+													<translate dx='0' dy='5' dz='0'>
+														<scale dx='4.5' dy='4.5' dz='4.5'>
+															<object name='lamp_bulb'/>
+														</scale>
+													</translate>	
+													<rotate angle="90" dx="1" dy="0" dz="0">	
+														<translate dx='2' dy='0' dz='0'>
+															<scale dx='4.5' dy='4.5' dz='4.5'>
+																<object name='lamp_strap'/>
+															</scale>
+														</translate>	
+													</rotate>
+												</scale>
+											</rotate>
+										</rotate>
+									</translate>
+								</rotate>
+							</translate>
+						</rotate>
+						</translate>
+						
+							<!-- Walls and ceiling -->
+							<translate dx='20'>
+								<rotate angle="90" dx="0" dy="1" dz="0">
+									<object name="xyplane"/>
+								</rotate>
+							</translate>
+							<translate dx='-20'>
+								<rotate angle="90" dx="0" dy="-1" dz="0">
+									<object name="xyplane"/>
+								</rotate>
+							</translate>
+							<translate dz='-20'>
+									<object name="xyplane"/>
+							</translate>
+							<translate dz='20'>
+								<rotate angle="180" dx="0" dy="1" dz="0">
+									<object name="xyplane"/>
+								</rotate>
+							</translate>
+							
+	
+						</scale>
+					</rotate>
+				</translate>
+				
+			</rotate>
+		</translate>
+	</body>
+</scene>

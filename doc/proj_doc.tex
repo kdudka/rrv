@@ -1,0 +1,119 @@
+%============================================================================
+% tento soubor pouzijete jako zaklad
+% kodovaní: iso-8859-2 (zmena prikazem iconv, recode nebo cstocs)
+%----------------------------------------------------------------------------
+% zpracování: make, make pdf, make desky, make clean
+% pøipomínky posílejte na e-mail: peringer AT fit.vutbr.cz
+% vim: set syntax=tex encoding=latin2:
+%============================================================================
+\documentclass{cls/fitthesis}
+%Je-li prace psana v anglickem jazyce, je zapotrebi u tridy pouzit parametr 
+%english  \documentclass[english]{cls/fitthesis}
+
+% zde zvolime kodovani, ve kterem je napsan text prace
+% "latin2" pro iso8859-2 nebo "cp1250" pro windows-1250
+\usepackage[latin2]{inputenc}
+
+%zde muzeme vlozit vlastni balicky
+
+% =======================================================================
+% balíèek "hyperref" vytváøí klikací odkazy v pdf, pokud tedy pou¾ijeme pdflatex
+% problém je, ¾e balíèek hyperref musí být uveden jako poslední, tak¾e nemù¾e
+% být v ¹ablonì
+\ifx\pdfoutput\undefined % nejedeme pod pdflatexem
+\else
+  \usepackage{color}
+  \usepackage[colorlinks,hyperindex,plainpages=false,pdftex]{hyperref}
+  \definecolor{links}{rgb}{0.4,0.5,0}
+  \definecolor{anchors}{rgb}{1,0,0}
+  \def\AnchorColor{anchors}
+  \def\LinkColor{links}
+  \def\pdfBorderAttrs{/Border [0 0 0] } % bez okrajù kolem odkazù
+  \pdfcompresslevel=9
+\fi
+
+%Informace o praci/projektu
+%---------------------------------------------------------------------------
+\projectinfo{
+  %Prace
+  project=BP,           %typ prace BP/DP
+  year=2007,             %rok
+  date=\today,           %datum odevzdani
+  %Nazev prace
+  title.cs=Objektovì orientovaná radiozita, %nazev prace v cestine
+%   title.en=Object oriented radiosity,       %nazev prace v anglictine
+  %Autor
+  author=Kamil Dudka,   %jmeno prijmeni autora
+  %author.title.p=Bc., %titul pred jmenem (nepovinne)
+  %author.title.a=PhD, %titul za jmenem (nepovinne)
+  %Ustav
+  department=UPGM,
+  %Skolitel
+%   supervisor=Michal ©panìl, %jmeno prijmeni skolitele
+%   supervisor.title.p=Ing.,   %titul pred jmenem (nepovinne)
+  %supervisor.title.a=Ph.D.,    %titul za jmenem (nepovinne)
+  %
+  %Klicova slova, abstrakty, prohlaseni a podekovani je mozne definovat 
+  %bud pomoci nasledujicich parametru nebo pomoci vyhrazenych maker (viz dale)
+  %===========================================================================
+  %Klicova slova
+  %keywords.cs={}, %klicova slova v ceskem jazyce
+  %keywords.en={}, %klicova slova v anglickem jazyce
+  %Abstract
+  %abstract.cs={}, % abstrakt v ceskem jazyce
+  %abstract.en={}, % abstrakt v anglickem jazyce
+  %Prohlaseni
+  %declaration={},
+  %Podekovani (nepovinne)
+%  acknowledgment={Zde je mo¾no uvést podìkování vedoucímu práce a tìm, kteøí poskytli odbornou pomoc} % nepovinne
+}
+
+%Zadani (cesky)
+\task[cs]{
+\begin{enumerate}
+ \item Navrhnìte tøídy, které názornì a z hlediska OOP èistì implementují radiozitu.
+ \item Vytvoøte demonstraèní pøíklady - scéna mù¾e být zadána kusy kódu, které instanciují vhodné objekty (není tøeba naèítat ze souboru apod.)
+ \item Vytvoøte nadstandardní dokumentaci (oproti v¹eobecným po¾adavkùm), která dobøe popí¹e (napø. s pomocí grafù) a obhájí strukturu tøíd.
+ \item Dùraz je kladen na èistotu OOP návrhu a kvalitu dokumentace.
+\end{enumerate}
+}
+
+%Licencni smlouva (cesky)
+\licence[cs]{Licenèní smlouva je ulo¾ena v archivu Fakulty informaèních technologií Vysokého uèení technického v Brnì.}
+
+%Abstrakt (cesky, anglicky)
+\abstract[cs]{Tato bakaláøská práce se zabývá problematikou meziprocesové komunikace v moderních operaèních systémech. Dùraz je kladen na vyu¾ití sdílené pamìti pro meziprocesovou komunikaci v objektovì orientovaném jazyku C++. Souèástí práce je popis návrhu a implementace knihovny, která umo¾òuje sdílenou pamì» jednodu¹e a efektivnì pou¾ívat. Knihovna umo¾òuje sdílet pøímo objekty jazyka C++ mezi procesy. Kromì toho vytváøí knihovna platformovì nezávislé rozhraní pro práci se sdílenou pamìtí v operaèních systémech Linux a Microsoft Windows. V závìru práce je zhodnocena efektivita vyu¾ití sdílené pamìti jako zpùsobu meziprocesové komunikace.}
+\abstract[en]{This bachelor's thesis considers problems of IPC (Inter Process Comunication) in modern operating systems. It is concentrated on usage of shared memory as IPC in object-oriented language C++. Thesis includes design and implementation of library, which provides easy end effective usage of shared memory. The library makes possible to share C++ language's objects between processes. Furthermore it creates platform-independent interface for work with shared memory on operating systems Linux and Microsoft Windows. Effectivity of~shared memory usage as kind of ICP is evaluated in the conclusion of the thesis.}
+
+%Klicova slova (cesky, anglicky)
+\keywords[cs]{sdílená pamì», C++, knihovna, ICP, Linux, Windows, MDSTk, STL, alokátor, Share}
+\keywords[en]{shared memory, C++, library, ICP, Linux, Windows, MDSTk, STL, allocator, Share}
+
+%Prohlaseni
+\declaration{Prohla¹uji, ¾e jsem tuto bakaláøskou práci vypracoval samostatnì pod vedením Ing. Michala ©panìla. Uvedl jsem v¹echny literární prameny a publikace, ze kterých jsem èerpal.}
+
+%Podekovani (nepovinne)
+\acknowledgment{Dìkuji svému vedoucímu Ing. Michalu ©panìlovi za odbornou pomoc pøi vývoji knihovny a v neposlední øadì také za poskytnutí zdrojových kódù toolkitu MDSTk a za souhlas s~jejich vyu¾itím v této práci.}
+
+%Proklad øádkù 1.2 místo defaultního 1
+\renewcommand{\baselinestretch}{1.2}
+
+\begin{document}
+  % Vysazeni titulnich stran
+  % ----------------------------------------------
+  \maketitle
+  % Obsah
+  % ----------------------------------------------
+  \tableofcontents
+
+  % Text prace
+  % ----------------------------------------------
+  \input{proj_doc_content}
+
+  % Pouzita literatura
+  % ----------------------------------------------
+  \bibliographystyle{plain}
+  \begin{flushleft}
+  \bibliography{priklad}
+  \end{flushleft}
+\end{document}
