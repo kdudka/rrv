@@ -12,7 +12,7 @@
         Lukas Hefka     (lukas.hefka@gmail.com)
 
     License:
-        Creative Commons Attribution-Noncommercial-Share Alike 3.0
+        Creative Commons Attribution ShareAlike 3.0 Unported
 
     Date:
         2007-12-04
@@ -29,9 +29,9 @@
         You can make API documentation by command 'make' in directory
         ./doc/api (requires Doxygen).
 
-        For making and install radiosity renderer and visualizer you need to
+        For make and install radiosity renderer and visualizer you need to
         run following sequence of commands in directory ./src (requires CMake):
 
         cmake .         (creates Makefile)
-        make            (build programs)
+        make            (builds programs)
         make install    (requires root privileges)
