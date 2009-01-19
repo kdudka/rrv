@@ -423,9 +423,14 @@ void FormFactorEngine::renderFullScene(int dest)
 	Vector norm = Vector::fromTriangle(t0);
 	Vector norm_m(-norm.dx,-norm.dy,-norm.dz);
 	
+	Vector side(norm, Vector(1,2,3));
+	if(0 == side.size())
+	    side = Vector(norm, Vector(1,1,1)); // a neudelat Vector::operator= ??
+	Vector side_m(-side.dx,-side.dy,-side.dz);
+	
 	// side vectors
-	Vector vctD(t0.vertex[0], t0.vertex[1]);
-	Vector vctC(t0.vertex[1], t0.vertex[0]);
+	Vector vctD(/*t0.vertex[0], t0.vertex[1]*/side);
+	Vector vctC(/*t0.vertex[1], t0.vertex[0]*/side_m);
 	Vector vctA( vctD, norm );
 	Vector vctB( vctC, norm );
 	
