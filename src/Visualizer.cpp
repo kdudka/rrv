@@ -10,6 +10,9 @@
 #if defined(__WIN32__) || defined(_WIN32) || defined(__CYGWIN__) 
 	#include <GL/glext.h>
 #else
+	#ifdef FREEGLUT
+		#include <GL/freeglut.h>
+	#endif
 #endif
 
 TriangleSetExt * Visualizer::patchSequenceEnumerator_;
@@ -259,7 +262,7 @@ void Visualizer::onMouseMotion(int x, int y)
  * Method for create a window
  */
 void Visualizer::createWindow(const char * title)
-{	
+{
         xnew=0; ynew=0; znew=0;                   /* actual position */
         xold=0; yold=0; zold=0;                   /* old position */
         xx1=0; yy1=0; zz1=0;                      /* mouse position*/
@@ -272,22 +275,23 @@ void Visualizer::createWindow(const char * title)
         mouseState=0;                             /* mouse button state */
         xshift=0; yshift=0;                       /* shifting in space*/
 
- 	fov=45.0;                                 /* field of view */
- 	near_plane=1;                             /* trim plain */
- 	far_plane=1000.0;                         /* farther trim plain */
- 	line_width=1.0;                           /* width of line */
- 	WindowWidth=1024;                         /* width and height of window */
- 	WindowHeight=768;
- 	ObjectType=0;                             /* type of paint object */
- 	Solid=1;                                  /* fill or wireframe model */
+	fov=45.0;                                 /* field of view */
+	near_plane=1;                             /* trim plain */
+	far_plane=1000.0;                         /* farther trim plain */
+	line_width=1.0;                           /* width of line */
+	WindowWidth=1024;                         /* width and height of window */
+	WindowHeight=768;
+	ObjectType=0;                             /* type of paint object */
+	Solid=1;                                  /* fill or wireframe model */
 
 	char * dummy_argv[1];
-  dummy_argv[0] = const_cast<char *>("run");
+	dummy_argv[0] = const_cast<char *>("run");
 	int dummy_argc = 1;
 
 	glutInit(&dummy_argc, dummy_argv);
 
-        glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH); /* graphic mod of window */
+	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE ); /* graphic mod of window */
+
         glutInitWindowSize(WindowWidth,WindowHeight); /* original window size */
         glutInitWindowPosition(10,10);                /* original window position */
         glutCreateWindow(title);                      /* create window */
@@ -310,7 +314,26 @@ void Visualizer::createWindow(const char * title)
         //glCullFace(GL_FRONT);
 
         glLineWidth(line_width);                      /* line width */
-  	glPointSize(line_width);                
+	glPointSize(line_width);
+
+	//glEnable(GL_MULTISAMPLE);
+#ifdef FREEGLUT
+    #ifdef GLUT_AUX
+	int *sampleNumbers = NULL;
+	int sampleNumbersSize = 0;
+	sampleNumbers = glutGetModeValues(GLUT_MULTISAMPLE, &sampleNumbersSize);
+	if(sampleNumbers != NULL)
+	{
+		glutSetOption(GLUT_MULTISAMPLE, sampleNumbers[sampleNumbersSize - 1]);
+		printf("Multisampling with %i samples.\n", sampleNumbers[sampleNumbersSize - 1]);
+		free(sampleNumbers);
+	}
+	else
+	{
+		printf("Multisampling is not available.\n");
+	}
+    #endif
+#endif
 
         scene_ = glGenLists(1);                        /* get number of calllist */
         createCallList();                             /* initialization */
