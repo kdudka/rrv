@@ -38,7 +38,10 @@ namespace XML
 		TransformationY,
 		TransformationZ,
 		RotateAngle,
-		IncludeFile
+		IncludeFile,
+		Spec,
+		Refr,
+		Refl
 	} XMLTAN;
 	
 	struct XMLNames

@@ -17,13 +17,13 @@
  * @todo Document.
  */
 class TriangleEntity : public Entity {
-public:
+protected:
 
 		/**
 		 * @brief  Read entity properties and set its in object.
 		 * @param  from XMLNode which has tagname triangleset
 		 */
-		void deserialize (XMLNode *from );
+		virtual void impl_deserialize ( XMLNode *from );
 
 
 private:
@@ -31,7 +31,7 @@ private:
 		 * @param  from XMLNode with tagname vertex 
 		 * @return New vertex with properties from XMLNode
 		 */
-		Vertex vertexFromXMLNode( XMLNode* from );
+		Vertex vertexFromXMLNode( XMLNode* from);
 
 		/**
 		 * @param  from XMLNode with tagname triangle or triangleset
@@ -40,11 +40,7 @@ private:
 		 * @param  defRad default radiosity value 
 		 * @return triangle with properties from XMLNode 
 		 */
-		Triangle triangleFromXMLNode( XMLNode* from, Color& defEm, Color& defRefl, Color& defRad );
-
-		Color reflectivity_;
-                Color emission_;
-		Color radiosity_;
+		Triangle triangleFromXMLNode( XMLNode* from );
 };
 
 #endif // TRIANGLEENTITY_H

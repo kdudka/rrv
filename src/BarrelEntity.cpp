@@ -7,9 +7,8 @@
 
 using namespace XML;
 
-void BarrelEntity::deserialize (XMLNode *from ) {
+void BarrelEntity::impl_deserialize( XMLNode *from ) {
 	setName(from, "barrel");
-	Entity::setColors( from, emission_, reflectivity_, radiosity_);
 	this->polygonize();
 }
 

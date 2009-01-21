@@ -200,6 +200,9 @@ struct Triangle
 		Color reflectivity;   ///< Triangle's reflectivity (material property)
 		Color radiosity;      ///< Triangle's computed radiosity
 		Color radiosityLast;	///< Working variable of RadiosityRenderer
+		double spec;		///< Triangle's spec for RayTracing
+		double refl;		///< Triangle's refl for RayTracing
+		double refr;		///< Triangle's refr for RayTracing
 
 		/**
 		 * @brief Compute center of triangle.
@@ -230,6 +233,9 @@ inline std::ostream& operator<< (std::ostream &out, const Triangle &t) {
 			"    Emission: " << t.emission << std::endl << "  " <<
 			"Reflectivity: " << t.reflectivity << std::endl << "  " <<
 			"   Radiosity: " << t.radiosity << std::endl <<
+			"        Spec: " << t.spec << std::endl <<
+			"        Refl: " << t.refl << std::endl <<
+			"        Refr: " << t.refr << std::endl <<
 			std::endl;
 	return out;
 }

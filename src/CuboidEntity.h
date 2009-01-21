@@ -18,27 +18,22 @@
  * @brief Cuboid entity.
  */
 class CuboidEntity : public Entity {
-public:
+protected:
 
 		/**
 		 * @brief  Read entity properties and set its in object 
 		 * @param  from XMLNode which has tagname cuboid
 		 */
-		void deserialize (XMLNode *from );
+		void impl_deserialize (XMLNode *from );
 
 		
 private:
-		Color reflectivity_;
-		Color emission_;
-		Color radiosity_;
-		
 		/**
 		 * @attention reflectivity_ and emission_ properties have to be
 		 * initialized before call of this method!
 		 */
 		void polygonize();
 		
-private:
 		void addQuad(Vertex vertex[4]);
 };
 

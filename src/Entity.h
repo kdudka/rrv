@@ -59,7 +59,7 @@ public:
 		 * @attention this method is unimlemented in this class
 		 * @param from XMLNode which contains entity declaration
 		 */
-		virtual void deserialize (XMLNode *from);
+		 void deserialize (XMLNode *from);
 
 		/**
 		 * @brief Perform patch division.
@@ -118,6 +118,13 @@ public:
 		static bool colorFromXMLNode( XMLNode* from, XMLCSTR attName, Color& to );
 #endif
 
+protected:
+		/**
+		 * @brief Add triangle to entity using tranformation matrix.
+		 * @param triangle Triangle to add.
+		 */
+		void addTriangle(Triangle *triangle);
+
 		/**
 		 * @brief  Read three colors from XMLnode from specified attributs and ctore its valeus
 		 * @param  from XMLNode containing entity declaration.
@@ -126,12 +133,21 @@ public:
 		 * @param  rad Radiosity color value
 		 */
 		static void setColors( XMLNode* from, Color& em, Color& refl, Color& rad ); 
-protected:
+
 		/**
-		 * @brief Add triangle to entity using tranformation matrix.
-		 * @param triangle Triangle to add.
+		 * @brief Entity deserialization from XMLNode.
+		 * @attention this method is unimlemented in this class
+		 * @param from XMLNode which contains entity declaration
 		 */
-		void addTriangle(Triangle *triangle);
+		virtual void impl_deserialize (XMLNode *from);
+
+		Color reflectivity_;
+                Color emission_;
+		Color radiosity_;
+
+		double spec_;
+		double refl_;
+		double refr_;
 
 private:
 		TransformMatrix transformMatrix_;

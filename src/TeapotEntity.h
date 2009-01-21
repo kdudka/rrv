@@ -16,19 +16,15 @@
  * @brief Teapot entity.
  */
 class TeapotEntity : public Entity {
-public:
+protected:
 
 		/**
 		 * @brief  Read entity properties and set its in object
 		 * @param  from XMLNode which has tagname teapot
 		 */
-		void deserialize (XMLNode *from );
+		virtual void impl_deserialize (XMLNode *from );
 
 private:
-		Color reflectivity_;
-                Color emission_;
-		Color radiosity_;
-
 		static const int teapot_v_count = 1976;
 		static const int teapot_t_count = 3752;
 		static const Vertex teapot_v[1976];

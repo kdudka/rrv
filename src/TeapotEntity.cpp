@@ -3,9 +3,8 @@
 
 using namespace XML;
 
-void TeapotEntity::deserialize (XMLNode *from ) {
+void TeapotEntity::impl_deserialize (XMLNode *from ) {
 	setName( from, "teapot" );
-	Entity::setColors( from, emission_, reflectivity_, radiosity_);
 	this->polygonize();
 }
 

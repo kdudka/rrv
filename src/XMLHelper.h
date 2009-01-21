@@ -230,33 +230,36 @@ namespace XML {
 					{
 						std::string strVal = val;
 						std::istringstream iss(strVal);
-
-						if ( (crash = ( iss >> t ).fail()) && required )
-						{	// can't convert value to type
-							throw XMLException("Fail converting attribute! Bad format!");
-						}
-					}
-					catch(XMLException e)
-					{
-						throw e;
+						crash = ( iss >> t ).fail();
 					}
 					catch(...)
 					{	// something bad happend
-						if ( required ) throw XMLException("Fail converting attribute!");
+						if ( required ) 
+							throw XMLException(
+								"Fail while converting XML element attribute value!");
+					}
+
+					if( crash && required )
+					{	// can't convert value to type
+						throw XMLException("Fail converting attribute! Bad format!");
 					}
 				} 
 				else
 				{	
 					if ( required ) 
 					{	// attribute doesn't exist
-						throw XMLException("Fail before converting attribute! Attribute NOT SETTED !");
+						throw XMLException(
+						"Fail before converting attribute! Attribute NOT SETTED !");
 					}
 				}
 
 				if ( crash )
 				{	// print warning message and use default value
 #ifndef NDEBUG
-					std::cout << "WARNING: \"" << node->getName() << "\" doesn't have attribute \""<< attName  <<  "\", using default value = " << defaultValue << std::endl;
+					std::cout << "WARNING: \""
+						<< node->getName() << "\" doesn't have attribute \"" << attName
+						<<  "\", using default value = " 
+						<< defaultValue << std::endl;
 #endif
 					t = defaultValue;
 				}

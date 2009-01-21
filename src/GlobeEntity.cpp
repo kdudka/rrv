@@ -7,9 +7,8 @@
 
 using namespace XML;
 
-void GlobeEntity::deserialize (XMLNode *from ) {
+void GlobeEntity::impl_deserialize (XMLNode *from ) {
 	setName( from, "globe" );
-	Entity::setColors( from, emission_, reflectivity_, radiosity_);
 	this->polygonize();
 }
 

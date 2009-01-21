@@ -42,7 +42,7 @@ Vertex TriangleEntity::vertexFromXMLNode( XMLNode* from )
  * @return Triangle
  * @brief  Convert XMLNode to Triangle. If triangle doesn't have declared any color explicitly then default from params is used.
  */
-Triangle TriangleEntity::triangleFromXMLNode( XMLNode* from, Color& defEm, Color& defRefl, Color& defRad )
+Triangle TriangleEntity::triangleFromXMLNode( XMLNode* from )
 {
 	Triangle tmpTr;
 	XMLNode tmpVertex;
@@ -71,7 +71,7 @@ Triangle TriangleEntity::triangleFromXMLNode( XMLNode* from, Color& defEm, Color
 	if (  !Entity::colorFromXMLNode( from, XMLNames::ATTRIBUTES[Emission], tmpTr.emission ))
 #endif
 	{	
-		tmpTr.emission = defEm;
+		tmpTr.emission = this->emission_;
 	}
 	
 #ifndef NDEBUG
@@ -80,7 +80,7 @@ Triangle TriangleEntity::triangleFromXMLNode( XMLNode* from, Color& defEm, Color
 	if (  !Entity::colorFromXMLNode( from, XMLNames::ATTRIBUTES[Reflectivity], tmpTr.reflectivity ))
 #endif
 	{
-		tmpTr.reflectivity = defRefl;
+		tmpTr.reflectivity = this->reflectivity_;
 	}
 	
 #ifndef NDEBUG
@@ -89,8 +89,13 @@ Triangle TriangleEntity::triangleFromXMLNode( XMLNode* from, Color& defEm, Color
 	if ( !Entity::colorFromXMLNode( from, XMLNames::ATTRIBUTES[Radiosity], tmpTr.radiosity ))
 #endif
 	{
-		tmpTr.radiosity = defRad;
+		tmpTr.radiosity = this->radiosity_;
 	}
+
+	XMLHelper::fromAttribute<double>( tmpTr.spec, this->spec_, from, XMLNames::ATTRIBUTES[Spec], false );
+	XMLHelper::fromAttribute<double>( tmpTr.refl, this->refl_, from, XMLNames::ATTRIBUTES[Refr], false );
+	XMLHelper::fromAttribute<double>( tmpTr.refr, this->refr_, from, XMLNames::ATTRIBUTES[Refl], false );
+
 	
         return tmpTr;
 }
@@ -100,11 +105,10 @@ Triangle TriangleEntity::triangleFromXMLNode( XMLNode* from, Color& defEm, Color
  * @param  from
  * @brief  Create all triangles from XLNode
  */
-void TriangleEntity::deserialize (XMLNode *from ) {
+void TriangleEntity::impl_deserialize (XMLNode *from ) {
 	/* Set etntity name if presented */
 	setName( from, "TriangleEntity" );
 	
-	Entity::setColors( from, emission_, reflectivity_, radiosity_);
 	XMLNodeChildIterator triangles(from); 		// create iterator used to read nodes in triangleset
 
 	XMLNode* triangleNode = 0;				
@@ -121,7 +125,7 @@ void TriangleEntity::deserialize (XMLNode *from ) {
 
 			if( !strcmp( tagName, XMLNames::TAGS[ TriangleNode ] ))
 			{	// Child is triangle
-				t = TriangleEntity::triangleFromXMLNode( triangleNode, emission_, reflectivity_, radiosity_ );
+				t = TriangleEntity::triangleFromXMLNode( triangleNode );
 				tnSwap = false;
 			}
 			else if( !strcmp( tagName, XMLNames::TAGS[ Trianglenext ] ))

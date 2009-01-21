@@ -7,6 +7,7 @@
 #include "TriangleEntity.h"
 #include "TriangleSetExt.h"
 
+#include <cassert>
 #include <cstring>
 #include <iostream>
 #include <sstream>
@@ -17,7 +18,10 @@ using namespace std;
 using namespace XML;
 
 Entity::Entity():
-		patchSet_(0)
+	spec_(1.0),	
+	refl_(.0),	
+	refr_(.0),	
+	patchSet_(0)
 {
 }
 
@@ -31,13 +35,17 @@ Entity::Entity(const Entity &e) {
 }
 
 Entity& Entity::operator=(const Entity &e) {
-	transformMatrix_ = e.transformMatrix_;
-	triangleSet_ = e.triangleSet_;
-	name_ = e.name_;
+	if( this != &e )
+	{
+		transformMatrix_ = e.transformMatrix_;
+		triangleSet_ = e.triangleSet_;
+		name_ = e.name_;
 
-	patchSet_ = (e.patchSet_)?
-		new TriangleSet(*e.patchSet_):
-		0;
+		patchSet_ = (e.patchSet_)?
+			new TriangleSet(*e.patchSet_):
+			0;
+	}
+
 	return *this;
 }
 
@@ -109,9 +117,17 @@ void Entity::setTransformMatrix (TransformMatrix *matrix) {
 /**
  * @param  from
  */
-void Entity::deserialize (XMLNode *) {
+void Entity::deserialize (XMLNode *from) {
+	this->setColors(from,this->emission_,this->reflectivity_,this->radiosity_);
+	XMLHelper::fromAttribute<double>( spec_,  1, from, XMLNames::ATTRIBUTES[ Spec ], false );   
+	XMLHelper::fromAttribute<double>( refl_, .0, from, XMLNames::ATTRIBUTES[ Refl ], false );   
+	XMLHelper::fromAttribute<double>( refr_, .0, from, XMLNames::ATTRIBUTES[ Refr ], false );   
+	impl_deserialize( from );
 }
 
+void Entity::impl_deserialize( XMLNode* ) {
+	assert( !"Not implemented deserialization method" );
+}
 
 /**
  * @param  size
@@ -174,15 +190,7 @@ PatchSequenceEnumerator* Entity::createPatchSequenceEnumerator ( ) {
 }
 
 
-/**
- * @return XMLNode
- */
-XMLNode Entity::serialize ( ) 
-{
-	XMLNode n = XMLNode::createXMLTopNode((XMLNames::TAGS[TriangleSetNode] ));
-	n.addAttribute_WOSD( XMLWriter::copyString( XMLNames::ATTRIBUTES[Name]), XMLWriter::copyString( getName().c_str() ) );
-
-	class {
+	class Converter {
 		public:
 		char* colorToStr( Color& c )
 		{
@@ -190,7 +198,8 @@ XMLNode Entity::serialize ( )
 			oss << c.r << "," << c.g << "," << c.b;
 			return XMLWriter::copyString(oss.str().c_str());
 		}
-		char* fToS( float& f )
+
+		template<typename V> char* valToS( V& f )
 		{
 			ostringstream oss;
 			oss << f;
@@ -198,6 +207,14 @@ XMLNode Entity::serialize ( )
 		}
 	} converter;	
 
+
+/**
+ * @return XMLNode
+ */
+XMLNode Entity::serialize ( ) 
+{
+	XMLNode n = XMLNode::createXMLTopNode((XMLNames::TAGS[TriangleSetNode] ));
+	n.addAttribute_WOSD( XMLWriter::copyString( XMLNames::ATTRIBUTES[Name]), XMLWriter::copyString( getName().c_str() ) );
 	PatchSequenceEnumerator *e = createPatchSequenceEnumerator();
 
 	Triangle *t = 0;
@@ -205,17 +222,46 @@ XMLNode Entity::serialize ( )
 	while( 0 != ( t = e->nextPatch() ) )
 	{
 		tnode = n.addChild_WOSD( XMLWriter::copyString( XMLNames::TAGS[TriangleNode] ) );
-		tnode.addAttribute_WOSD( XMLWriter::copyString( XMLNames::ATTRIBUTES[Emission] ),  converter.colorToStr(t->emission) );
-		tnode.addAttribute_WOSD( XMLWriter::copyString( XMLNames::ATTRIBUTES[Reflectivity] ), converter.colorToStr(t->reflectivity) );
-		tnode.addAttribute_WOSD( XMLWriter::copyString( XMLNames::ATTRIBUTES[Radiosity] ), converter.colorToStr(t->radiosity) );
+
+		tnode.addAttribute_WOSD( 
+				XMLWriter::copyString( XMLNames::ATTRIBUTES[Emission] ), 
+				converter.colorToStr(t->emission) );
+
+		tnode.addAttribute_WOSD( 
+				XMLWriter::copyString( XMLNames::ATTRIBUTES[Reflectivity] ),
+				converter.colorToStr(t->reflectivity) );
+
+		tnode.addAttribute_WOSD(
+				XMLWriter::copyString( XMLNames::ATTRIBUTES[Radiosity] ),
+				converter.colorToStr(t->radiosity) );
+
+		tnode.addAttribute_WOSD(
+				XMLWriter::copyString( XMLNames::ATTRIBUTES[Spec] ),
+				converter.valToS<double>(t->spec) );
+
+		tnode.addAttribute_WOSD(
+				XMLWriter::copyString( XMLNames::ATTRIBUTES[Refl] ),
+				converter.valToS<double>(t->refl) );
+
+		tnode.addAttribute_WOSD(
+				XMLWriter::copyString( XMLNames::ATTRIBUTES[Refr] ),
+				converter.valToS<double>(t->refr) );
 
 		for( int i = 0; i < 3; i++ )
 		{
 			XMLNode vnode = tnode.addChild_WOSD( XMLWriter::copyString( XMLNames::TAGS[VertexNode] ) );
 			
-			vnode.addAttribute_WOSD( XMLWriter::copyString( XMLNames::ATTRIBUTES[VertexX] ), converter.fToS( t->vertex[i].x ) );
-			vnode.addAttribute_WOSD( XMLWriter::copyString( XMLNames::ATTRIBUTES[VertexY] ), converter.fToS( t->vertex[i].y ) );
-			vnode.addAttribute_WOSD( XMLWriter::copyString( XMLNames::ATTRIBUTES[VertexZ] ), converter.fToS( t->vertex[i].z ) );
+			vnode.addAttribute_WOSD(
+					XMLWriter::copyString( XMLNames::ATTRIBUTES[VertexX] ), 
+					converter.valToS<float>( t->vertex[i].x ) );
+
+			vnode.addAttribute_WOSD( 
+					XMLWriter::copyString( XMLNames::ATTRIBUTES[VertexY] ), 
+					converter.valToS<float>( t->vertex[i].y ) );
+			
+			vnode.addAttribute_WOSD( 
+					XMLWriter::copyString( XMLNames::ATTRIBUTES[VertexZ] ), 
+					converter.valToS<float>( t->vertex[i].z ) );
 		}
 	}
 
@@ -227,9 +273,14 @@ XMLNode Entity::serialize ( )
 /**
  * @param  triangle
  */
-void Entity::addTriangle (Triangle *triangle ) {
+void Entity::addTriangle ( Triangle *triangle ) {
 	// Transform all vertex using transformMatrix_ matrix
 	Triangle t = *triangle;
+
+	t.spec = this->spec_;
+	t.refl = this->refl_;
+	t.refr = this->refr_;
+
 	for (int i=0; i<3; i++) {
 		Vertex &v = t.vertex[i];
 		v = transformMatrix_.transform(v);
@@ -254,7 +305,9 @@ bool Entity::colorFromXMLNode( XMLNode *node, XMLCSTR attName, Color& to)
 #ifndef NDEBUG
 		if ( wlevel > 1 )
 		{
-			cerr << "WARNING: node: " << node->getName() << " - " << attName << " , color unrecognized, using default BLACK" << endl;	
+			cerr << "WARNING: node: " << 
+				node->getName() << " - " << attName 
+				<< " , color unrecognized, using default BLACK" << endl;	
 		}
 #endif
 

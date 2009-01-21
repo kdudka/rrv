@@ -17,19 +17,15 @@
  * @brief Globe entity.
  */
 class GlobeEntity : public Entity {
-public:
+protected:
 
 		/**
 		 * @brief  Read entity properties and set its in object
 		 * @param  from XMLNode which has tagname globe
 		 */
-		void deserialize (XMLNode *from );
+		virtual void impl_deserialize (XMLNode *from );
 
 private:
-		Color reflectivity_;
-                Color emission_;
-		Color radiosity_;
-
 		void polygonize ( );
 		void addQuad(Vertex vertex[4]);
 };

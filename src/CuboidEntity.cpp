@@ -5,9 +5,8 @@ using namespace XML;
 /**
  * @param  from
  */
-void CuboidEntity::deserialize (XMLNode *from ) {
+void CuboidEntity::impl_deserialize (XMLNode *from ) {
 	setName(from,"cuboid");
-	Entity::setColors( from, emission_, reflectivity_, radiosity_);
 	this->polygonize();
 }
 
