@@ -13,8 +13,7 @@ void TeapotEntity::polygonize ( )
 	for(int i=0; i<teapot_t_count; i++)
 	{
 		Triangle t;
-		t.emission = emission_;
-		t.reflectivity = reflectivity_;
+		setTriangleProperties( t );
 		
 		for (int j=0; j<3; j++)
 		{

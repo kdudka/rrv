@@ -83,8 +83,7 @@ void GlobeEntity::addQuad(Vertex vertex[4])
 {
 	// Triangle initialization
 	Triangle t;
-	t.emission = emission_;
-	t.reflectivity = reflectivity_;
+	setTriangleProperties( t );
 	
 	// Add triangle #1
 	for (int i=0; i<3; i++)

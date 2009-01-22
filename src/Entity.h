@@ -123,7 +123,13 @@ protected:
 		 * @brief Add triangle to entity using tranformation matrix.
 		 * @param triangle Triangle to add.
 		 */
-		void addTriangle(Triangle *triangle);
+		void addTriangle( Triangle *triangle );
+
+		/**
+		 * @brief Set protperties to from entity properties.
+		 * @param triangle Updated triangle.
+		 */
+		void setTriangleProperties( Triangle& triangle );
 
 		/**
 		 * @brief  Read three colors from XMLnode from specified attributs and ctore its valeus

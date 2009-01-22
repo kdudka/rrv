@@ -269,6 +269,16 @@ XMLNode Entity::serialize ( )
 	return n;
 }
 
+void Entity::setTriangleProperties( Triangle& triangle )
+{
+	triangle.emission = this->emission_;
+	triangle.reflectivity = this->reflectivity_;
+	triangle.radiosity = this->radiosity_;
+	
+	triangle.spec = this->spec_;
+	triangle.refl = this->refl_;
+	triangle.refr = this->refr_;
+}
 
 /**
  * @param  triangle
@@ -276,10 +286,6 @@ XMLNode Entity::serialize ( )
 void Entity::addTriangle ( Triangle *triangle ) {
 	// Transform all vertex using transformMatrix_ matrix
 	Triangle t = *triangle;
-
-	t.spec = this->spec_;
-	t.refl = this->refl_;
-	t.refr = this->refr_;
 
 	for (int i=0; i<3; i++) {
 		Vertex &v = t.vertex[i];
