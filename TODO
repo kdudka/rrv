@@ -1,0 +1,19 @@
+ASAP
+----
+1. review and apply pending patches
+2. normalize indentation in source codes
+
+Later
+-----
+- rewrite tools to use getopt_long(3) for cmd-line args parsing
+- fix model/projection matrices order in visualizer
+- make computation/visualization parameters as parameters (not hard-wired)
+- fill up the gallery with new photos and videos
+
+Anytime
+-------
+- rewrite src/CMakeLists.txt
+- create root Makefile
+- write some unit tests (Boost is highly recommended)
+- design new scenes
+
