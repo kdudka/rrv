@@ -1,8 +1,8 @@
-    Object oriented radiosity
+    RRV (Radiosity Renderer and Visualizer)
 
 ================================================================================
 
-    Web:
+    Project web page:
         http://dudka.cz/rrv/
 
     Authors:
@@ -12,15 +12,15 @@
         Lukas Hefka     (lukas.hefka@gmail.com)
 
     License:
-        Creative Commons Attribution ShareAlike 3.0 Unported
+        GPLv3, available at http://www.gnu.org/licenses/gpl-3.0.txt
 
-    Date:
+    Announced:
         2007-12-04
 
 ================================================================================
 
     Directory structure:
-        ./doc/          project documentation (in czech language)
+        ./doc/          project documentation (in Czech language)
         ./doc/api/      API documentation
         ./scene/        input scenes (examples)
         ./src           source codes
