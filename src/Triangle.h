@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2007 TODO
+ * Copyright (C) 2007 Kamil Dudka <rrv@dudka.cz>, Jakub Filak,
+ * David Barina <DaBler@gmail.com>
  *
  * This file is part of rrv (Radiosity Renderer and Visualizer).
  *
@@ -37,34 +38,34 @@
  * @brief 3D vertex (3 axes - x, y, z)
  */
 struct Vertex {
-		float x;	///< x-axe of vertex
-		float y;	///< y-axe of vertex
-		float z;	///< z-axe of vertex
-		
-		/**
-		 * @attention Default constructor is @b not @b implemented.
-		 */
-		Vertex() {}
-		
-		/**
-		 * @param ix x-axe of vertex
-		 * @param iy y-axe of vertex
-		 * @param iz z-axe of vertex
-		 */
-		Vertex(float ix, float iy, float iz):
-				x(ix),
-				y(iy),
-				z(iz)
-				{}
+    float x;	///< x-axe of vertex
+    float y;	///< y-axe of vertex
+    float z;	///< z-axe of vertex
 
-		/**
-		 * @param coords Array of axes (0 - x, 1 - y, 2 - z)
-		 */
-		Vertex(float coords[3]):
-				x(coords[0]),
-				y(coords[1]),
-				z(coords[2])
-				{}
+    /**
+     * @attention Default constructor is @b not @b implemented.
+     */
+    Vertex() {}
+
+    /**
+     * @param ix x-axe of vertex
+     * @param iy y-axe of vertex
+     * @param iz z-axe of vertex
+     */
+    Vertex(float ix, float iy, float iz):
+        x(ix),
+        y(iy),
+        z(iz)
+    {}
+
+    /**
+     * @param coords Array of axes (0 - x, 1 - y, 2 - z)
+     */
+    Vertex(float coords[3]):
+        x(coords[0]),
+        y(coords[1]),
+        z(coords[2])
+    {}
 };
 
 #ifndef NDEBUG
@@ -76,11 +77,11 @@ struct Vertex {
  * @return Return output stream given as parameter.
  */
 inline std::ostream& operator<< (std::ostream &out, const Vertex &vertex) {
-	out << "(" <<
-			vertex.x << ", " <<
-			vertex.y << ", " <<
-			vertex.z << ")";
-	return out;
+    out << "(" <<
+        vertex.x << ", " <<
+        vertex.y << ", " <<
+        vertex.z << ")";
+    return out;
 }
 #endif
 
@@ -89,38 +90,38 @@ inline std::ostream& operator<< (std::ostream &out, const Vertex &vertex) {
  * @note <0.0, 1.0> is effective range, but there are no range restriction.
  */
 struct Color {
-		float r;	///< red
-		float g;	///< green
-		float b;	///< blue
+    float r;	///< red
+    float g;	///< green
+    float b;	///< blue
 
-		/**
-		 * @param cr red
-		 * @param cg green
-		 * @param cb blue
-		 */
-		Color(float cr, float cg, float cb):
-			r(cr),
-			g(cg),
-			b(cb)
-			{}
+    /**
+     * @param cr red
+     * @param cg green
+     * @param cb blue
+     */
+    Color(float cr, float cg, float cb):
+        r(cr),
+        g(cg),
+        b(cb)
+    {}
 
-		/**
-		 * @param rgb Array of colors (0 - red, 1 - green, 2 - blue)
-		 */
-		Color( float rgb[] ):
-			r(rgb[0]),
-			g(rgb[1]),
-			b(rgb[2])
-			{}
-		
-		/**
-		 * @brief Default color is black (r=0.0, g=0.0, b=0.0)
-		 */
-		Color():
-				r(0.0),
-				g(0.0),
-				b(0.0)
-				{}
+    /**
+     * @param rgb Array of colors (0 - red, 1 - green, 2 - blue)
+     */
+    Color( float rgb[] ):
+        r(rgb[0]),
+        g(rgb[1]),
+        b(rgb[2])
+    {}
+
+    /**
+     * @brief Default color is black (r=0.0, g=0.0, b=0.0)
+     */
+    Color():
+        r(0.0),
+        g(0.0),
+        b(0.0)
+    {}
 };
 
 /**
@@ -131,10 +132,10 @@ struct Color {
  * @return Return destination color given as parameter.
  */
 inline Color& operator+= (Color &dest, const Color &src) {
-	dest.r += src.r;
-	dest.g += src.g;
-	dest.b += src.b;
-	return dest;
+    dest.r += src.r;
+    dest.g += src.g;
+    dest.b += src.b;
+    return dest;
 }
 
 /**
@@ -145,10 +146,10 @@ inline Color& operator+= (Color &dest, const Color &src) {
  * @return Return destination color given as parameter.
  */
 inline Color& operator*= (Color &dest, const Color &src) {
-	dest.r *= src.r;
-	dest.g *= src.g;
-	dest.b *= src.b;
-	return dest;
+    dest.r *= src.r;
+    dest.g *= src.g;
+    dest.b *= src.b;
+    return dest;
 }
 
 /**
@@ -159,10 +160,10 @@ inline Color& operator*= (Color &dest, const Color &src) {
  * @return Return destination color given as parameter.
  */
 inline Color& operator*= (Color &c, float ratio) {
-	c.r *= ratio;
-	c.g *= ratio;
-	c.b *= ratio;
-	return c;
+    c.r *= ratio;
+    c.g *= ratio;
+    c.b *= ratio;
+    return c;
 }
 
 /**
@@ -173,8 +174,8 @@ inline Color& operator*= (Color &c, float ratio) {
  * @return Return result of multiplication.
  */
 inline Color operator* (Color c, float ratio) {
-	c *= ratio;
-	return c;
+    c *= ratio;
+    return c;
 }
 
 /**
@@ -185,10 +186,10 @@ inline Color operator* (Color c, float ratio) {
  * @return Return true if colors are equal.
  */
 inline bool operator== (const Color &a, const Color &b) {
-	return
-			a.r == b.r &&
-			a.g == b.g &&
-			a.b == b.b;
+    return
+        a.r == b.r &&
+        a.g == b.g &&
+        a.b == b.b;
 }
 
 #ifndef NDEBUG
@@ -200,11 +201,11 @@ inline bool operator== (const Color &a, const Color &b) {
  * @return Return output stream given as parameter.
  */
 inline std::ostream& operator<< (std::ostream &out, const Color &color) {
-	out << "RGB(" <<
-			color.r << ", " <<
-			color.g << ", " <<
-			color.b << ")";
-	return out;
+    out << "RGB(" <<
+        color.r << ", " <<
+        color.g << ", " <<
+        color.b << ")";
+    return out;
 }
 #endif
 
@@ -214,26 +215,26 @@ inline std::ostream& operator<< (std::ostream &out, const Color &color) {
  */
 struct Triangle
 {
-		Vertex vertex[3];     ///< Array of vertexes
-		Color emission;       ///< Triangle's own emission (for light sources)
-		Color reflectivity;   ///< Triangle's reflectivity (material property)
-		Color radiosity;      ///< Triangle's computed radiosity
-		Color radiosityLast;	///< Working variable of RadiosityRenderer
-		double spec;		///< Triangle's spec for RayTracing
-		double refl;		///< Triangle's refl for RayTracing
-		double refr;		///< Triangle's refr for RayTracing
+    Vertex vertex[3];     ///< Array of vertexes
+    Color emission;       ///< Triangle's own emission (for light sources)
+    Color reflectivity;   ///< Triangle's reflectivity (material property)
+    Color radiosity;      ///< Triangle's computed radiosity
+    Color radiosityLast;	///< Working variable of RadiosityRenderer
+    double spec;		///< Triangle's spec for RayTracing
+    double refl;		///< Triangle's refl for RayTracing
+    double refr;		///< Triangle's refr for RayTracing
 
-		/**
-		 * @brief Compute center of triangle.
-		 * @return Return triangle's center as Vertex object
-		 */
-		static Vertex centerOf(const Triangle &t)
-		{
-			float x = (t.vertex[0].x+t.vertex[1].x+t.vertex[2].x)/3.0f;
-			float y = (t.vertex[0].y+t.vertex[1].y+t.vertex[2].y)/3.0f;
-			float z = (t.vertex[0].z+t.vertex[1].z+t.vertex[2].z)/3.0f;
-			return(Vertex(x,y,z));
-		}
+    /**
+     * @brief Compute center of triangle.
+     * @return Return triangle's center as Vertex object
+     */
+    static Vertex centerOf(const Triangle &t)
+    {
+        float x = (t.vertex[0].x+t.vertex[1].x+t.vertex[2].x)/3.0f;
+        float y = (t.vertex[0].y+t.vertex[1].y+t.vertex[2].y)/3.0f;
+        float z = (t.vertex[0].z+t.vertex[1].z+t.vertex[2].z)/3.0f;
+        return(Vertex(x,y,z));
+    }
 };
 
 #ifndef NDEBUG
@@ -245,18 +246,18 @@ struct Triangle
  * @return Return output stream given as parameter.
  */
 inline std::ostream& operator<< (std::ostream &out, const Triangle &t) {
-	out << "Triangle:" << std::endl << "  " <<
-			t.vertex[0] << " " << std::endl << "  " <<
-			t.vertex[1] << " " << std::endl << "  " <<
-			t.vertex[2] << " " << std::endl << "  " <<
-			"    Emission: " << t.emission << std::endl << "  " <<
-			"Reflectivity: " << t.reflectivity << std::endl << "  " <<
-			"   Radiosity: " << t.radiosity << std::endl <<
-			"        Spec: " << t.spec << std::endl <<
-			"        Refl: " << t.refl << std::endl <<
-			"        Refr: " << t.refr << std::endl <<
-			std::endl;
-	return out;
+    out << "Triangle:" << std::endl << "  " <<
+        t.vertex[0] << " " << std::endl << "  " <<
+        t.vertex[1] << " " << std::endl << "  " <<
+        t.vertex[2] << " " << std::endl << "  " <<
+        "    Emission: " << t.emission << std::endl << "  " <<
+        "Reflectivity: " << t.reflectivity << std::endl << "  " <<
+        "   Radiosity: " << t.radiosity << std::endl <<
+        "        Spec: " << t.spec << std::endl <<
+        "        Refl: " << t.refl << std::endl <<
+        "        Refr: " << t.refr << std::endl <<
+        std::endl;
+    return out;
 }
 #endif
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 TODO
+ * Copyright (C) 2007 Jakub Filak
  *
  * This file is part of rrv (Radiosity Renderer and Visualizer).
  *
@@ -24,26 +24,26 @@
 
 namespace XML
 {
-	class XMLWriter
-	{
-		public:
-			XMLWriter();
+    class XMLWriter
+    {
+        public:
+            XMLWriter();
 
-			void addEntity( XMLNode entityNode );
-			
-			void writeToFile( const char* fileName );
+            void addEntity( XMLNode entityNode );
 
-			static XMLSTR copyString( XMLCSTR from );
+            void writeToFile( const char* fileName );
 
-		private:
-			XMLCSTR objectName;
+            static XMLSTR copyString( XMLCSTR from );
 
-			XMLNode root_;
-			XMLNode definition_;
-			XMLNode objectdef_;
-			XMLNode instantiate_;
-			XMLNode object_;			
-	};
+        private:
+            XMLCSTR objectName;
+
+            XMLNode root_;
+            XMLNode definition_;
+            XMLNode objectdef_;
+            XMLNode instantiate_;
+            XMLNode object_;			
+    };
 }
 
 #endif

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 TODO
+ * Copyright (C) 2007 Kamil Dudka <rrv@dudka.cz>
  *
  * This file is part of rrv (Radiosity Renderer and Visualizer).
  *
@@ -23,26 +23,26 @@
 #include "EntitySet.h"
 
 PatchRandomAccessEnumerator* PatchRandomAccessEnumerator::create(Entity *fromEntity) {
-  return createGeneric(fromEntity);
+    return createGeneric(fromEntity);
 }
 
 PatchRandomAccessEnumerator* PatchRandomAccessEnumerator::create(EntitySet *fromEntitySet) {
-  return createGeneric(fromEntitySet);
+    return createGeneric(fromEntitySet);
 }
 
 PatchRandomAccessEnumerator::PatchRandomAccessEnumerator (
-		PatchSequenceEnumerator *pe)
+        PatchSequenceEnumerator *pe)
 {
-	Triangle *t;
-	for(int i=0; 0!= (t=pe->nextPatch()); i++)
-		container_[i] = t;
+    Triangle *t;
+    for(int i=0; 0!= (t=pe->nextPatch()); i++)
+        container_[i] = t;
 }
 
 /**
  * @return int
  */
 int PatchRandomAccessEnumerator::count ( ) {
-	return container_.size();
+    return container_.size();
 }
 
 
@@ -50,6 +50,6 @@ int PatchRandomAccessEnumerator::count ( ) {
  * @param index
  */
 Triangle& PatchRandomAccessEnumerator::operator[] (unsigned index ) {
-	Triangle *t = container_[index];
-	return *t;
+    Triangle *t = container_[index];
+    return *t;
 }

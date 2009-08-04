@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 TODO
+ * Copyright (C) 2007 Kamil Dudka <rrv@dudka.cz>
  *
  * This file is part of rrv (Radiosity Renderer and Visualizer).
  *
@@ -22,89 +22,89 @@
 #include "FormFactorEngine.h"
 
 PatchCache::PatchCache(
-	PatchRandomAccessEnumerator *patchEnumerator,
-  float ffTreshold,
-	long maxCacheSize
-	):
-		patchEnumerator_(patchEnumerator),
-		ffTreshold_(ffTreshold),
-		maxCacheSize_(maxCacheSize),
-		cachedItems_(0)
+        PatchRandomAccessEnumerator *patchEnumerator,
+        float ffTreshold,
+        long maxCacheSize
+        ):
+    patchEnumerator_(patchEnumerator),
+    ffTreshold_(ffTreshold),
+    maxCacheSize_(maxCacheSize),
+    cachedItems_(0)
 {
-	patchCount_ = patchEnumerator->count();
-	
-	// FIXME: Does this constructor zero vector's items?
-	cache_ = new TCache(patchCount_, 0);
-	
-	// Create patch cache (priority) queue
-	cacheQueue_ = new TQueue;
+    patchCount_ = patchEnumerator->count();
 
-	ffe_ = new FormFactorEngine(patchEnumerator);
+    // FIXME: Does this constructor zero vector's items?
+    cache_ = new TCache(patchCount_, 0);
+
+    // Create patch cache (priority) queue
+    cacheQueue_ = new TQueue;
+
+    ffe_ = new FormFactorEngine(patchEnumerator);
 }
 
 void PatchCache::setPatchEnumerator(PatchRandomAccessEnumerator *patchEnumerator) {
     delete ffe_;
     delete cache_;
-	patchCount_ = patchEnumerator->count();
-	cache_ = new TCache(patchCount_, 0);
-	ffe_ = new FormFactorEngine(patchEnumerator);
+    patchCount_ = patchEnumerator->count();
+    cache_ = new TCache(patchCount_, 0);
+    ffe_ = new FormFactorEngine(patchEnumerator);
 }
 
 PatchCache::~PatchCache() {
-	delete ffe_;
-	delete cacheQueue_;
-	
-	// Destroy patch cache
-	TCache::iterator i;
-	for(i= cache_->begin(); i!= cache_->end(); i++)
-		delete *i;
-	delete cache_;
+    delete ffe_;
+    delete cacheQueue_;
+
+    // Destroy patch cache
+    TCache::iterator i;
+    for(i= cache_->begin(); i!= cache_->end(); i++)
+        delete *i;
+    delete cache_;
 }
 
 long int PatchCache::cacheRawSize() const {
-	return
-			static_cast<long int>(sizeof(TCache) + sizeof(TQueue)) +
-			static_cast<long int>(sizeof(PatchCacheLine) + sizeof(TQueueItem)) * patchCount_ +
-			static_cast<long int>(PatchCacheLine::itemSize()) *cachedItems_;
+    return
+        static_cast<long int>(sizeof(TCache) + sizeof(TQueue)) +
+        static_cast<long int>(sizeof(PatchCacheLine) + sizeof(TQueueItem)) * patchCount_ +
+        static_cast<long int>(PatchCacheLine::itemSize()) *cachedItems_;
 }
 
 Color PatchCache::totalRadiosity(int destPatch) {	
 #if 0
     // master branche
-	PatchCacheLine *&cacheLine = cache_->operator[](destPatch);
-	if (0==cacheLine) {
-		// Cache-line was not in cache --> create and fill
-		cacheLine = new PatchCacheLine(patchEnumerator_, ffTreshold_);
-		ffe_->fillCacheLine(destPatch, cacheLine);
-		
-		// Update metadata
-		cachedItems_ += cacheLine->itemCount();
-		cacheQueue_->push(&cacheLine);
-	}
+    PatchCacheLine *&cacheLine = cache_->operator[](destPatch);
+    if (0==cacheLine) {
+        // Cache-line was not in cache --> create and fill
+        cacheLine = new PatchCacheLine(patchEnumerator_, ffTreshold_);
+        ffe_->fillCacheLine(destPatch, cacheLine);
+
+        // Update metadata
+        cachedItems_ += cacheLine->itemCount();
+        cacheQueue_->push(&cacheLine);
+    }
 #else
     // adaptive-division branche
     PatchCacheLine *cacheLine = new PatchCacheLine(patchEnumerator_, ffTreshold_);
     ffe_->fillCacheLine(destPatch, cacheLine);
 #endif
-	
-	// Use cache-line to cumpute total radiosity
-	Color rad = cacheLine->totalRadiosity();
-	
+
+    // Use cache-line to cumpute total radiosity
+    Color rad = cacheLine->totalRadiosity();
+
 #if 0
     // master branche
-	if (this->cacheRawSize() >= maxCacheSize_) {
-		// maxCacheSize exceed --> free the largest cache-line
-		const TQueueItem &qi = cacheQueue_->top();
-		PatchCacheLine *&topCL = qi.pCacheLine();
-		cachedItems_ -= static_cast<int>(qi);
-		delete topCL;
-		topCL = 0;
-		cacheQueue_->pop();
-	}
+    if (this->cacheRawSize() >= maxCacheSize_) {
+        // maxCacheSize exceed --> free the largest cache-line
+        const TQueueItem &qi = cacheQueue_->top();
+        PatchCacheLine *&topCL = qi.pCacheLine();
+        cachedItems_ -= static_cast<int>(qi);
+        delete topCL;
+        topCL = 0;
+        cacheQueue_->pop();
+    }
 #else
     // adaptive-division branche
     delete cacheLine;
 #endif
-	
-	return rad;
+
+    return rad;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 TODO
+ * Copyright (C) 2007 Jakub Filak
  *
  * This file is part of rrv (Radiosity Renderer and Visualizer).
  *
@@ -19,56 +19,56 @@
 
 #ifndef XMLNAMES_H
 #define XMLNAMES_H
-	
+
 namespace XML
 {
-	typedef enum XMLTagName
-	{
-		Root=0,
-		Definition,
-		Instantiate,
-		ObjectDefinition,
-		Cuboid,
-		Barrel,
-		Globe,
-		Teapot,
-		TriangleSetNode,
-		TriangleNode,
-		VertexNode,
-		Rotate,
-		Scale,
-		Shear,
-		Translate,
-		Object,
-		Trianglenext,
-		angle
-       	} XMLTN;
-	
-	typedef enum XMLTagAttributeName
-	{
-		Name=0,
-		Emission,
-		Reflectivity,
-		Radiosity,
-		VertexX,
-		VertexY,
-		VertexZ,
-		TransformationX,
-		TransformationY,
-		TransformationZ,
-		RotateAngle,
-		IncludeFile,
-		Spec,
-		Refr,
-		Refl
-	} XMLTAN;
-	
-	struct XMLNames
-	{
-		public:
-			static const char* TAGS[];
+    typedef enum XMLTagName
+    {
+        Root=0,
+        Definition,
+        Instantiate,
+        ObjectDefinition,
+        Cuboid,
+        Barrel,
+        Globe,
+        Teapot,
+        TriangleSetNode,
+        TriangleNode,
+        VertexNode,
+        Rotate,
+        Scale,
+        Shear,
+        Translate,
+        Object,
+        Trianglenext,
+        angle
+    } XMLTN;
 
-			static const char* ATTRIBUTES[];
-	};
+    typedef enum XMLTagAttributeName
+    {
+        Name=0,
+        Emission,
+        Reflectivity,
+        Radiosity,
+        VertexX,
+        VertexY,
+        VertexZ,
+        TransformationX,
+        TransformationY,
+        TransformationZ,
+        RotateAngle,
+        IncludeFile,
+        Spec,
+        Refr,
+        Refl
+    } XMLTAN;
+
+    struct XMLNames
+    {
+        public:
+            static const char* TAGS[];
+
+            static const char* ATTRIBUTES[];
+    };
 }	
 #endif

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 TODO
+ * Copyright (C) 2007 Jakub Filak
  *
  * This file is part of rrv (Radiosity Renderer and Visualizer).
  *
@@ -29,16 +29,16 @@
 
 #include "ArgumentParser.h"
 
-enum ComputeArgumentsNames 
+enum ComputeArgumentsNames
 {
-	ArgFileIn,
-	ArgFileOut,
-	ArgTreshold,
-	ArgCache,
-	ArgDivide,
-	ArgSteps,
-	ArgSaves,
-	ArgNormalize
+    ArgFileIn,
+    ArgFileOut,
+    ArgTreshold,
+    ArgCache,
+    ArgDivide,
+    ArgSteps,
+    ArgSaves,
+    ArgNormalize
 };
 
 /**
@@ -46,93 +46,93 @@ enum ComputeArgumentsNames
  */
 class ComputeArguments : public ArgumentParser
 {
-public:
+    public:
 
-	// Constructors/Destructors
-	//  
-
-
-	/**
-	 * Empty Constructor
-	 */
-	ComputeArguments ( );
-
-	/**
-	 * Empty Destructor
-	 */
-	virtual ~ComputeArguments ( );
-
-	// Static public attributes
-	//  
-
-	static const char* NAMES[];
-
-	// public attribute accessor methods
-	//  
-
-	/**
-	 * @return float
-	 */
-	float getTreshold ( );
+        // Constructors/Destructors
+        //
 
 
-	/**
-	 * @return float
-	 */
-	float getDivide ( );
+        /**
+         * Empty Constructor
+         */
+        ComputeArguments ( );
+
+        /**
+         * Empty Destructor
+         */
+        virtual ~ComputeArguments ( );
+
+        // Static public attributes
+        //
+
+        static const char* NAMES[];
+
+        // public attribute accessor methods
+        //
+
+        /**
+         * @return float
+         */
+        float getTreshold ( );
 
 
-	/**
-	 * @return int
-	 */
-	int getSteps ( );
+        /**
+         * @return float
+         */
+        float getDivide ( );
 
 
-	/**
-	 * @return int
-	 */
-	int getSaves ( );
+        /**
+         * @return int
+         */
+        int getSteps ( );
 
 
-	/**
-	 * @return long
-	 */
-	long getCache ( );
+        /**
+         * @return int
+         */
+        int getSaves ( );
 
 
-	/**
-	 * @return char*
-	 */
-	char* getFileIn ( );
+        /**
+         * @return long
+         */
+        long getCache ( );
 
 
-	/**
-	 * @return char*
-	 */
-	char* getFileOut ( );
+        /**
+         * @return char*
+         */
+        char* getFileIn ( );
 
 
-	/**
-	 * @return bool
-	 */
-	bool getNormalize ( );
+        /**
+         * @return char*
+         */
+        char* getFileOut ( );
 
-private:
-	/**
-	 * Show help for controls
-	 */
-	virtual void showHelpAppendix() {return;}
-	// private attributes
-	//  
 
-	static const char* descripts_[];
-	static const bool reqs_[];
-	static const char* defaults_[];
+        /**
+         * @return bool
+         */
+        bool getNormalize ( );
 
-	/**
-	 * Initialize object.
-	 */
-	void initialize ( );
+    private:
+        /**
+         * Show help for controls
+         */
+        virtual void showHelpAppendix() {return;}
+        // private attributes
+        //
+
+        static const char* descripts_[];
+        static const bool reqs_[];
+        static const char* defaults_[];
+
+        /**
+         * Initialize object.
+         */
+        void initialize ( );
 };
 
 #endif // COMPUTEARGUMENTS_H

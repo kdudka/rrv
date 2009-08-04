@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 TODO
+ * Copyright (C) 2007 Kamil Dudka <rrv@dudka.cz>
  *
  * This file is part of rrv (Radiosity Renderer and Visualizer).
  *
@@ -31,53 +31,53 @@
 #include <pthread.h>
 
 class ContinousSaver: public ProgressObserverMultiStep {
-		Scene *scene_;
-		RadiosityRenderer *renderer_;
-		std::string nameBase_;
-		int perStepFreq_;
-		int perStepCounter_;
-// 		int stepSkip_;
-	public:
-		ContinousSaver(Scene *scene, RadiosityRenderer *renderer, std::string nameBase, int perStepFreq):
-			scene_(scene),
-			renderer_(renderer),
-			nameBase_(nameBase),
-			perStepFreq_(perStepFreq<<1),
-			perStepCounter_(0)/*,
-			stepSkip_(1)*/
-		{
-			renderer->attach(this, perStepFreq);
-		}
-        virtual void updatePatchCount() {
-			renderer_->detach(this);
-			renderer_->attach(this, perStepFreq_);
-        }
-		virtual void updateStep() {
-			perStepCounter_ = 0;
+    Scene *scene_;
+    RadiosityRenderer *renderer_;
+    std::string nameBase_;
+    int perStepFreq_;
+    int perStepCounter_;
+    // 		int stepSkip_;
+    public:
+    ContinousSaver(Scene *scene, RadiosityRenderer *renderer, std::string nameBase, int perStepFreq):
+        scene_(scene),
+        renderer_(renderer),
+        nameBase_(nameBase),
+        perStepFreq_(perStepFreq<<1),
+        perStepCounter_(0)/*,
+                            stepSkip_(1)*/
+    {
+        renderer->attach(this, perStepFreq);
+    }
+    virtual void updatePatchCount() {
+        renderer_->detach(this);
+        renderer_->attach(this, perStepFreq_);
+    }
+    virtual void updateStep() {
+        perStepCounter_ = 0;
 #if 0
-			perStepFreq_ >>= 1;
-			if (perStepFreq_ < 1)
-				perStepFreq_ = 1;
-			renderer_->detach(this);
-			renderer_->attach(this, perStepFreq_);
+        perStepFreq_ >>= 1;
+        if (perStepFreq_ < 1)
+            perStepFreq_ = 1;
+        renderer_->detach(this);
+        renderer_->attach(this, perStepFreq_);
 #endif
-		}
-		virtual void updatePerStepProgress() {
-// 			if (1==perStepFreq_) {
-// 				if (0==renderer_->currentStep()%stepSkip_)
-// 					stepSkip_ <<= 1;
-// 				else if (renderer_->currentStep()+1!=renderer_->stepCount())
-// 					return;
-// 			}
-			std::ostringstream nameStream;
-			nameStream
-					<< nameBase_
-					<< "-step" << std::setw(3) << std::setfill('0') << renderer_->currentStep()
-					<< "-snapshot" << std::setw(3) << std::setfill('0') << perStepCounter_
-					<< ".xml";
-			scene_->save(nameStream.str());
-			perStepCounter_ ++;
-		}
+    }
+    virtual void updatePerStepProgress() {
+        // 			if (1==perStepFreq_) {
+        // 				if (0==renderer_->currentStep()%stepSkip_)
+        // 					stepSkip_ <<= 1;
+        // 				else if (renderer_->currentStep()+1!=renderer_->stepCount())
+        // 					return;
+        // 			}
+        std::ostringstream nameStream;
+        nameStream
+            << nameBase_
+            << "-step" << std::setw(3) << std::setfill('0') << renderer_->currentStep()
+            << "-snapshot" << std::setw(3) << std::setfill('0') << perStepCounter_
+            << ".xml";
+        scene_->save(nameStream.str());
+        perStepCounter_ ++;
+    }
 };
 
 class AdaptiveDivider: public ProgressObserverMultiStep {
@@ -85,15 +85,15 @@ class AdaptiveDivider: public ProgressObserverMultiStep {
         AdaptiveDivider(Scene *scene, RadiosityRenderer *renderer):
             scene_(scene),
             renderer_(renderer)
-        {
-			renderer->attach(this, 1);
-        }
-		virtual void updateStep() {
+    {
+        renderer->attach(this, 1);
+    }
+        virtual void updateStep() {
             if (!renderer_->currentStep())
                 return;
             scene_->divide();
             renderer_->setPatchEnumerator(scene_->createPatchSequenceEnumerator());
-		}
+        }
     private:
         Scene *scene_;
         RadiosityRenderer *renderer_;
@@ -106,31 +106,31 @@ void *vis(void *) {
 }
 
 int main(int argc, char *argv[]) {
-	ComputeArguments *args = new ComputeArguments();
-	args->parseArguments( argc, argv );
+    ComputeArguments *args = new ComputeArguments();
+    args->parseArguments( argc, argv );
 
-	/* if (1>=argc)
-		return 1; */
-	
-	std::string fileName(args->getFileIn());
-	
-	// Load scene
-	try
-	{
-		scene.load(args->getFileIn());
-	}
-	catch( XML::XMLException &e )
-	{
-		std::cerr << e.what() << std::endl;
-		exit( 0 );
-	}
-	
-	// Acceleration
-	scene.applyEmission();
-	
-	// Patch division
-	//scene.divide(DIVIDE_TO);
-	scene.divide(args->getDivide());
+    /* if (1>=argc)
+       return 1; */
+
+    std::string fileName(args->getFileIn());
+
+    // Load scene
+    try
+    {
+        scene.load(args->getFileIn());
+    }
+    catch( XML::XMLException &e )
+    {
+        std::cerr << e.what() << std::endl;
+        exit( 0 );
+    }
+
+    // Acceleration
+    scene.applyEmission();
+
+    // Patch division
+    //scene.divide(DIVIDE_TO);
+    scene.divide(args->getDivide());
 
     // ////////////////////////////////////////////////////////////
     pthread_attr_t attr;
@@ -139,39 +139,39 @@ int main(int argc, char *argv[]) {
     pthread_t thread;
     if (0!= pthread_create(&thread, &attr, vis, 0));
     // ////////////////////////////////////////////////////////////
-	
-	// Compute radiosity
-	RadiosityRenderer *renderer =
-			scene.createRadiosityRenderer(args->getSteps(), args->getTreshold(), args->getCache()*1048576);
-			//scene.createRadiosityRenderer(STEP_COUNT, FORM_FACTOR_TRESHOLD, MAX_CACHE_SIZE);
-	
+
+    // Compute radiosity
+    RadiosityRenderer *renderer =
+        scene.createRadiosityRenderer(args->getSteps(), args->getTreshold(), args->getCache()*1048576);
+    //scene.createRadiosityRenderer(STEP_COUNT, FORM_FACTOR_TRESHOLD, MAX_CACHE_SIZE);
+
 #if 1
     // adaptive-division branche
     AdaptiveDivider *divider=
-            new AdaptiveDivider(&scene, renderer);
+        new AdaptiveDivider(&scene, renderer);
 #endif
 
-	ConsoleProgressIndicator *progressIndicator=
-			new ConsoleProgressIndicator(renderer);
-	
-	ContinousSaver *saver=
-		 	new ContinousSaver(&scene, renderer, fileName, args->getSaves());
-			//new ContinousSaver(&scene, renderer, fileName, PER_STEP_SAVE_INITIAL);
+    ConsoleProgressIndicator *progressIndicator=
+        new ConsoleProgressIndicator(renderer);
 
-	renderer->compute();
-		
-	delete saver;
-	delete progressIndicator;
+    ContinousSaver *saver=
+        new ContinousSaver(&scene, renderer, fileName, args->getSaves());
+    //new ContinousSaver(&scene, renderer, fileName, PER_STEP_SAVE_INITIAL);
+
+    renderer->compute();
+
+    delete saver;
+    delete progressIndicator;
 #if 1
     // adaptive-division branche
     delete divider;
 #endif
-	delete renderer;
+    delete renderer;
 
-	//scene.save(fileName+"-final.xml");
-	scene.save(args->getFileOut());
-	
-	delete args;
+    //scene.save(fileName+"-final.xml");
+    scene.save(args->getFileOut());
 
-	return 0;
+    delete args;
+
+    return 0;
 }

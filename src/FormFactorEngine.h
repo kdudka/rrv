@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 TODO
+ * Copyright (C) 2007 David Barina <DaBler@gmail.com>
  *
  * This file is part of rrv (Radiosity Renderer and Visualizer).
  *
@@ -51,49 +51,49 @@ class PatchCacheLine;
  * @brief Compute all form factors for any destination patch.
  */
 class FormFactorEngine {
-public:
-		
-		/**
-		 * @brief Constructor, create window, OpenGL context and pre-compute some temp variables.
-		 * @param patchEnumerator
-		 */
-		FormFactorEngine (PatchRandomAccessEnumerator *patchEnumerator);
-			
-		/**
-		 * @brief Compute form factors for destination patch destPatch and store these factors into cache line.
-		 * @param destPatch Index of destination patch.
-		 * @param cacheLine Pointer to target cache line.
-		 */
-		void fillCacheLine(int destPatch, PatchCacheLine *cacheLine);
+    public:
 
-private:
+        /**
+         * @brief Constructor, create window, OpenGL context and pre-compute some temp variables.
+         * @param patchEnumerator
+         */
+        FormFactorEngine (PatchRandomAccessEnumerator *patchEnumerator);
 
-		PatchRandomAccessEnumerator *patchEnumerator_;
+        /**
+         * @brief Compute form factors for destination patch destPatch and store these factors into cache line.
+         * @param destPatch Index of destination patch.
+         * @param cacheLine Pointer to target cache line.
+         */
+        void fillCacheLine(int destPatch, PatchCacheLine *cacheLine);
 
-#if defined(__WIN32__) || defined(_WIN32) || defined(__CYGWIN__) 
+    private:
+
+        PatchRandomAccessEnumerator *patchEnumerator_;
+
+#if defined(__WIN32__) || defined(_WIN32) || defined(__CYGWIN__)
 #else
-		Display *dpy;
-		Window win;
+        Display *dpy;
+        Window win;
 #endif
-		void createGLWindow();
+        void createGLWindow();
 
-		void drawScene();
-		void renderViewport(const GLint x, const GLint y, const Vertex &c, const Vertex &at, const Vector &up);
-		void renderFullScene(int dest);
-		map<unsigned,double> *getFF();
+        void drawScene();
+        void renderViewport(const GLint x, const GLint y, const Vertex &c, const Vertex &at, const Vector &up);
+        void renderFullScene(int dest);
+        map<unsigned,double> *getFF();
 
-public:
-		/**
-		 * @brief Destructor, close window, free memory.
-		 */
-		~FormFactorEngine();
+    public:
+        /**
+         * @brief Destructor, close window, free memory.
+         */
+        ~FormFactorEngine();
 
-		static const int EDGE_1 = 256;	 ///< size (in pixels) of hemi-cube edge
-		static const int EDGE_2 = 2*EDGE_1;	///< EDGE_1 * 2 (size of important area in hemicube)
-		static const int EDGE_LENGTH = 3*EDGE_1;	 ///< size (pixels) of render viewport
+        static const int EDGE_1 = 256;	 ///< size (in pixels) of hemi-cube edge
+        static const int EDGE_2 = 2*EDGE_1;	///< EDGE_1 * 2 (size of important area in hemicube)
+        static const int EDGE_LENGTH = 3*EDGE_1;	 ///< size (pixels) of render viewport
 
-private:
-		double **ffcoefs;
+    private:
+        double **ffcoefs;
 };
 
 #endif // FORMFACTORENGINE_H

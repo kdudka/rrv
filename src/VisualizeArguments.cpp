@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 TODO
+ * Copyright (C) 2007 Jakub Filak
  *
  * This file is part of rrv (Radiosity Renderer and Visualizer).
  *
@@ -26,23 +26,23 @@
 using namespace std;
 
 // Constructors/Destructors
-//  
+//
 
-const char* VisualizeArguments::NAMES[PARAMETRS]  = { "filein", 
+const char* VisualizeArguments::NAMES[PARAMETRS]  = { "filein",
 						      "screenshot",
 						      "fileout",};
 							
 
 
-const char* VisualizeArguments::descripts_[PARAMETRS]= { "Input file name, REQUIRED", 
+const char* VisualizeArguments::descripts_[PARAMETRS]= { "Input file name, REQUIRED",
 							 "Save screenshot",
 							 "File to save screenshot", };
 
-const bool  VisualizeArguments::reqs_[PARAMETRS]= { true, 
+const bool  VisualizeArguments::reqs_[PARAMETRS]= { true,
 						    false,
 						    false,};
 
-const char* VisualizeArguments::defaults_[PARAMETRS] = { "", 
+const char* VisualizeArguments::defaults_[PARAMETRS] = { "",
 							 "0",
 							 "screenshot.tga",};
 
@@ -50,7 +50,7 @@ const char* VisualizeArguments::keys_[KEYNUM] = { "M", };
 
 const char* VisualizeArguments::kdesc_[KEYNUM] = { "model from xml, reflectivity is used in color property", };
 
-VisualizeArguments::VisualizeArguments ( ) 
+VisualizeArguments::VisualizeArguments ( )
 {
 	initialize();
 }
@@ -60,7 +60,7 @@ VisualizeArguments::~VisualizeArguments ( ) { }
 /**
  * @return char*
  */
-char* VisualizeArguments::getFileIn ( ) 
+char* VisualizeArguments::getFileIn ( )
 {
 	return getCstringValue( string( NAMES[ 0 ] ) );
 }
@@ -89,7 +89,7 @@ bool VisualizeArguments::getScreenshot( )
 /**
  * @return char*
  */
-char* VisualizeArguments::getScreenshotFile ( ) 
+char* VisualizeArguments::getScreenshotFile ( )
 {
 	return getCstringValue( string( NAMES[ 2 ] ) );
 }
@@ -98,7 +98,7 @@ char* VisualizeArguments::getScreenshotFile ( )
 /**
  * Initialize members
  */
-void VisualizeArguments::initialize ( ) 
+void VisualizeArguments::initialize ( )
 {
 	this->setDescription("Visualize computed or uncomputed scene.\nAuthors:\tKamil Dudka, Lukas Hefka, David Barina, Jakub Filak\nDate:\t\t2007-11-19");
 	this->setVersion("unknow");
@@ -118,6 +118,6 @@ void VisualizeArguments::showHelpAppendix()
 
 	for( int i = 0; i < KEYNUM; i++ )
 	{
-		cout << "  " << setw(10) << left << keys_[i] << kdesc_[i] << endl; 
+		cout << "  " << setw(10) << left << keys_[i] << kdesc_[i] << endl;
 	}
 }

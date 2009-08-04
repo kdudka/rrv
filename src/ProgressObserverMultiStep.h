@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 TODO
+ * Copyright (C) 2007 Kamil Dudka <rrv@dudka.cz>
  *
  * This file is part of rrv (Radiosity Renderer and Visualizer).
  *
@@ -33,21 +33,21 @@
  */
 class ProgressObserverMultiStep
 {
-	public:
-		virtual ~ProgressObserverMultiStep() { }
-		
-		/**
-		 * @brief Notification about starting new step.
-		 */
-		virtual void updateStep();
+    public:
+        virtual ~ProgressObserverMultiStep() { }
 
-		virtual void updatePatchCount();
+        /**
+         * @brief Notification about starting new step.
+         */
+        virtual void updateStep();
+
+        virtual void updatePatchCount();
 
 
-		/**
-		 * @brief Notification about subject's progress.
-		 */
-		virtual void updatePerStepProgress();
+        /**
+         * @brief Notification about subject's progress.
+         */
+        virtual void updatePerStepProgress();
 };
 
 #endif // PROGRESSOBSERVERMULTISTEP_H

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 TODO
+ * Copyright (C) 2007 Jakub Filak
  *
  * This file is part of rrv (Radiosity Renderer and Visualizer).
  *
@@ -35,56 +35,56 @@
  */
 class VisualizeArguments : virtual public ArgumentParser
 {
-public:
-	/**
-	 * Empty Constructor
-	 */
-	VisualizeArguments ( );
+    public:
+        /**
+         * Empty Constructor
+         */
+        VisualizeArguments ( );
 
-	/**
-	 * Empty Destructor
-	 */
-	virtual ~VisualizeArguments ( );
+        /**
+         * Empty Destructor
+         */
+        virtual ~VisualizeArguments ( );
 
-	// Names of usable arguments
-	static const char* NAMES[];
-	
-	/**
-	 * @return char*
-	 */
-	char* getFileIn ( );
-	
-	/**
-	 * @return char*
-	 */
-	bool getScreenshot ( );
+        // Names of usable arguments
+        static const char* NAMES[];
 
-	/**
-	 * @return char*
-	 */
-	char* getScreenshotFile ( );
+        /**
+         * @return char*
+         */
+        char* getFileIn ( );
 
-private:
-	// Descriptions of arguments
-	static const char* descripts_[];
-	// Arguments requiration
-	static const bool reqs_[];
-	// Default values of arguments
-	static const char* defaults_[];
-	// Keys value
-	static const char* keys_[];
-	// Keys description
-	static const char* kdesc_[];
+        /**
+         * @return char*
+         */
+        bool getScreenshot ( );
 
-	/**
-	 * Initialize members
-	 */
-	void initialize ( );
+        /**
+         * @return char*
+         */
+        char* getScreenshotFile ( );
 
-	/**
-	 * Show help for controls
-	 */
-	virtual void showHelpAppendix();
+    private:
+        // Descriptions of arguments
+        static const char* descripts_[];
+        // Arguments requiration
+        static const bool reqs_[];
+        // Default values of arguments
+        static const char* defaults_[];
+        // Keys value
+        static const char* keys_[];
+        // Keys description
+        static const char* kdesc_[];
+
+        /**
+         * Initialize members
+         */
+        void initialize ( );
+
+        /**
+         * Show help for controls
+         */
+        virtual void showHelpAppendix();
 };
 
 #endif // VISUALIZEARGUMENTS_H

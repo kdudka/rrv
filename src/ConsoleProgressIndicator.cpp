@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 TODO
+ * Copyright (C) 2007 Kamil Dudka <rrv@dudka.cz>
  *
  * This file is part of rrv (Radiosity Renderer and Visualizer).
  *
@@ -24,68 +24,68 @@
 #include <iomanip>
 
 ConsoleProgressIndicator::ConsoleProgressIndicator(RadiosityRenderer *renderer):
-		renderer_(renderer),
-		counter_(0)
+    renderer_(renderer),
+    counter_(0)
 {
-	renderer->attach(this, 100);
+    renderer->attach(this, 100);
 }
 
 ConsoleProgressIndicator::~ConsoleProgressIndicator() {
-	renderer_->detach(this);
+    renderer_->detach(this);
 }
 
 void ConsoleProgressIndicator::updatePatchCount() {
-	renderer_->detach(this);
-	renderer_->attach(this, 100);
+    renderer_->detach(this);
+    renderer_->attach(this, 100);
 }
 void ConsoleProgressIndicator::updateStep() {
-	counter_ = 0;
-	std::cout
-			<< ">>> Step "
-			<< std::setw(3) << std::setfill(' ') << renderer_->currentStep()+1
-			<< " of " << renderer_->stepCount()
-			<< " "
-			<< std::flush;
-	
+    counter_ = 0;
+    std::cout
+        << ">>> Step "
+        << std::setw(3) << std::setfill(' ') << renderer_->currentStep()+1
+        << " of " << renderer_->stepCount()
+        << " "
+        << std::flush;
+
 #if 0
-	if (1== renderer_->currentStep()) {
-		renderer_->detach(this);
-		renderer_->attach(this, 10);
-		updatePerStepProgress();
-	}
+    if (1== renderer_->currentStep()) {
+        renderer_->detach(this);
+        renderer_->attach(this, 10);
+        updatePerStepProgress();
+    }
 #endif
-	
-	// FIXME: This should not be here
- 	if (!renderer_->currentStep())
- 		updatePerStepProgress();
+
+    // FIXME: This should not be here
+    if (!renderer_->currentStep())
+        updatePerStepProgress();
 }
 
 void ConsoleProgressIndicator::updatePerStepProgress() {
-	if (0==counter_%10/* && !renderer_->currentStep()*/) {
-		if (counter_) {
-			std::cout
-					<< " cache raw size: "
-					<< std::setw(7) << std::setfill(' ')
-					<< std::setprecision(2) << std::fixed
-					<< static_cast<float>(renderer_->cacheRawSize())/(1024*1024)
-					<< " MB";
-		}
-		std::cout
-				<< std::endl
-				<< "    "
-				<< std::setw(2) << std::setfill(' ') << counter_
-				<< "% ";
-	}
-	
-	if (100> counter_)
-		std::cout << "." << std::flush;
-	else
-		std::cout << std::endl;
-	
+    if (0==counter_%10/* && !renderer_->currentStep()*/) {
+        if (counter_) {
+            std::cout
+                << " cache raw size: "
+                << std::setw(7) << std::setfill(' ')
+                << std::setprecision(2) << std::fixed
+                << static_cast<float>(renderer_->cacheRawSize())/(1024*1024)
+                << " MB";
+        }
+        std::cout
+            << std::endl
+            << "    "
+            << std::setw(2) << std::setfill(' ') << counter_
+            << "% ";
+    }
+
+    if (100> counter_)
+        std::cout << "." << std::flush;
+    else
+        std::cout << std::endl;
+
 #if 0
-	if (renderer_->currentStep() && counter_ >=10)
-		std::cout << std::endl;
+    if (renderer_->currentStep() && counter_ >=10)
+        std::cout << std::endl;
 #endif
-	
-	counter_++;
+
+    counter_++;
 }

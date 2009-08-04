@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 TODO
+ * Copyright (C) 2007 David Barina <DaBler@gmail.com>, Jakub Filak
  *
  * This file is part of rrv (Radiosity Renderer and Visualizer).
  *
@@ -35,21 +35,21 @@
  * @brief Teapot entity.
  */
 class TeapotEntity : public Entity {
-protected:
+    protected:
 
-		/**
-		 * @brief  Read entity properties and set its in object
-		 * @param  from XMLNode which has tagname teapot
-		 */
-		virtual void impl_deserialize (XMLNode *from );
+        /**
+         * @brief  Read entity properties and set its in object
+         * @param  from XMLNode which has tagname teapot
+         */
+        virtual void impl_deserialize (XMLNode *from );
 
-private:
-		static const int teapot_v_count = 1976;
-		static const int teapot_t_count = 3752;
-		static const Vertex teapot_v[1976];
-		static const int teapot_t[3752][3];
+    private:
+        static const int teapot_v_count = 1976;
+        static const int teapot_t_count = 3752;
+        static const Vertex teapot_v[1976];
+        static const int teapot_t[3752][3];
 
-		void polygonize ( );
+        void polygonize ( );
 };
 
 #endif // TEAPOTENTITY_H

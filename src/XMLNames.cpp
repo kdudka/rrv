@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 TODO
+ * Copyright (C) 2007 Jakub Filak
  *
  * This file is part of rrv (Radiosity Renderer and Visualizer).
  *
@@ -20,37 +20,37 @@
 #include "XMLNames.h"
 
 const char* XML::XMLNames::TAGS[] = {
-	"scene",
-	"head",
-	"body",
-	"objectdef",
-	"cuboid",
-	"barrel",
-	"globe",
-	"teapot",
-	"triangleset",
-	"triangle",
-	"vertex",
-	"rotate",
-	"scale",
-	"shear",
-	"translate",
-	"object",
-	"trianglenext" };
+    "scene",
+    "head",
+    "body",
+    "objectdef",
+    "cuboid",
+    "barrel",
+    "globe",
+    "teapot",
+    "triangleset",
+    "triangle",
+    "vertex",
+    "rotate",
+    "scale",
+    "shear",
+    "translate",
+    "object",
+    "trianglenext" };
 
 const char* XML::XMLNames::ATTRIBUTES[] = {
-	"name",
-	"emission",
-	"reflectivity",
-	"radiosity",
-	"x",
-	"y",
-	"z",
-	"dx",
-	"dy",
-	"dz",
-	"angle",
-	"file",
-	"spec",
-	"refr",
-	"refl"};
+    "name",
+    "emission",
+    "reflectivity",
+    "radiosity",
+    "x",
+    "y",
+    "z",
+    "dx",
+    "dy",
+    "dz",
+    "angle",
+    "file",
+    "spec",
+    "refr",
+    "refl"};

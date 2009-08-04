@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 TODO
+ * Copyright (C) 2007 David Barina <DaBler@gmail.com>, Jakub Filak
  *
  * This file is part of rrv (Radiosity Renderer and Visualizer).
  *
@@ -36,17 +36,17 @@
  * @brief Globe entity.
  */
 class GlobeEntity : public Entity {
-protected:
+    protected:
 
-		/**
-		 * @brief  Read entity properties and set its in object
-		 * @param  from XMLNode which has tagname globe
-		 */
-		virtual void impl_deserialize (XMLNode *from );
+        /**
+         * @brief  Read entity properties and set its in object
+         * @param  from XMLNode which has tagname globe
+         */
+        virtual void impl_deserialize (XMLNode *from );
 
-private:
-		void polygonize ( );
-		void addQuad(Vertex vertex[4]);
+    private:
+        void polygonize ( );
+        void addQuad(Vertex vertex[4]);
 };
 
 #endif // GLOBEENTITY_H

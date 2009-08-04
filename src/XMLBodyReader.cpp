@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 TODO
+ * Copyright (C) 2007 Jakub Filak
  *
  * This file is part of rrv (Radiosity Renderer and Visualizer).
  *
@@ -126,8 +126,8 @@ XMLNode* XMLBodyReader::next()
 
 			if ( XMLBodyReader::changeMatrixByXMLNode( nextNode, tm) )
 			{	// if changing matrix succed then save matrix on stack
-				// mustn't push matrix on top of stack when failure, 
-				// because this matrix hasn't been removed from stack in future, 
+				// mustn't push matrix on top of stack when failure,
+				// because this matrix hasn't been removed from stack in future,
 				// observe isn't registered for bad node name
 				this->matrixes_.push(tm);
 			}

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 TODO
+ * Copyright (C) 2007 Kamil Dudka <rrv@dudka.cz>
  *
  * This file is part of rrv (Radiosity Renderer and Visualizer).
  *
@@ -37,17 +37,17 @@ class RadiosityRenderer;
  */
 class ConsoleProgressIndicator: public ProgressObserverMultiStep
 {
-	public:
-		ConsoleProgressIndicator(RadiosityRenderer *);
-		~ConsoleProgressIndicator();
-		
-		virtual void updateStep();
-		virtual void updatePatchCount();
-		virtual void updatePerStepProgress();
-		
-	private:
-		RadiosityRenderer *renderer_;
-		int counter_;
+    public:
+        ConsoleProgressIndicator(RadiosityRenderer *);
+        ~ConsoleProgressIndicator();
+
+        virtual void updateStep();
+        virtual void updatePatchCount();
+        virtual void updatePerStepProgress();
+
+    private:
+        RadiosityRenderer *renderer_;
+        int counter_;
 };
 
 #endif // CONSOLEPROGRESSINDICATOR_H

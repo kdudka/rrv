@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 TODO
+ * Copyright (C) 2007 Kamil Dudka <rrv@dudka.cz>, Jakub Filak
  *
  * This file is part of rrv (Radiosity Renderer and Visualizer).
  *
@@ -26,57 +26,57 @@
  * @param  entity
  */
 void EntitySet::add (Entity *entity) {
-	container_.push_back(*entity);
+    container_.push_back(*entity);
 }
 
 /**
  * @param  size
  */
 void EntitySet::divide (float size ) {
-	TContainer::iterator i;
-	for(i= container_.begin(); i!= container_.end(); i++) {
-		Entity &e = *i;
+    TContainer::iterator i;
+    for(i= container_.begin(); i!= container_.end(); i++) {
+        Entity &e = *i;
         if (size == 0.0)
             e.divide();
         else
             e.divide(size);
-	}
+    }
 }
 
 /**
  * @return PatchSequenceEnumerator*
  */
 PatchSequenceEnumerator* EntitySet::createPatchSequenceEnumerator ( ) {
-	IndirectPatchSequenceEnumerator *pe= new IndirectPatchSequenceEnumerator;
-	
-	TContainer::iterator i;
-	for(i= container_.begin(); i!=container_.end(); i++) {
-		Entity &e = *i;
-		pe->add(e.createPatchSequenceEnumerator());
-	}
-	
-	return pe;
+    IndirectPatchSequenceEnumerator *pe= new IndirectPatchSequenceEnumerator;
+
+    TContainer::iterator i;
+    for(i= container_.begin(); i!=container_.end(); i++) {
+        Entity &e = *i;
+        pe->add(e.createPatchSequenceEnumerator());
+    }
+
+    return pe;
 }
 
 size_t EntitySet::count()
 {
-	return container_.size();
+    return container_.size();
 }
 
 Entity& EntitySet::operator[]( unsigned index )
 {
-	return container_[index];
+    return container_[index];
 }
 
 TriangleSetExt* EntitySet::computeVertexColors() {
-	TriangleSetExt *tset = new TriangleSetExt;
-	
-	TContainer::iterator i;
-	for(i= container_.begin(); i!=container_.end(); i++) {
-		Entity &e = *i;
-		tset->add(e.computeVertexColors());
-	}
-	
-	return tset;
+    TriangleSetExt *tset = new TriangleSetExt;
+
+    TContainer::iterator i;
+    for(i= container_.begin(); i!=container_.end(); i++) {
+        Entity &e = *i;
+        tset->add(e.computeVertexColors());
+    }
+
+    return tset;
 }
 

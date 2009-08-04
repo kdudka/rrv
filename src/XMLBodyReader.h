@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 TODO
+ * Copyright (C) 2007 Jakub Filak
  *
  * This file is part of rrv (Radiosity Renderer and Visualizer).
  *
@@ -36,63 +36,63 @@ using std::string;
 
 namespace XML
 {
-	/*
-	 * Read body from xml file.
-	 * On next returs only entity nodes.
-	 */
-	class XMLBodyReader: public XMLNodeNextNodeIterator, AbstractObserver
-	{
-		public:
-			XMLBodyReader( XMLHelper* helper, XMLNode* node ) : XMLNodeNextNodeIterator( node )
-			{	
-				this->addObservs( string( XMLNames::TAGS[ Rotate    ] ), this );		// register callbac function for matrix end
-				this->addObservs( string( XMLNames::TAGS[ Scale     ] ), this );		// register callbac function for matrix end
-				this->addObservs( string( XMLNames::TAGS[ Translate ] ), this );		// register callbac function for matrix end
-				this->addObservs( string( XMLNames::TAGS[ Shear     ] ), this );		// register callbac function for matrix end
-				
-				this->object_ = XMLNode::emptyXMLNode;
-				this->objectIterator_ = new XMLNodeChildIterator( &(this->object_) );		// initialize to empty node
-				this->matrixes_.push( TransformMatrix() );		// intialize with standart matrix
-				this->helper_ = helper;
-			}	
+    /*
+     * Read body from xml file.
+     * On next returs only entity nodes.
+     */
+    class XMLBodyReader: public XMLNodeNextNodeIterator, AbstractObserver
+    {
+        public:
+            XMLBodyReader( XMLHelper* helper, XMLNode* node ) : XMLNodeNextNodeIterator( node )
+        {	
+            this->addObservs( string( XMLNames::TAGS[ Rotate    ] ), this );		// register callbac function for matrix end
+            this->addObservs( string( XMLNames::TAGS[ Scale     ] ), this );		// register callbac function for matrix end
+            this->addObservs( string( XMLNames::TAGS[ Translate ] ), this );		// register callbac function for matrix end
+            this->addObservs( string( XMLNames::TAGS[ Shear     ] ), this );		// register callbac function for matrix end
 
-			/*
-			 * Return top of transform matrixies stack.
-			 * It is an actual matrix which is used to transform objects.
-			 */
-			TransformMatrix* getMatrix() { return &(this->matrixes_.top()); }
+            this->object_ = XMLNode::emptyXMLNode;
+            this->objectIterator_ = new XMLNodeChildIterator( &(this->object_) );		// initialize to empty node
+            this->matrixes_.push( TransformMatrix() );		// intialize with standart matrix
+            this->helper_ = helper;
+        }	
 
-			/*
-			 * Method reads node body and return entity from objects whose are in body.
-			 * Doesn't return transform matrix.
-			 */
-			virtual XMLNode* next();
+            /*
+             * Return top of transform matrixies stack.
+             * It is an actual matrix which is used to transform objects.
+             */
+            TransformMatrix* getMatrix() { return &(this->matrixes_.top()); }
 
-			virtual ~XMLBodyReader() { delete this->objectIterator_; }
+            /*
+             * Method reads node body and return entity from objects whose are in body.
+             * Doesn't return transform matrix.
+             */
+            virtual XMLNode* next();
 
-		private:
-			/***************/
-			/*** Methods ***/
+            virtual ~XMLBodyReader() { delete this->objectIterator_; }
 
-			virtual void respond() { this->matrixEnd(); }
+        private:
+            /***************/
+            /*** Methods ***/
 
-			/*
-			 * Removes matrix from top of matrixies stack when became inactive.
-			 */
-			void matrixEnd(void) { this->matrixes_.pop(); }
-				
-			/*
-			 * Create TransformMatrix from XML node.
-			 */
-			static bool changeMatrixByXMLNode( XMLNode* from, TransformMatrix &matrix );
+            virtual void respond() { this->matrixEnd(); }
 
-			/*****************/
-			/*** Variables ***/
+            /*
+             * Removes matrix from top of matrixies stack when became inactive.
+             */
+            void matrixEnd(void) { this->matrixes_.pop(); }
 
-			XMLHelper *helper_;
-			stack<TransformMatrix> matrixes_;
-			XMLNode object_;
-			XMLNodeChildIterator* objectIterator_;
-	};
+            /*
+             * Create TransformMatrix from XML node.
+             */
+            static bool changeMatrixByXMLNode( XMLNode* from, TransformMatrix &matrix );
+
+            /*****************/
+            /*** Variables ***/
+
+            XMLHelper *helper_;
+            stack<TransformMatrix> matrixes_;
+            XMLNode object_;
+            XMLNodeChildIterator* objectIterator_;
+    };
 }
 #endif

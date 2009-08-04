@@ -1,4 +1,4 @@
-# Copyright (C) 2007 Kamil Dudka
+# Copyright (C) 2007 Kamil Dudka <rrv@dudka.cz>
 #
 # This file is part of rrv (Radiosity Renderer and Visualizer).
 #

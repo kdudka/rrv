@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 TODO
+ * Copyright (C) 2007 Kamil Dudka <rrv@dudka.cz>, Jakub Filak
  *
  * This file is part of rrv (Radiosity Renderer and Visualizer).
  *
@@ -156,9 +156,9 @@ void Entity::setTransformMatrix (TransformMatrix *matrix) {
  */
 void Entity::deserialize (XMLNode *from) {
 	this->setColors(from,this->emission_,this->reflectivity_,this->radiosity_);
-	XMLHelper::fromAttribute<double>( spec_,  1, from, XMLNames::ATTRIBUTES[ Spec ], false );   
-	XMLHelper::fromAttribute<double>( refl_, .0, from, XMLNames::ATTRIBUTES[ Refl ], false );   
-	XMLHelper::fromAttribute<double>( refr_, .0, from, XMLNames::ATTRIBUTES[ Refr ], false );   
+	XMLHelper::fromAttribute<double>( spec_,  1, from, XMLNames::ATTRIBUTES[ Spec ], false );
+	XMLHelper::fromAttribute<double>( refl_, .0, from, XMLNames::ATTRIBUTES[ Refl ], false );
+	XMLHelper::fromAttribute<double>( refr_, .0, from, XMLNames::ATTRIBUTES[ Refr ], false );
 	impl_deserialize( from );
 }
 
@@ -299,7 +299,7 @@ PatchSequenceEnumerator* Entity::createPatchSequenceEnumerator ( ) {
 /**
  * @return XMLNode
  */
-XMLNode Entity::serialize ( ) 
+XMLNode Entity::serialize ( )
 {
 	XMLNode n = XMLNode::createXMLTopNode((XMLNames::TAGS[TriangleSetNode] ));
 	n.addAttribute_WOSD( XMLWriter::copyString( XMLNames::ATTRIBUTES[Name]), XMLWriter::copyString( getName().c_str() ) );
@@ -311,11 +311,11 @@ XMLNode Entity::serialize ( )
 	{
 		tnode = n.addChild_WOSD( XMLWriter::copyString( XMLNames::TAGS[TriangleNode] ) );
 
-		tnode.addAttribute_WOSD( 
-				XMLWriter::copyString( XMLNames::ATTRIBUTES[Emission] ), 
+		tnode.addAttribute_WOSD(
+				XMLWriter::copyString( XMLNames::ATTRIBUTES[Emission] ),
 				converter.colorToStr(t->emission) );
 
-		tnode.addAttribute_WOSD( 
+		tnode.addAttribute_WOSD(
 				XMLWriter::copyString( XMLNames::ATTRIBUTES[Reflectivity] ),
 				converter.colorToStr(t->reflectivity) );
 
@@ -340,15 +340,15 @@ XMLNode Entity::serialize ( )
 			XMLNode vnode = tnode.addChild_WOSD( XMLWriter::copyString( XMLNames::TAGS[VertexNode] ) );
 			
 			vnode.addAttribute_WOSD(
-					XMLWriter::copyString( XMLNames::ATTRIBUTES[VertexX] ), 
+					XMLWriter::copyString( XMLNames::ATTRIBUTES[VertexX] ),
 					converter.valToS<float>( t->vertex[i].x ) );
 
-			vnode.addAttribute_WOSD( 
-					XMLWriter::copyString( XMLNames::ATTRIBUTES[VertexY] ), 
+			vnode.addAttribute_WOSD(
+					XMLWriter::copyString( XMLNames::ATTRIBUTES[VertexY] ),
 					converter.valToS<float>( t->vertex[i].y ) );
 			
-			vnode.addAttribute_WOSD( 
-					XMLWriter::copyString( XMLNames::ATTRIBUTES[VertexZ] ), 
+			vnode.addAttribute_WOSD(
+					XMLWriter::copyString( XMLNames::ATTRIBUTES[VertexZ] ),
 					converter.valToS<float>( t->vertex[i].z ) );
 		}
 	}
@@ -385,9 +385,9 @@ void Entity::addTriangle ( Triangle *triangle ) {
 }
 
 #ifndef  NDEBUG
-bool Entity::colorFromXMLNode( XMLNode *node, XMLCSTR attName, Color& to, int wlevel) 
+bool Entity::colorFromXMLNode( XMLNode *node, XMLCSTR attName, Color& to, int wlevel)
 #else
-bool Entity::colorFromXMLNode( XMLNode *node, XMLCSTR attName, Color& to) 
+bool Entity::colorFromXMLNode( XMLNode *node, XMLCSTR attName, Color& to)
 #endif
 {
 	float rgb[] = {0.0,0.0,0.0}; 			// array for colors
@@ -399,14 +399,14 @@ bool Entity::colorFromXMLNode( XMLNode *node, XMLCSTR attName, Color& to)
 #ifndef NDEBUG
 		if ( wlevel > 1 )
 		{
-			cerr << "WARNING: node: " << 
-				node->getName() << " - " << attName 
+			cerr << "WARNING: node: " <<
+				node->getName() << " - " << attName
 				<< " , color unrecognized, using default BLACK" << endl;	
 		}
 #endif
 
 		to = Color( rgb );
-		return false; 
+		return false;
 	}
 	
 	XMLCSTR mPtr = fRGBValues;

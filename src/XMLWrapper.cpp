@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 TODO
+ * Copyright (C) 2007 Jakub Filak
  *
  * This file is part of rrv (Radiosity Renderer and Visualizer).
  *
@@ -38,33 +38,33 @@ using namespace XML;
  */
 XMLWrapper::XMLWrapper()
 {
-	this->xmlHelper_ = 0;
-	this->xmlBodyReader_ = 0;
+    this->xmlHelper_ = 0;
+    this->xmlBodyReader_ = 0;
 }
 
 /**
  * @param  fileName
  * @brief  Load and parse file
  */
-void XMLWrapper::loadFile( std::string fileName ) 
+void XMLWrapper::loadFile( std::string fileName )
 {
-	this->xmlHelper_ = new XMLHelper(); 
-	this->xmlHelper_->loadFile( fileName );
-	this->xmlBodyReader_ = new XMLBodyReader( this->xmlHelper_, this->xmlHelper_->getBody() );
+    this->xmlHelper_ = new XMLHelper();
+    this->xmlHelper_->loadFile( fileName );
+    this->xmlBodyReader_ = new XMLBodyReader( this->xmlHelper_, this->xmlHelper_->getBody() );
 }
 
 /**
  * @return XMLNode*
  * @brief  Return next entity node
  */
-XMLNode* XMLWrapper::nextEntityNode() 
-{ 
-	if ( 0 == this->xmlBodyReader_ )
-	{
-		throw XMLException( "ERROR: Probalby file not loaded, can't return next entity" );
-	}
+XMLNode* XMLWrapper::nextEntityNode()
+{
+    if ( 0 == this->xmlBodyReader_ )
+    {
+        throw XMLException( "ERROR: Probalby file not loaded, can't return next entity" );
+    }
 
-	return this->xmlBodyReader_->next();
+    return this->xmlBodyReader_->next();
 }
 
 /**
@@ -73,12 +73,12 @@ XMLNode* XMLWrapper::nextEntityNode()
  */
 TransformMatrix* XMLWrapper::getTransformMatrix()
 {
-	if ( 0 == this->xmlBodyReader_ )
-	{
-		throw XMLException( "ERROR: Probalby file not loaded, can't return next entity" );
-	}
+    if ( 0 == this->xmlBodyReader_ )
+    {
+        throw XMLException( "ERROR: Probalby file not loaded, can't return next entity" );
+    }
 
-	return this->xmlBodyReader_->getMatrix();
+    return this->xmlBodyReader_->getMatrix();
 }
 
 /**
@@ -86,13 +86,13 @@ TransformMatrix* XMLWrapper::getTransformMatrix()
  */
 XMLWrapper::~XMLWrapper()
 {
-	if ( 0 != this->xmlHelper_ )
-	{
-		delete this->xmlHelper_;
-	}
+    if ( 0 != this->xmlHelper_ )
+    {
+        delete this->xmlHelper_;
+    }
 
-	if ( 0 != this->xmlBodyReader_ )
-	{
-		delete this->xmlBodyReader_;
-	}
+    if ( 0 != this->xmlBodyReader_ )
+    {
+        delete this->xmlBodyReader_;
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 TODO
+ * Copyright (C) 2007 Jakub Filak
  *
  * This file is part of rrv (Radiosity Renderer and Visualizer).
  *
@@ -33,23 +33,23 @@
 
 namespace XML
 {
-	class XMLWrapper
-	{
-		public:
-			XMLWrapper();
-			
-			void loadFile( std::string fileName );
+    class XMLWrapper
+    {
+        public:
+            XMLWrapper();
 
-			XMLNode* nextEntityNode();
+            void loadFile( std::string fileName );
 
-			TransformMatrix* getTransformMatrix();
+            XMLNode* nextEntityNode();
 
-			virtual ~XMLWrapper();
-				
-		private:
-			XMLHelper *xmlHelper_;
-			XMLBodyReader *xmlBodyReader_;
-	};
+            TransformMatrix* getTransformMatrix();
+
+            virtual ~XMLWrapper();
+
+        private:
+            XMLHelper *xmlHelper_;
+            XMLBodyReader *xmlBodyReader_;
+    };
 }
 
 #endif

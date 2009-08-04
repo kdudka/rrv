@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 TODO
+ * Copyright (C) 2007 Kamil Dudka <rrv@dudka.cz>, Jakub Filak
  *
  * This file is part of rrv (Radiosity Renderer and Visualizer).
  *
@@ -37,23 +37,23 @@
  * @brief Cuboid entity.
  */
 class CuboidEntity : public Entity {
-protected:
+    protected:
 
-		/**
-		 * @brief  Read entity properties and set its in object 
-		 * @param  from XMLNode which has tagname cuboid
-		 */
-		void impl_deserialize (XMLNode *from );
+        /**
+         * @brief  Read entity properties and set its in object
+         * @param  from XMLNode which has tagname cuboid
+         */
+        void impl_deserialize (XMLNode *from );
 
-		
-private:
-		/**
-		 * @attention reflectivity_ and emission_ properties have to be
-		 * initialized before call of this method!
-		 */
-		void polygonize();
-		
-		void addQuad(Vertex vertex[4]);
+
+    private:
+        /**
+         * @attention reflectivity_ and emission_ properties have to be
+         * initialized before call of this method!
+         */
+        void polygonize();
+
+        void addQuad(Vertex vertex[4]);
 };
 
 #endif // CUBOIDENTITY_H
