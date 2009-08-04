@@ -84,6 +84,8 @@ class ProgressSubjectMultiStep
 		 * observer's request.
 		 */
 		void notifyPerStepProgress();
+
+        void notifyPatchCountChanged();
 	
 	private:
 		struct TItem {

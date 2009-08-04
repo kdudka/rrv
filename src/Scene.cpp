@@ -22,10 +22,7 @@
 #include "PatchSequenceEnumerator.h"
 #include "RadiosityRenderer.h"
 #include "TriangleSetExt.h"
-
-#ifndef NDEBUG
-#	include "PatchRandomAccessEnumerator.h"
-#endif
+#include "PatchRandomAccessEnumerator.h"
 
 using namespace XML;
 
@@ -108,18 +105,22 @@ void Scene::applyEmission() {
 /**
  */
 void Scene::divide (float size) {
-#ifndef NDEBUG
+#if 1//ndef NDEBUG
 	PatchRandomAccessEnumerator *iter=
 			PatchRandomAccessEnumerator::create(&entitySet_);
 	std::cout << "--- Count of patch: "	<< iter->count() << std::endl;
-	std::cout << "--- Max. patch size: " << size << std::endl;
+	//std::cout << "--- Max. patch size: " << size << std::endl;
 	delete iter;
 	
 	std::cout << ">>> Starting patch division ... " << std::flush;
 #endif
-	entitySet_.divide(size);
-#ifndef NDEBUG
+    entitySet_.divide(size);
+#if 1//ndef NDEBUG
 	std::cout << "ok" << std::endl;
+	iter= PatchRandomAccessEnumerator::create(&entitySet_);
+	std::cout << "--- Count of patch: "	<< iter->count() << std::endl;
+    std::cout << std::endl;
+	delete iter;
 #endif
 }
 
@@ -132,6 +133,10 @@ RadiosityRenderer* Scene::createRadiosityRenderer(int stepCount, float formFacto
 	
 	delete patchEnumerator;
 	return renderer;
+}
+
+PatchSequenceEnumerator* Scene::createPatchSequenceEnumerator() {
+    return entitySet_.createPatchSequenceEnumerator();
 }
 
 /**

@@ -41,6 +41,8 @@ class ProgressObserverMultiStep
 		 */
 		virtual void updateStep();
 
+		virtual void updatePatchCount();
+
 
 		/**
 		 * @brief Notification about subject's progress.

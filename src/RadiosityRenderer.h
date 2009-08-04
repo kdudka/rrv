@@ -48,6 +48,8 @@ class RadiosityRenderer: public ProgressSubjectMultiStep {
 		 */
 		RadiosityRenderer(PatchSequenceEnumerator *patchEnumerator, int stepCount, float formFactorTreshold, long maxCacheSize);
 		~RadiosityRenderer();
+
+        void setPatchEnumerator(PatchSequenceEnumerator *patchEnumerator);
 		
 		/**
 		 * @brief Return total count of radiosity computation steps.

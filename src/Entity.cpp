@@ -36,6 +36,24 @@
 using namespace std;
 using namespace XML;
 
+namespace {
+	inline std::string vertexToString(const Vertex &v) {
+		std::ostringstream oss;
+		oss << v.x << "," << v.y << "," << v.z;
+		return oss.str();
+	}
+    inline float colorDist(Triangle *ta, Triangle *tb) {
+        Color ca = ta->radiosity;
+        Color cb = tb->radiosity;
+
+        float dr = ca.r - cb.r;
+        float dg = ca.g - cb.g;
+        float db = ca.b - cb.b;
+
+        return dr*dr + dg*dg + db*db;
+    }
+}
+
 Entity::Entity():
 	spec_(1.0),	
 	refl_(.0),	
@@ -197,6 +215,57 @@ void Entity::divide (float size ) {
  	patchSet_ = pset;
 }
 
+void Entity::divide () {
+    static const float MIN_PATCH_SIZE = 0.01; ///< TODO: read as parameter
+    static const float MAX_PATCH_DIST = 0.01; ///< TODO: read as parameter
+
+    TriangleSet &src = *patchSet_;
+
+	// Build map Vertex -> list of Triangles
+	typedef std::vector<Triangle *> TTrianglePtrList;
+	typedef std::map<std::string, TTrianglePtrList> TVertexMap;
+	TVertexMap vertexMap;
+	for(size_t i=0; i<src.count(); i++) {
+		Triangle &t = src[i];
+
+		for(int j=0; j<3; j++) {
+			TTrianglePtrList &cpList = vertexMap[vertexToString(t.vertex[j])];
+			cpList.push_back(&t);
+		}
+	}
+
+	TriangleSet *pset = new TriangleSet;
+
+    // main loop
+	for (size_t i=0; i<src.count(); i++) {
+        Triangle &t = src[i];
+        if (TriangleSet::size<1>(&t) < MIN_PATCH_SIZE) {
+            // patch too small
+            pset->add(&t);
+            continue;
+        }
+
+        // compute color distance
+        float maxDist = 0.0;
+        for(int j=0; j<3; j++) {
+			TTrianglePtrList &cpList = vertexMap[vertexToString(t.vertex[j])];
+            for(size_t k=0; k<cpList.size(); k++) {
+                float d = colorDist(&t, cpList[k]);
+                if (maxDist < d)
+                    maxDist = d;
+            }
+        }
+
+        // divide if needed
+        if (maxDist < MAX_PATCH_DIST)
+            pset->add(&t);
+        else
+            pset->add(TriangleSet::divide(&t));
+    }
+
+ 	delete patchSet_;
+ 	patchSet_ = pset;
+}
 
 /**
  * @return PatchSequenceEnumerator*
@@ -392,14 +461,6 @@ void Entity::setColors( XMLNode* from, Color& em, Color& refl, Color& rad )
 	Entity::colorFromXMLNode( from, XMLNames::ATTRIBUTES[ Emission     ] , em );
 	Entity::colorFromXMLNode( from, XMLNames::ATTRIBUTES[ Reflectivity ] , refl );
 	Entity::colorFromXMLNode( from, XMLNames::ATTRIBUTES[ Radiosity    ] , rad );
-}
-
-namespace {
-	inline std::string vertexToString(const Vertex &v) {
-		std::ostringstream oss;
-		oss << v.x << "," << v.y << "," << v.z;
-		return oss.str();
-	}
 }
 
 TriangleSetExt* Entity::computeVertexColors() {

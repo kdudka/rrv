@@ -65,6 +65,14 @@ void ProgressSubjectMultiStep::notifyStep() {
 		i->observer->updateStep();
 }
 
+void ProgressSubjectMultiStep::notifyPatchCountChanged() {
+	// Must be copy of working list to avoid race condition!!
+	TList listCopy(observerList_);
+	TList::iterator i;
+	for(i= listCopy.begin(); i!= listCopy.end(); i++)
+		i->observer->updatePatchCount();
+}
+
 void ProgressSubjectMultiStep::notifyPerStepProgress() {
 	// Must be copy of working list to avoid race condition!!
 	TList listCopy(observerList_);

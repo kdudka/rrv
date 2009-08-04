@@ -36,7 +36,10 @@ void EntitySet::divide (float size ) {
 	TContainer::iterator i;
 	for(i= container_.begin(); i!= container_.end(); i++) {
 		Entity &e = *i;
-		e.divide(size);
+        if (size == 0.0)
+            e.divide();
+        else
+            e.divide(size);
 	}
 }
 

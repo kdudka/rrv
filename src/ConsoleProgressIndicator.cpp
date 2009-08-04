@@ -34,6 +34,10 @@ ConsoleProgressIndicator::~ConsoleProgressIndicator() {
 	renderer_->detach(this);
 }
 
+void ConsoleProgressIndicator::updatePatchCount() {
+	renderer_->detach(this);
+	renderer_->attach(this, 100);
+}
 void ConsoleProgressIndicator::updateStep() {
 	counter_ = 0;
 	std::cout
@@ -43,11 +47,13 @@ void ConsoleProgressIndicator::updateStep() {
 			<< " "
 			<< std::flush;
 	
+#if 0
 	if (1== renderer_->currentStep()) {
 		renderer_->detach(this);
 		renderer_->attach(this, 10);
 		updatePerStepProgress();
 	}
+#endif
 	
 	// FIXME: This should not be here
  	if (!renderer_->currentStep())
@@ -55,7 +61,7 @@ void ConsoleProgressIndicator::updateStep() {
 }
 
 void ConsoleProgressIndicator::updatePerStepProgress() {
-	if (0==counter_%10 && !renderer_->currentStep()) {
+	if (0==counter_%10/* && !renderer_->currentStep()*/) {
 		if (counter_) {
 			std::cout
 					<< " cache raw size: "
@@ -76,8 +82,10 @@ void ConsoleProgressIndicator::updatePerStepProgress() {
 	else
 		std::cout << std::endl;
 	
+#if 0
 	if (renderer_->currentStep() && counter_ >=10)
 		std::cout << std::endl;
+#endif
 	
 	counter_++;
 }

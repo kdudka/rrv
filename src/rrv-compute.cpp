@@ -46,13 +46,19 @@ class ContinousSaver: public ProgressObserverMultiStep {
 		{
 			renderer->attach(this, perStepFreq);
 		}
+        virtual void updatePatchCount() {
+			renderer_->detach(this);
+			renderer_->attach(this, perStepFreq_);
+        }
 		virtual void updateStep() {
 			perStepCounter_ = 0;
+#if 0
 			perStepFreq_ >>= 1;
 			if (perStepFreq_ < 1)
 				perStepFreq_ = 1;
 			renderer_->detach(this);
 			renderer_->attach(this, perStepFreq_);
+#endif
 		}
 		virtual void updatePerStepProgress() {
 // 			if (1==perStepFreq_) {
@@ -70,6 +76,25 @@ class ContinousSaver: public ProgressObserverMultiStep {
 			scene_->save(nameStream.str());
 			perStepCounter_ ++;
 		}
+};
+
+class AdaptiveDivider: public ProgressObserverMultiStep {
+    public:
+        AdaptiveDivider(Scene *scene, RadiosityRenderer *renderer):
+            scene_(scene),
+            renderer_(renderer)
+        {
+			renderer->attach(this, 1);
+        }
+		virtual void updateStep() {
+            if (!renderer_->currentStep())
+                return;
+            scene_->divide();
+            renderer_->setPatchEnumerator(scene_->createPatchSequenceEnumerator());
+		}
+    private:
+        Scene *scene_;
+        RadiosityRenderer *renderer_;
 };
 
 int main(int argc, char *argv[]) {
@@ -106,17 +131,27 @@ int main(int argc, char *argv[]) {
 			scene.createRadiosityRenderer(args->getSteps(), args->getTreshold(), args->getCache()*1048576);
 			//scene.createRadiosityRenderer(STEP_COUNT, FORM_FACTOR_TRESHOLD, MAX_CACHE_SIZE);
 	
+#if 1
+    // adaptive-division branche
+    AdaptiveDivider *divider=
+            new AdaptiveDivider(&scene, renderer);
+#endif
+
 	ConsoleProgressIndicator *progressIndicator=
 			new ConsoleProgressIndicator(renderer);
 	
 	ContinousSaver *saver=
 		 	new ContinousSaver(&scene, renderer, fileName, args->getSaves());
 			//new ContinousSaver(&scene, renderer, fileName, PER_STEP_SAVE_INITIAL);
-	
+
 	renderer->compute();
 		
 	delete saver;
 	delete progressIndicator;
+#if 1
+    // adaptive-division branche
+    delete divider;
+#endif
 	delete renderer;
 
 	//scene.save(fileName+"-final.xml");

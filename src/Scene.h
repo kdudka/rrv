@@ -62,7 +62,7 @@ public:
 		 * @brief Divide scene triangles to patches.
 		 * @param size Maximum acceptable size of patch.
 		 */
-		void divide (float size);
+		void divide (float size = 0.0);
 		
 		/**
 		 * @brief @return Return instance of RadiosityRenderer object allocated on the heap.
@@ -72,6 +72,8 @@ public:
 		 * @note Maximum cache size is raw size (estimated). The real cache size can be greater.
 		 */
 		RadiosityRenderer* createRadiosityRenderer(int stepCount, float formFactorTreshold, long maxCacheSize);
+
+        PatchSequenceEnumerator* createPatchSequenceEnumerator();
 
 		/**
 		 * @brief Save scene to XML file.

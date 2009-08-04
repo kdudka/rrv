@@ -38,6 +38,10 @@ void ProgressObserverMultiStep::updateStep() {
 
 }
 
+void ProgressObserverMultiStep::updatePatchCount() {
+
+}
+
 
 /**
  */
