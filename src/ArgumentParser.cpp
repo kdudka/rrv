@@ -18,6 +18,8 @@
  */
 
 #include "ArgumentParser.h"
+
+#include <cstring>
 #include <exception>
 #include <iomanip>
 

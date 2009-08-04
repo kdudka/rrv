@@ -38,6 +38,8 @@
 	#define M_PI		3.14159265358979323846
 #endif
 
+#include <cstdlib>
+#include <cstring>
 #include <iostream>
 #include <string>
 

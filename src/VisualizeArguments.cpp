@@ -17,9 +17,11 @@
  * along with rrv.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "VisualizeArguments.h"
+
+#include <cstring>
 #include <iostream>
 #include <iomanip>
-#include "VisualizeArguments.h"
 
 #define PARAMETRS 3
 #define KEYNUM 1

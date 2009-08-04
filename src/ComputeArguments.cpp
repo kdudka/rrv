@@ -18,6 +18,9 @@
  */
 
 #include "ComputeArguments.h"
+
+#include <cstring>
+
 #define PARAMETRS 8
 using namespace std;
 

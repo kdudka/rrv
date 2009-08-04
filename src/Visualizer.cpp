@@ -22,7 +22,8 @@
 #include "TriangleSetExt.h"
 #include "Scene.h"
 
-#include <stdlib.h>
+#include <cstring>
+#include <cstdlib>
 #include <fstream>
 #include <iostream>
 // #include <unistd.h>
