@@ -99,7 +99,7 @@ ADD_LIBRARY(rrv STATIC ArgumentParser.cpp BarrelEntity.cpp ConsoleProgressIndica
 TARGET_LINK_LIBRARIES(rrv ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES} ${MINGW_LIBRARIES})
 
 # Executable binary rrv-compute
-ADD_EXECUTABLE(rrv-compute rrv-compute.cpp ComputeArguments.cpp)
+ADD_EXECUTABLE(rrv-compute rrv-compute.cpp ComputeArguments.cpp Visualizer.cpp)
 TARGET_LINK_LIBRARIES(rrv-compute rrv)
 
 # Executable binary rrv-visualize

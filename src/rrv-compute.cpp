@@ -21,12 +21,14 @@
 #include "RadiosityRenderer.h"
 #include "ConsoleProgressIndicator.h"
 #include "ComputeArguments.h"
+#include "Visualizer.h"
 
 #ifndef NDEBUG
 #	include <iostream>
 #endif
 
 #include <iomanip>
+#include <pthread.h>
 
 class ContinousSaver: public ProgressObserverMultiStep {
 		Scene *scene_;
@@ -97,6 +99,12 @@ class AdaptiveDivider: public ProgressObserverMultiStep {
         RadiosityRenderer *renderer_;
 };
 
+Scene scene;
+void *vis(void *) {
+    Visualizer::visualize(&scene);
+    return 0;
+}
+
 int main(int argc, char *argv[]) {
 	ComputeArguments *args = new ComputeArguments();
 	args->parseArguments( argc, argv );
@@ -107,8 +115,6 @@ int main(int argc, char *argv[]) {
 	std::string fileName(args->getFileIn());
 	
 	// Load scene
-	Scene scene;
-
 	try
 	{
 		scene.load(args->getFileIn());
@@ -125,6 +131,14 @@ int main(int argc, char *argv[]) {
 	// Patch division
 	//scene.divide(DIVIDE_TO);
 	scene.divide(args->getDivide());
+
+    // ////////////////////////////////////////////////////////////
+    pthread_attr_t attr;
+    if (0!= pthread_attr_init(&attr));
+
+    pthread_t thread;
+    if (0!= pthread_create(&thread, &attr, vis, 0));
+    // ////////////////////////////////////////////////////////////
 	
 	// Compute radiosity
 	RadiosityRenderer *renderer =

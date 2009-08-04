@@ -20,6 +20,7 @@
 #include "Visualizer.h"
 #include "Triangle.h"
 #include "TriangleSetExt.h"
+#include "Scene.h"
 
 #include <stdlib.h>
 #include <fstream>
@@ -34,10 +35,11 @@
 	#endif
 #endif
 
-TriangleSetExt * Visualizer::patchSequenceEnumerator_;
+TriangleSetExt * Visualizer::ts_;
 Visualizer::TColorInput Visualizer::colorInput;
 
 GLuint Visualizer::scene_;
+Scene *Visualizer::src_;
 
 int   Visualizer::xnew, Visualizer::ynew, Visualizer::znew;                  /* actual position */
 int   Visualizer::xold, Visualizer::yold, Visualizer::zold;                  /* old position */
@@ -147,6 +149,12 @@ void Visualizer::onKeyboard(unsigned char key, int, int)
       			onReshape(WindowWidth, WindowHeight);
       			glutPostRedisplay();
       			break;
+        case 'r':
+                delete ts_;
+                ts_ = src_->dumpForVis();
+                createCallList();
+                glutPostRedisplay();
+                break;
 		case 's' :				    	/* print to bitmap - screenshot */
 			saveScreenshot(screenshotFileName);
 			break;
@@ -366,8 +374,15 @@ void Visualizer::createWindow(const char * title)
  */
 void Visualizer::visualize(const char * setTitle, TriangleSetExt * patchSequenceEnumerator)
 {
-	patchSequenceEnumerator_ = patchSequenceEnumerator;
+	ts_ = patchSequenceEnumerator;
 	createWindow(setTitle);
+}
+
+void Visualizer::visualize(Scene *src)
+{
+    src_ = src;
+	ts_ = new TriangleSetExt;
+	createWindow("rrv-compute");
 }
 
 /**
@@ -378,7 +393,7 @@ void Visualizer::takeScreenshot(char * filename, TriangleSetExt * patchSequenceE
 	doScreenshot = true;
 	screenshotFileName = filename;
 
-	patchSequenceEnumerator_ = patchSequenceEnumerator;	
+	ts_ = patchSequenceEnumerator;	
 	createWindow("Screenshot");
 }
 
@@ -523,7 +538,7 @@ void Visualizer::createCallList(void)
 {
         glNewList(scene_,GL_COMPILE);
 
-        start(patchSequenceEnumerator_, colorInput);
+        start(ts_, colorInput);
 
         glEndList();
 }

@@ -35,6 +35,7 @@
 #include <GL/glut.h>
 
 #ifndef BUILDING_DOX
+class Scene;
 class TriangleSetExt;
 #endif
 
@@ -50,6 +51,7 @@ class Visualizer{
 		 * @param te Filled patch container with computed patch and vertex colors.
 		 */
 		static void visualize(const char *title, TriangleSetExt *te);	/* visualize of scene in GLUT window */
+		static void visualize(Scene *);
 		
 		/**
 		 * Using TGA image format to save screenshot.
@@ -63,10 +65,11 @@ class Visualizer{
 	private:
 		typedef enum { INTERPOLATE_RADIOSITY, INTERPOLATE_RADIOSITY_RAW, RADIOSITY_LAST, RADIOSITY, REFLECTIVITY, EMISSION, REFLECT_EMISS } TColorInput;
 	
-		static TriangleSetExt * patchSequenceEnumerator_;
+		static TriangleSetExt * ts_;
 		static TColorInput colorInput;
 	
 		static GLuint scene_;
+        static Scene *src_;
 	
 		static int   xnew, ynew, znew;                 	/* actual position */
 		static int   xold, yold, zold;                 	/* old position */
