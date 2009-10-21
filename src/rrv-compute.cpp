@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 Kamil Dudka <rrv@dudka.cz>
+ * Copyright (C) 2007-2009 Kamil Dudka <rrv@dudka.cz>
  *
  * This file is part of rrv (Radiosity Renderer and Visualizer).
  *
@@ -17,6 +17,7 @@
  * along with rrv.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "config.h"
 #include "Scene.h"
 #include "RadiosityRenderer.h"
 #include "ConsoleProgressIndicator.h"
@@ -29,6 +30,10 @@
 
 #include <iomanip>
 #include <pthread.h>
+
+#ifndef ENABLE_RT_VIS
+#   define ENABLE_RT_VIS 0
+#endif
 
 class ContinousSaver: public ProgressObserverMultiStep {
     Scene *scene_;
@@ -132,13 +137,13 @@ int main(int argc, char *argv[]) {
     //scene.divide(DIVIDE_TO);
     scene.divide(args->getDivide());
 
-    // ////////////////////////////////////////////////////////////
+#if ENABLE_RT_VIS
     pthread_attr_t attr;
     if (0!= pthread_attr_init(&attr));
 
     pthread_t thread;
     if (0!= pthread_create(&thread, &attr, vis, 0));
-    // ////////////////////////////////////////////////////////////
+#endif
 
     // Compute radiosity
     RadiosityRenderer *renderer =
