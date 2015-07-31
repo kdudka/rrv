@@ -24,6 +24,8 @@
 #include "TriangleSetExt.h"
 #include "PatchRandomAccessEnumerator.h"
 
+#include <cstdio>
+
 using namespace XML;
 
 
