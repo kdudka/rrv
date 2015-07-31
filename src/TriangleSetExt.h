@@ -29,6 +29,7 @@
 
 #include "Triangle.h"
 
+#include <cstddef>              // for size_t
 #include <vector>
 
 /**

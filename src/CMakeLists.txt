@@ -64,7 +64,7 @@ ADD_CXX_OPT("W_ALL"      "-Wall")
 ADD_CXX_OPT("W_EXTRA"    "-Wextra")
 ADD_CXX_OPT("W_D4305"    "/wd4305")
 
-option(RRV_DEBUG "Set to OFF to boost performance" ON)
+option(RRV_DEBUG "Set to ON to disable optimizations" OFF)
 if(RRV_DEBUG)
     add_definitions("-O0 -g")
 else()
