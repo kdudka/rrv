@@ -50,13 +50,12 @@ FormFactorHemicube::FormFactorHemicube (int edge, FormFactorHemicube::Mode mode,
                 default:
                 case RRV2007:
                     {
-                        assert(edge == 256);
-                        unsigned tw = -EDGE_1 + i;
-                        unsigned th = -EDGE_1 + j;
-                        unsigned R = EDGE_2;
-                        double cw = cos( M_PI * tw/(double)R );
-                        double ch = cos( M_PI * th/(double)R );
-                        float S = 256.0f*256.0f+4*256.0f*128.0f;
+                        int tw = -EDGE_1 + i;
+                        int th = -EDGE_1 + j;
+                        double R = EDGE_2;
+                        double cw = cos( M_PI * tw/R );
+                        double ch = cos( M_PI * th/R );
+                        double S = EDGE_1 * EDGE_1 + 4 * EDGE_1 * EDGE_1_2;
                         ffcoefs[i][j] = 2 * cw*ch / S;
                     }
                     break;

@@ -34,7 +34,6 @@
 	#include <GL/glx.h>
 #endif
 
-#include <cassert>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
@@ -68,12 +67,10 @@ void FormFactorEngine::fillCacheLine(int destPatch, PatchCacheLine *cacheLine)
 
 map<unsigned,double> *FormFactorEngine::getFF()
 {
-    assert(hemicube_.edge() == FormFactorEngine::EDGE_LENGTH);
-
     map<unsigned,double> *ffmap = new map<unsigned,double>();
 
-    unsigned resW = FormFactorEngine::EDGE_LENGTH;
-    unsigned resH = FormFactorEngine::EDGE_LENGTH;
+    unsigned resW = 3 * hemicube_.edge();
+    unsigned resH = resW;
 
     int size=resW*resH*3;
 
@@ -85,8 +82,10 @@ map<unsigned,double> *FormFactorEngine::getFF()
 
     glReadPixels(0, 0, resW, resH, GL_BGR, GL_UNSIGNED_BYTE, screen);
 
-    for(w=128;w<(128+512);w++)
-        for(h=128;h<(128+512);h++)
+    unsigned EDGE_1_2 = hemicube_.edge() / 2;
+    unsigned EDGE_5_2 = EDGE_1_2 + 2 * hemicube_.edge();
+    for(w=EDGE_1_2;w<EDGE_5_2;w++)
+        for(h=EDGE_1_2;h<EDGE_5_2;h++)
         {
             b = screen[ 3*(w*resH+h) +0];
             g = screen[ 3*(w*resH+h) +1];
@@ -97,7 +96,7 @@ map<unsigned,double> *FormFactorEngine::getFF()
             //screen[ 3*(w*resH+h) +1] = (unsigned char)(g*ffcoefs[w-128][h-128]);
             //screen[ 3*(w*resH+h) +2] = (unsigned char)(r*ffcoefs[w-128][h-128]);
 
-            ((*ffmap)[clr]) += hemicube_.ff(w-128,h-128);
+            ((*ffmap)[clr]) += hemicube_.ff(w-EDGE_1_2,h-EDGE_1_2);
         }
 
     //glDrawPixels(resW, resH, GL_BGR, GL_UNSIGNED_BYTE, screen);
@@ -216,6 +215,7 @@ void FormFactorEngine::createGLWindow()
         exit(-1);
     }
 
+    int EDGE_LENGTH = 3 * hemicube_.edge();
     win = XCreateSimpleWindow(dpy, RootWindow(dpy, vi->screen), 0, 0, EDGE_LENGTH,  EDGE_LENGTH, 0, 0, 0);
 
     XFree(vi);
@@ -393,10 +393,10 @@ void gluLookAtV(const Vertex &eye, const Vertex &center, const Vector &up)
  */
 void FormFactorEngine::renderViewport(const GLint x, const GLint y, const Vertex &c, const Vertex &at, const Vector &up)
 {
-    glViewport(x,y, 256,256);
+    glViewport(x,y, hemicube_.edge(), hemicube_.edge());
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(90, (double)EDGE_LENGTH/(double)EDGE_LENGTH, 1e-3, 50);
+    gluPerspective(90, 1, 1e-3, 50);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     gluLookAtV( c, at, up );
@@ -441,20 +441,22 @@ void FormFactorEngine::renderFullScene(int dest)
     Vertex atC = c+vctC;
     Vertex atD = c+vctD;
 
+    int EDGE_1 = hemicube_.edge();
+    int EDGE_2 = 2 * EDGE_1;
     // top
-    renderViewport(256, 256, c, at, vctA);
+    renderViewport(EDGE_1, EDGE_1, c, at, vctA);
 
     // 1. side
-    renderViewport(256, 512, c, atA, norm_m);
+    renderViewport(EDGE_1, EDGE_2, c, atA, norm_m);
 
     // opposite side
-    renderViewport(256, 0, c, atB, norm);
+    renderViewport(EDGE_1, 0, c, atB, norm);
 
     // left side
-    renderViewport(0, 256, c, atC, vctA);
+    renderViewport(0, EDGE_1, c, atC, vctA);
 
     // right side
-    renderViewport(512, 256, c, atD, vctA);
+    renderViewport(EDGE_2, EDGE_1, c, atD, vctA);
 
     // render
     glFlush();

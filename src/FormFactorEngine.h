@@ -91,10 +91,6 @@ class FormFactorEngine {
          * @brief Destructor, close window, free memory.
          */
         ~FormFactorEngine();
-
-        static const int EDGE_1 = 256;	 ///< size (in pixels) of hemi-cube edge
-        static const int EDGE_2 = 2*EDGE_1;	///< EDGE_1 * 2 (size of important area in hemicube)
-        static const int EDGE_LENGTH = 3*EDGE_1;	 ///< size (pixels) of render viewport
 };
 
 #endif // FORMFACTORENGINE_H
