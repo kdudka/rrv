@@ -50,7 +50,7 @@ class RadiosityRenderer: public ProgressSubjectMultiStep {
          * @param hcMode hemicube form factor algorithm
          * @param hcNormalize hemicube normalization
          */
-        RadiosityRenderer(PatchSequenceEnumerator *patchEnumerator, int stepCount, float formFactorTreshold, long maxCacheSize, int hcEdge = 256, FormFactorHemicube::Mode hcMode = FormFactorHemicube::RRV2007, bool hcNormalize = false);
+        RadiosityRenderer(PatchSequenceEnumerator *patchEnumerator, int stepCount, float formFactorTreshold, long maxCacheSize, int hcEdge = 256, FormFactorHemicube::Mode hcMode = FormFactorHemicube::Cohen1985, bool hcNormalize = true);
         ~RadiosityRenderer();
 
         /**
