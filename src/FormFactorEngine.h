@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2007 David Barina <DaBler@gmail.com>
+ * Copyright (C) 2015 Claude Heiland-Allen <claude@mathr.co.uk>
  *
  * This file is part of rrv (Radiosity Renderer and Visualizer).
  *
@@ -38,6 +39,7 @@
 
 #include <GL/glu.h>
 #include "Triangle.h"
+#include "FormFactorHemicube.h"
 
 using namespace std;
 
@@ -54,10 +56,11 @@ class FormFactorEngine {
     public:
 
         /**
-         * @brief Constructor, create window, OpenGL context and pre-compute some temp variables.
+         * @brief Constructor, create window and OpenGL context.
          * @param patchEnumerator
+         * @param hemicube Per-pixel form factors.
          */
-        FormFactorEngine (PatchRandomAccessEnumerator *patchEnumerator);
+        FormFactorEngine (PatchRandomAccessEnumerator *patchEnumerator, const FormFactorHemicube &hemicube);
 
         /**
          * @brief Compute form factors for destination patch destPatch and store these factors into cache line.
@@ -69,6 +72,7 @@ class FormFactorEngine {
     private:
 
         PatchRandomAccessEnumerator *patchEnumerator_;
+        const FormFactorHemicube &hemicube_;
 
 #if defined(__WIN32__) || defined(_WIN32) || defined(__CYGWIN__)
 #else
@@ -91,9 +95,6 @@ class FormFactorEngine {
         static const int EDGE_1 = 256;	 ///< size (in pixels) of hemi-cube edge
         static const int EDGE_2 = 2*EDGE_1;	///< EDGE_1 * 2 (size of important area in hemicube)
         static const int EDGE_LENGTH = 3*EDGE_1;	 ///< size (pixels) of render viewport
-
-    private:
-        double **ffcoefs;
 };
 
 #endif // FORMFACTORENGINE_H

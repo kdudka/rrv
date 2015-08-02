@@ -28,18 +28,22 @@ RadiosityRenderer::RadiosityRenderer(
         PatchSequenceEnumerator *patchEnumerator,
         int stepCount,
         float formFactorTreshold,
-        long maxCacheSize
+        long maxCacheSize,
+        int hcEdge,
+        FormFactorHemicube::Mode hcMode,
+        bool hcNormalize
         ):
     stepCount_(stepCount),
     currentStep_(0),
     currentPatch_(0),
+    hemicube_(hcEdge, hcMode, hcNormalize),
     colorPeak_(0.0)
 {
     patchEnumerator_ = new PatchRandomAccessEnumerator(patchEnumerator);
     patchCount_ = patchEnumerator_->count();
 
     // Create patch cache
-    patchCache_ = new PatchCache(patchEnumerator_, formFactorTreshold, maxCacheSize);
+    patchCache_ = new PatchCache(patchEnumerator_, formFactorTreshold, maxCacheSize, hemicube_);
 
     // #ifndef NDEBUG
     std::cout << "--- Count of patch: " << patchCount_ << std::endl;

@@ -86,6 +86,7 @@ add_library(rrv STATIC
     Entity.cpp
     EntitySet.cpp
     FormFactorEngine.cpp
+    FormFactorHemicube.cpp
     GlobeEntity.cpp
     PatchCache.cpp
     PatchCacheLine.cpp

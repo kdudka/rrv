@@ -31,6 +31,7 @@
 
 #include <vector>
 #include <queue>
+class FormFactorHemicube;
 class FormFactorEngine;
 class PatchRandomAccessEnumerator;
 
@@ -44,9 +45,10 @@ class PatchCache {
          * @param patchEnumerator @b Shared instance of PatchRandomAccessEnumerator.
          * @param ffTreshold Pair of patches with smaller form factor than formFactorTreshold will be ignored.
          * @param maxCacheSize Maximum size of patch cache (in bytes).
+         * @param hemicube Form factors.
          * @note Maximum cache size is raw size (estimated). The real cache size can be greater.
          */
-        PatchCache(PatchRandomAccessEnumerator *patchEnumerator, float ffTreshold, long maxCacheSize);
+        PatchCache(PatchRandomAccessEnumerator *patchEnumerator, float ffTreshold, long maxCacheSize, const FormFactorHemicube &hemicube);
         ~PatchCache();
 
         /**
@@ -66,6 +68,7 @@ class PatchCache {
         PatchRandomAccessEnumerator *patchEnumerator_;
         float ffTreshold_;
         long maxCacheSize_;
+        const FormFactorHemicube &hemicube_;
         size_t patchCount_;
         FormFactorEngine *ffe_;
 

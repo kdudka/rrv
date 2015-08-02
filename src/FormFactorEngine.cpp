@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2007 David Barina <DaBler@gmail.com>
+ * Copyright (C) 2015 Claude Heiland-Allen <claude@mathr.co.uk>
  *
  * This file is part of rrv (Radiosity Renderer and Visualizer).
  *
@@ -33,11 +34,7 @@
 	#include <GL/glx.h>
 #endif
 
-#include <math.h>
-#ifndef M_PI
-	#define M_PI		3.14159265358979323846
-#endif
-
+#include <cassert>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
@@ -56,15 +53,13 @@ void FormFactorEngine::fillCacheLine(int destPatch, PatchCacheLine *cacheLine)
     renderFullScene(destPatch);
     map<unsigned,double> *ffmap = getFF();
 
-    float S = 256.0f*256.0f+4*256.0f*128.0f;
-
     map<unsigned,double>::iterator iter;
     for( iter = ffmap->begin(); iter != ffmap->end(); iter++ ) {
         if(iter->first != 0xffffff)
         {
             // this condition is due tu not offscreen rendering!!!
             if(static_cast<unsigned>(patchSet.count()) > iter->first)
-                cacheLine->addPatch(iter->first, 2.0*iter->second/S);
+                cacheLine->addPatch(iter->first, iter->second);
         }
     }
 
@@ -73,6 +68,8 @@ void FormFactorEngine::fillCacheLine(int destPatch, PatchCacheLine *cacheLine)
 
 map<unsigned,double> *FormFactorEngine::getFF()
 {
+    assert(hemicube_.edge() == FormFactorEngine::EDGE_LENGTH);
+
     map<unsigned,double> *ffmap = new map<unsigned,double>();
 
     unsigned resW = FormFactorEngine::EDGE_LENGTH;
@@ -100,7 +97,7 @@ map<unsigned,double> *FormFactorEngine::getFF()
             //screen[ 3*(w*resH+h) +1] = (unsigned char)(g*ffcoefs[w-128][h-128]);
             //screen[ 3*(w*resH+h) +2] = (unsigned char)(r*ffcoefs[w-128][h-128]);
 
-            ((*ffmap)[clr]) += /*1*/ffcoefs[w-128][h-128];
+            ((*ffmap)[clr]) += hemicube_.ff(w-128,h-128);
         }
 
     //glDrawPixels(resW, resH, GL_BGR, GL_UNSIGNED_BYTE, screen);
@@ -113,25 +110,10 @@ map<unsigned,double> *FormFactorEngine::getFF()
 /**
  * @param  patchIterator
  */
-FormFactorEngine::FormFactorEngine (PatchRandomAccessEnumerator *patchEnumerator):
-    patchEnumerator_(patchEnumerator)
+FormFactorEngine::FormFactorEngine (PatchRandomAccessEnumerator *patchEnumerator, const FormFactorHemicube &hemicube):
+    patchEnumerator_(patchEnumerator), hemicube_(hemicube)
 {
     createGLWindow();
-
-    ffcoefs = new double*[EDGE_2];
-    for(int i=0; i<EDGE_2; i++)
-    {
-        ffcoefs[i] = new double[EDGE_2];
-        for(int j=0; j<EDGE_2; j++)
-        {
-            unsigned tw = -EDGE_1 + i;
-            unsigned th = -EDGE_1 + j;
-            unsigned R = EDGE_2;
-            double cw = cos( M_PI * tw/(double)R );
-            double ch = cos( M_PI * th/(double)R );
-            ffcoefs[i][j] = cw*ch;
-        }
-    }
 }
 
 FormFactorEngine::~FormFactorEngine()
@@ -140,9 +122,6 @@ FormFactorEngine::~FormFactorEngine()
 #else
     XCloseDisplay(dpy);
 #endif
-    for(int i=0; i<EDGE_2; i++)
-        delete[] ffcoefs[i];
-    delete[] ffcoefs;
 }
 
 #if defined(__WIN32__) || defined(_WIN32) || defined(__CYGWIN__)

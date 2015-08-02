@@ -24,11 +24,13 @@
 PatchCache::PatchCache(
         PatchRandomAccessEnumerator *patchEnumerator,
         float ffTreshold,
-        long maxCacheSize
+        long maxCacheSize,
+        const FormFactorHemicube &hemicube
         ):
     patchEnumerator_(patchEnumerator),
     ffTreshold_(ffTreshold),
     maxCacheSize_(maxCacheSize),
+    hemicube_(hemicube),
     cachedItems_(0)
 {
     patchCount_ = patchEnumerator->count();
@@ -39,7 +41,7 @@ PatchCache::PatchCache(
     // Create patch cache (priority) queue
     cacheQueue_ = new TQueue;
 
-    ffe_ = new FormFactorEngine(patchEnumerator);
+    ffe_ = new FormFactorEngine(patchEnumerator, hemicube_);
 }
 
 PatchCache::~PatchCache() {

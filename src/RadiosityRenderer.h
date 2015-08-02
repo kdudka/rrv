@@ -29,6 +29,7 @@
 
 #include "Triangle.h"
 #include "ProgressSubjectMultiStep.h"
+#include "FormFactorHemicube.h"
 
 class PatchSequenceEnumerator;
 class PatchRandomAccessEnumerator;
@@ -45,8 +46,11 @@ class RadiosityRenderer: public ProgressSubjectMultiStep {
          * @param formFactorTreshold Pair of patches with smaller form factor than formFactorTreshold will be ignored.
          * @param maxCacheSize Maximum size of patch cache (in bytes).
          * @note Maximum cache size is raw size (estimated). The real cache size can be greater.
+         * @param hcEdge hemicube edge length
+         * @param hcMode hemicube form factor algorithm
+         * @param hcNormalize hemicube normalization
          */
-        RadiosityRenderer(PatchSequenceEnumerator *patchEnumerator, int stepCount, float formFactorTreshold, long maxCacheSize);
+        RadiosityRenderer(PatchSequenceEnumerator *patchEnumerator, int stepCount, float formFactorTreshold, long maxCacheSize, int hcEdge = 256, FormFactorHemicube::Mode hcMode = FormFactorHemicube::RRV2007, bool hcNormalize = false);
         ~RadiosityRenderer();
 
         /**
@@ -93,6 +97,7 @@ class RadiosityRenderer: public ProgressSubjectMultiStep {
         PatchRandomAccessEnumerator *patchEnumerator_;
         int patchCount_;
         PatchCache *patchCache_;
+        FormFactorHemicube hemicube_;
 
     private:
         float colorPeak_;
