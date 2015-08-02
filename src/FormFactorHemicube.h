@@ -41,7 +41,14 @@ class FormFactorHemicube {
             /**
              * @brief RRV's original implementation.
              */
-            RRV2007
+            RRV2007,
+            /**
+             * @brief Cohen and Greenberg's implementation, 1985.
+             * The Hemi-cube: a Radiosity Solution for Complex Environments,
+             * Michael F. Cohen and Donald P. Greenberg,
+             * ACM SIGGRAPH Volume 19, Number 3, 1985.
+             */
+            Cohen1985
         };
 
         /**

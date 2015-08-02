@@ -59,6 +59,35 @@ FormFactorHemicube::FormFactorHemicube (int edge, FormFactorHemicube::Mode mode,
                         ffcoefs[i][j] = 2 * cw*ch / S;
                     }
                     break;
+                case Cohen1985:
+                    {
+                        double x = (i + 0.5 - EDGE_1) / EDGE_1_2;
+                        double y = (j + 0.5 - EDGE_1) / EDGE_1_2;
+                        double z = 1;
+                        if (x < -1)
+                        {
+                            z = 2 + x;
+                            x = -1;
+                        }
+                        if (x > 1)
+                        {
+                            z = 2 - x;
+                            x = 1;
+                        }
+                        if (y < -1)
+                        {
+                            z = 2 + y;
+                            y = -1;
+                        }
+                        if (y > 1)
+                        {
+                            z = 2 - y;
+                            y = 1;
+                        }
+                        double S = EDGE_1 * EDGE_1 + 4 * EDGE_1 * EDGE_1_2;
+                        ffcoefs[i][j] = 8 * z / (M_PI * (x * x + y * y + z * z)) / S;
+                    }
+                    break;
                 }
 
     if(normalize)
