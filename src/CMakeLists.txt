@@ -121,6 +121,11 @@ add_executable(rrv-compute
     Visualizer.cpp)
 target_link_libraries(rrv-compute rrv)
 
+# Executable binary rrv-compute-gl3
+add_executable(rrv-compute-gl3
+    rrv-compute-gl3.cpp)
+target_link_libraries(rrv-compute-gl3 rrv -lGLEW -lglfw)
+
 # Executable binary rrv-visualize
 add_executable(rrv-visualize
     rrv-visualize.cpp
