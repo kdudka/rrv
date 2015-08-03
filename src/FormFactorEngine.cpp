@@ -19,6 +19,7 @@
  */
 
 #include "FormFactorEngine.h"
+#include "FormFactorView.h"
 #include "TriangleSet.h"
 #include "PatchRandomAccessEnumerator.h"
 #include "PatchCacheLine.h"
@@ -261,105 +262,6 @@ void FormFactorEngine::createGLWindow()
     glMatrixMode(GL_MODELVIEW);
 }
 
-class Vector;
-inline float operator* (const Vector &u, const Vector &v);
-
-#ifndef NDEBUG
-inline std::ostream& operator<< (std::ostream &out, const Vector &vect);
-#endif
-
-class Vector {
-    public:
-        // tohle by mohlo byt pozdeji private
-        float dx,dy,dz;
-
-    public:
-        static Vector fromTriangle(Triangle &t) {
-            return Vector(
-                    t.vertex[0],
-                    t.vertex[1],
-                    t.vertex[2]
-                    );
-        }
-
-        static float cos(const Vector &u, const Vector &v) {
-            return (u*v)/(u.size()*v.size());
-        }
-
-        float& operator[](int i) {
-            if(0==i)
-                return dx;
-            if(1==i)
-                return dy;
-            if(2==i)
-                return dz;
-            return(dx);
-        }
-
-        const float& operator[](int i) const {
-            if(0==i)
-                return dx;
-            if(1==i)
-                return dy;
-            if(2==i)
-                return dz;
-            return(dx);
-        }
-
-        Vector(const float dx, const float dy, const float dz)
-        {
-            this->dx = dx;
-            this->dy = dy;
-            this->dz = dz;
-        }
-
-        Vector(const Vertex &a, const Vertex &b) {
-            dx = a.x - b.x;
-            dy = a.y - b.y;
-            dz = a.z - b.z;
-        }
-
-        Vector(const Vector &u, const Vector &v) { // normalovy
-            dx = u[1]*v[2] - v[1]*u[2];
-            dy = u[2]*v[0] - v[2]*u[0];
-            dz = u[0]*v[1] - v[0]*u[1];
-        }
-
-        Vector(const Vertex &a, const Vertex &b, const Vertex &c) {
-            Vector u(b,a);
-            Vector v(c,a);
-            dx = u[1]*v[2] - v[1]*u[2];
-            dy = u[2]*v[0] - v[2]*u[0];
-            dz = u[0]*v[1] - v[0]*u[1];
-        }
-
-        float size() const {
-            return sqrtf( dx*dx + dy*dy + dz*dz );
-        }
-        /*
-           Vertex operator+ (const Vertex &v) {
-           return Vertex(v.x+dx, v.y+dy, v.z+dz);
-           }
-           */
-};
-
-inline float operator* (const Vector &u, const Vector &v) {
-    return u[0]*v[0] + u[1]*v[1] + u[2]*v[2];
-}
-#ifndef NDEBUG
-inline std::ostream& operator<< (std::ostream &out, const Vector &vect) {
-    out << "vect(" <<
-        vect[0] << ", " <<
-        vect[1] << ", " <<
-        vect[2] << ")";
-    return out;
-}
-#endif
-
-inline Vertex operator+ (const Vertex &v, const Vector &n) {
-    return Vertex(v.x+n.dx, v.y+n.dy, v.z+n.dz);
-}
-
 void FormFactorEngine::drawScene()
 {
     PatchRandomAccessEnumerator &patchSet = *patchEnumerator_;
@@ -416,47 +318,31 @@ void FormFactorEngine::renderFullScene(int dest)
     // destination triangle
     Triangle &t0 = patchSet[dest];
 
-    // center of this triangle
-    Vertex c = Triangle::centerOf(t0);
-
-    // normal vector and inverse normal vector of this triangle
-    Vector norm = Vector::fromTriangle(t0);
-    Vector norm_m(-norm.dx,-norm.dy,-norm.dz);
-
-    Vector side(norm, Vector(1,2,3));
-    if(0 == side.size())
-        side = Vector(norm, Vector(1,1,1)); // a neudelat Vector::operator= ??
-    Vector side_m(-side.dx,-side.dy,-side.dz);
-
-    // side vectors
-    Vector vctD(/*t0.vertex[0], t0.vertex[1]*/side);
-    Vector vctC(/*t0.vertex[1], t0.vertex[0]*/side_m);
-    Vector vctA( vctD, norm );
-    Vector vctB( vctC, norm );
+    FormFactorView v(t0);
 
     // points for directions of camera (top and 4 side)
-    Vertex at = c+norm;
-    Vertex atA = c+vctA;
-    Vertex atB = c+vctB;
-    Vertex atC = c+vctC;
-    Vertex atD = c+vctD;
+    Vertex at = v.c+v.norm;
+    Vertex atA = v.c+v.vctA;
+    Vertex atB = v.c+v.vctB;
+    Vertex atC = v.c+v.vctC;
+    Vertex atD = v.c+v.vctD;
 
     int EDGE_1 = hemicube_.edge();
     int EDGE_2 = 2 * EDGE_1;
     // top
-    renderViewport(EDGE_1, EDGE_1, c, at, vctA);
+    renderViewport(EDGE_1, EDGE_1, v.c, at, v.vctA);
 
     // 1. side
-    renderViewport(EDGE_1, EDGE_2, c, atA, norm_m);
+    renderViewport(EDGE_1, EDGE_2, v.c, atA, v.norm_m);
 
     // opposite side
-    renderViewport(EDGE_1, 0, c, atB, norm);
+    renderViewport(EDGE_1, 0, v.c, atB, v.norm);
 
     // left side
-    renderViewport(0, EDGE_1, c, atC, vctA);
+    renderViewport(0, EDGE_1, v.c, atC, v.vctA);
 
     // right side
-    renderViewport(EDGE_2, EDGE_1, c, atD, vctA);
+    renderViewport(EDGE_2, EDGE_1, v.c, atD, v.vctA);
 
     // render
     glFlush();
