@@ -86,9 +86,6 @@ class Entity
          */
         void divide (float size);
 
-        /// adaptive division
-        void divide ();
-
         /**
          * @brief Create enumerator for entity's patches.
          * @return Return instance of PatchSequenceEnumerator allocated on the heap.

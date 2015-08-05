@@ -22,9 +22,5 @@
 void ProgressObserverMultiStep::updateStep() {
 }
 
-void ProgressObserverMultiStep::updatePatchCount() {
-}
-
-
 void ProgressObserverMultiStep::updatePerStepProgress() {
 }

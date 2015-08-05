@@ -42,7 +42,6 @@ class ConsoleProgressIndicator: public ProgressObserverMultiStep
         ~ConsoleProgressIndicator();
 
         virtual void updateStep();
-        virtual void updatePatchCount();
         virtual void updatePerStepProgress();
 
     private:

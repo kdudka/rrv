@@ -42,14 +42,6 @@ PatchCache::PatchCache(
     ffe_ = new FormFactorEngine(patchEnumerator);
 }
 
-void PatchCache::setPatchEnumerator(PatchRandomAccessEnumerator *patchEnumerator) {
-    delete ffe_;
-    delete cache_;
-    patchCount_ = patchEnumerator->count();
-    cache_ = new TCache(patchCount_, 0);
-    ffe_ = new FormFactorEngine(patchEnumerator);
-}
-
 PatchCache::~PatchCache() {
     delete ffe_;
     delete cacheQueue_;
@@ -69,7 +61,6 @@ long int PatchCache::cacheRawSize() const {
 }
 
 Color PatchCache::totalRadiosity(int destPatch) {	
-#if 0
     // master branche
     PatchCacheLine *&cacheLine = cache_->operator[](destPatch);
     if (0==cacheLine) {
@@ -81,16 +72,10 @@ Color PatchCache::totalRadiosity(int destPatch) {
         cachedItems_ += cacheLine->itemCount();
         cacheQueue_->push(&cacheLine);
     }
-#else
-    // adaptive-division branche
-    PatchCacheLine *cacheLine = new PatchCacheLine(patchEnumerator_, ffTreshold_);
-    ffe_->fillCacheLine(destPatch, cacheLine);
-#endif
 
     // Use cache-line to cumpute total radiosity
     Color rad = cacheLine->totalRadiosity();
 
-#if 0
     // master branche
     if (this->cacheRawSize() >= maxCacheSize_) {
         // maxCacheSize exceed --> free the largest cache-line
@@ -101,10 +86,6 @@ Color PatchCache::totalRadiosity(int destPatch) {
         topCL = 0;
         cacheQueue_->pop();
     }
-#else
-    // adaptive-division branche
-    delete cacheLine;
-#endif
 
     return rad;
 }

@@ -48,7 +48,6 @@ class PatchCache {
          */
         PatchCache(PatchRandomAccessEnumerator *patchEnumerator, float ffTreshold, long maxCacheSize);
         ~PatchCache();
-        void setPatchEnumerator(PatchRandomAccessEnumerator *patchEnumerator);
 
         /**
          * This computation respectes form factor for each patch.

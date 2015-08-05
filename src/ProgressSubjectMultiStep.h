@@ -85,8 +85,6 @@ class ProgressSubjectMultiStep
          */
         void notifyPerStepProgress();
 
-        void notifyPatchCountChanged();
-
     private:
         struct TItem {
             int offset;

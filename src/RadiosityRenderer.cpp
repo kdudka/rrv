@@ -48,14 +48,6 @@ RadiosityRenderer::RadiosityRenderer(
     // #endif
 }
 
-void RadiosityRenderer::setPatchEnumerator(PatchSequenceEnumerator *patchEnumerator) {
-    delete patchEnumerator_;
-    patchEnumerator_ = new PatchRandomAccessEnumerator(patchEnumerator);
-    patchCount_ = patchEnumerator_->count();
-    patchCache_->setPatchEnumerator(patchEnumerator_);
-    notifyPatchCountChanged();
-}
-
 RadiosityRenderer::~RadiosityRenderer() {
     delete patchCache_;
     delete patchEnumerator_;
