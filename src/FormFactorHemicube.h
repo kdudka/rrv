@@ -71,7 +71,7 @@ class FormFactorHemicube {
          * to zero.  Outside the bounds [0 .. 2*edge), results are undefined.
          * Use of odd edge lengths is untested.
          */
-        double ff (int i, int j) const;
+        float ff (int i, int j) const;
 
         /**
          * @brief Retrieve the hemicube edge length.
@@ -80,7 +80,7 @@ class FormFactorHemicube {
 
     private:
         int edge_;
-        double **ffcoefs;
+        float **ffcoefs;
 };
 
 #endif // FORMFACTORHEMICUBE_H

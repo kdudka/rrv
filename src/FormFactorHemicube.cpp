@@ -36,9 +36,9 @@ FormFactorHemicube::FormFactorHemicube (int edge, FormFactorHemicube::Mode mode,
     int EDGE_1_2 = edge / 2;
     int EDGE_3_2 = edge / 2 + edge;
 
-    ffcoefs = new double*[EDGE_2];
+    ffcoefs = new float*[EDGE_2];
     for(int i=0; i<EDGE_2; i++)
-        ffcoefs[i] = new double[EDGE_2];
+        ffcoefs[i] = new float[EDGE_2];
 
     for(int i=0; i<EDGE_2; i++)
         for(int j=0; j<EDGE_2; j++)
@@ -114,7 +114,7 @@ FormFactorHemicube::~FormFactorHemicube ()
     }
 }
 
-double FormFactorHemicube::ff (int i, int j) const
+float FormFactorHemicube::ff (int i, int j) const
 {
     assert(0 <= i);
     assert(i < 2 * edge_);
