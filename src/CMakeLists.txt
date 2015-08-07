@@ -75,6 +75,7 @@ else()
     ADD_CXX_OPT("F_EXPENSIVE_OPTIMIZATIONS"     "-fexpensive-optimizations")
     ADD_CXX_OPT("F_FAST_MATH"                   "-ffast-math")
     ADD_CXX_OPT("F_OMIT_FRAME_POINTER"          "-fomit-frame-pointer")
+    ADD_CXX_OPT("F_OPENMP"                      "-fopenmp")
 endif()
 
 # Static library rrv
@@ -120,16 +121,16 @@ add_executable(rrv-compute
     rrv-compute.cpp
     ComputeArguments.cpp
     Visualizer.cpp)
-target_link_libraries(rrv-compute rrv)
+target_link_libraries(rrv-compute rrv -fopenmp)
 
 # Executable binary rrv-compute-gl3
 add_executable(rrv-compute-gl3
     rrv-compute-gl3.cpp)
-target_link_libraries(rrv-compute-gl3 rrv -lGLEW -lglfw)
+target_link_libraries(rrv-compute-gl3 rrv -lGLEW -lglfw -fopenmp)
 
 # Executable binary rrv-visualize
 add_executable(rrv-visualize
     rrv-visualize.cpp
     Visualizer.cpp
     VisualizeArguments.cpp)
-target_link_libraries(rrv-visualize rrv)
+target_link_libraries(rrv-visualize rrv -fopenmp)

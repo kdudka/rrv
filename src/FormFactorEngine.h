@@ -40,6 +40,8 @@
 #include "FormFactorHemicube.h"
 #include "LinearAlgebra.h"
 
+#include <map>
+
 using namespace std;
 
 #ifndef BUILDING_DOX
@@ -62,7 +64,15 @@ class FormFactorEngine {
         FormFactorEngine (PatchRandomAccessEnumerator *patchEnumerator, const FormFactorHemicube &hemicube);
 
         /**
+         * @brief Enqueue calculation of form factors for destination patch destPatch.
+         * @note  fillCacheLine() must be called later with the same destPatch to avoid leaking memory.
+         * @param destPatch Index of destination patch.
+         */
+        void prepare(int destPatch);
+
+        /**
          * @brief Compute form factors for destination patch destPatch and store these factors into cache line.
+         * @note  prepare() must have been called before with the same destPatch
          * @param destPatch Index of destination patch.
          * @param cacheLine Pointer to target cache line.
          */
@@ -73,7 +83,8 @@ class FormFactorEngine {
         PatchRandomAccessEnumerator *patchEnumerator_;
         const FormFactorHemicube &hemicube_;
         GLuint vbo_;
-        unsigned char *screen;
+        std::map<int, unsigned char *> screens;
+        std::map<int, GLuint> pbos;
         DenseVector<float> *ffvec;
 
 #if defined(__WIN32__) || defined(_WIN32) || defined(__CYGWIN__)
@@ -86,7 +97,7 @@ class FormFactorEngine {
         void drawScene();
         void renderViewport(const GLint x, const GLint y, const Vertex &c, const Vertex &at, const Vector &up);
         void renderFullScene(int dest);
-        void getFF();
+        void getFF(int destPatch);
 
     public:
         /**

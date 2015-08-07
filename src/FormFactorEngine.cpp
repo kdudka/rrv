@@ -46,25 +46,47 @@ using namespace std;
  * @param destPatch Index of destination patch.
  * @param cacheLine Pointer to target cache line.
  */
-void FormFactorEngine::fillCacheLine(int destPatch, PatchCacheLine *cacheLine)
+void FormFactorEngine::prepare(int destPatch)
 {
     renderFullScene(destPatch);
-    getFF();
+
+    unsigned EDGE_1_2 = hemicube_.edge() / 2;
+    unsigned EDGE_2 = hemicube_.edge() * 2;
+    unsigned resW = EDGE_2;
+    unsigned resH = resW;
+    unsigned bytes = resW * resH * 3;
+
+    GLuint pbo;
+    glGenBuffers(1, &pbo);
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, pbo);
+    glBufferData(GL_PIXEL_PACK_BUFFER, bytes, 0, GL_STREAM_READ);
+
+    glReadPixels(EDGE_1_2, EDGE_1_2, resW, resH, GL_BGR, GL_UNSIGNED_BYTE, 0);
+
+    unsigned char *screen = (unsigned char *) glMapBuffer(GL_PIXEL_PACK_BUFFER, GL_READ_ONLY);
+    screens[destPatch] = screen;
+    pbos[destPatch] = pbo;
 
     // only due to doublebuffering
 #if defined(__WIN32__) || defined(_WIN32) || defined(__CYGWIN__)
 #else
     glXSwapBuffers( dpy, win );
 #endif
+}
 
+/**
+ * @param destPatch Index of destination patch.
+ * @param cacheLine Pointer to target cache line.
+ */
+void FormFactorEngine::fillCacheLine(int destPatch, PatchCacheLine *cacheLine)
+{
+    getFF(destPatch);
     cacheLine->addPatches(*ffvec);
 }
 
-void FormFactorEngine::getFF()
+void FormFactorEngine::getFF(int destPatch)
 {
-    unsigned EDGE_1_2 = hemicube_.edge() / 2;
     unsigned EDGE_2 = hemicube_.edge() * 2;
-
     unsigned resW = EDGE_2;
     unsigned resH = resW;
 
@@ -72,11 +94,12 @@ void FormFactorEngine::getFF()
 
     unsigned char r,g,b;
 
-    glReadPixels(EDGE_1_2, EDGE_1_2, resW, resH, GL_BGR, GL_UNSIGNED_BYTE, screen);
+    unsigned char *screen = screens[destPatch];
+    GLuint pbo = pbos[destPatch];
+    assert(screen);
 
-    unsigned count = patchEnumerator_->count();
     ffvec->clear(0);
-
+    unsigned count = patchEnumerator_->count();
     for(w=0;w<EDGE_2;w++)
         for(h=0;h<EDGE_2;h++)
         {
@@ -93,7 +116,9 @@ void FormFactorEngine::getFF()
                 (*ffvec)[clr] += hemicube_.ff(w,h);
         }
 
-    //glDrawPixels(resW, resH, GL_BGR, GL_UNSIGNED_BYTE, screen);
+    glDeleteBuffers(1, &pbo);
+    pbos.erase(destPatch);
+    screens.erase(destPatch);
 }
 
 /**
@@ -104,11 +129,6 @@ FormFactorEngine::FormFactorEngine (PatchRandomAccessEnumerator *patchEnumerator
 {
     createGLWindow();
     uploadScene();
-
-    unsigned EDGE_2 = hemicube_.edge() * 2;
-    int size=EDGE_2*EDGE_2*3;
-    screen = new unsigned char[size];
-
     ffvec = new DenseVector<float>(patchEnumerator_->count());
 }
 
@@ -118,7 +138,6 @@ FormFactorEngine::~FormFactorEngine()
 #else
     XCloseDisplay(dpy);
 #endif
-    delete[] screen;
     delete ffvec;
 }
 

@@ -50,7 +50,7 @@ class PatchCache {
          * @param hemicube Form factors.
          * @note Maximum cache size is raw size (estimated). The real cache size can be greater.
          */
-        PatchCache(PatchRandomAccessEnumerator *patchEnumerator, float ffTreshold, size_t maxCacheSize, const FormFactorHemicube &hemicube);
+        PatchCache(PatchRandomAccessEnumerator *patchEnumerator, float ffTreshold, size_t maxCacheSize, const FormFactorHemicube &hemicube, int pipeline = 4);
         ~PatchCache();
 
         /**
@@ -58,8 +58,10 @@ class PatchCache {
          * @brief @return Return radiosity summarized from all patches.
          * @param destPatch Destination patch to compute radiosity for.
          * @param sceneRadiosity Packed patch colors.
+         * @param sequential Signals that destPatch is ascending by 1 in each successive call.
+         * @param noGL Signals safety of calling OpenGL (for parallelization when the cache is full).
          */
-        Color totalRadiosity(int destPatch, const DenseVector<Color> &sceneRadiosity);
+        Color totalRadiosity(int destPatch, const DenseVector<Color> &sceneRadiosity, bool sequential, bool noGL);
 
         /**
          * @brief Return current patch cache size.
@@ -67,11 +69,14 @@ class PatchCache {
          */
         size_t cacheRawSize() const;
 
+        bool full() const;
+
     private:
         PatchRandomAccessEnumerator *patchEnumerator_;
         float ffTreshold_;
         size_t maxCacheSize_;
         const FormFactorHemicube &hemicube_;
+        int pipeline_;
         size_t patchCount_;
         FormFactorEngine *ffe_;
 

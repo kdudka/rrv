@@ -34,7 +34,8 @@ PatchCacheLine::~PatchCacheLine()
         delete formFactors_;
 }
 
-void PatchCacheLine::addPatches(const DenseVector<float> &formFactors) {
+void PatchCacheLine::addPatches(const DenseVector<float> &formFactors)
+{
     if (formFactors_)
         delete formFactors_;
     formFactors_ = new CompactVector<float>(formFactors, ffTreshold_);
@@ -44,6 +45,6 @@ Color PatchCacheLine::totalRadiosity(const DenseVector<Color> &sceneRadiosity) c
     return formFactors_->dot(sceneRadiosity);
 }
 
-size_t PatchCacheLine::size() const{
+size_t PatchCacheLine::size() const {
     return formFactors_->size();
 }

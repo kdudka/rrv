@@ -112,19 +112,35 @@ void RadiosityRenderer::computeStep() {
         (*sceneRadiosity_)[i] = dest.radiosity;
     }
 
-    // Compute new step
-    for(currentPatch_=0; currentPatch_<patchCount_; currentPatch_++) {
-        notifyPerStepProgress();
-
-        // Compute radiosity
-        Triangle &dest = patch[currentPatch_];
-        Color &rad = dest.radiosity;
-        rad = patchCache_->totalRadiosity(currentPatch_, *sceneRadiosity_);
-        rad *= dest.reflectivity;
-        rad += dest.emission;
-
-        updateColorPeak(rad);
+    if(patchCache_->full())
+    {
+        // OpenGL uses thread-local storage (all GL calls
+        // must be from the thread that owns the context)
+        // if the cache is full then OpenGL can't be called
+        // which makes it safe to parallelize this loop
+        #pragma omp parallel for
+        for(int p = 0; p < patchCount_; ++p)
+            computePatch(p, false, true);
     }
+    else
+    {
+        // Compute new step
+        for(currentPatch_=0; currentPatch_<patchCount_; currentPatch_++)
+        {
+            notifyPerStepProgress();
+            computePatch(currentPatch_, currentStep_ == 0, false);
+        }
+    }
+}
+
+void RadiosityRenderer::computePatch(int p, bool sequential, bool noGL)
+{
+    PatchRandomAccessEnumerator &patch = *patchEnumerator_;
+    Triangle &dest = patch[p];
+    Color &rad = dest.radiosity;
+    rad = patchCache_->totalRadiosity(p, *sceneRadiosity_, sequential, noGL);
+    rad *= dest.reflectivity;
+    rad += dest.emission;
 }
 
 void RadiosityRenderer::normalize() {

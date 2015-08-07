@@ -26,12 +26,14 @@ PatchCache::PatchCache(
         PatchRandomAccessEnumerator *patchEnumerator,
         float ffTreshold,
         size_t maxCacheSize,
-        const FormFactorHemicube &hemicube
+        const FormFactorHemicube &hemicube,
+        int pipeline
         ):
     patchEnumerator_(patchEnumerator),
     ffTreshold_(ffTreshold),
     maxCacheSize_(maxCacheSize),
     hemicube_(hemicube),
+    pipeline_(pipeline),
     cachedSize_(0)
 {
     patchCount_ = patchEnumerator->count();
@@ -60,16 +62,38 @@ size_t PatchCache::cacheRawSize() const {
     return cachedSize_;
 }
 
-Color PatchCache::totalRadiosity(int destPatch, const DenseVector<Color> &sceneRadiosity) {
+bool PatchCache::full() const
+{
+    return cacheQueue_->size() == patchCount_;
+}
+
+Color PatchCache::totalRadiosity(int destPatch, const DenseVector<Color> &sceneRadiosity, bool sequential, bool noGL)
+{
     // master branche
     PatchCacheLine *&cacheLine = cache_->operator[](destPatch);
     if (0==cacheLine) {
+        (void) noGL; // silence warning with debug builds
+        assert(! noGL);
+
+        // pre-fill GPU form-factor calculation pipeline
+        if (sequential)
+        {
+            if (destPatch == 0)
+                for(int nextPatch = 0; nextPatch <= pipeline_ && nextPatch < int(patchCount_); ++nextPatch)
+                    ffe_->prepare(nextPatch);
+            else
+                if (destPatch + pipeline_ < int(patchCount_))
+                    ffe_->prepare(destPatch + pipeline_);
+        }
+        else
+            ffe_->prepare(destPatch);
+
         // Cache-line was not in cache --> create and fill
         cacheLine = new PatchCacheLine(patchEnumerator_, ffTreshold_);
         ffe_->fillCacheLine(destPatch, cacheLine);
 
         // Update metadata
-        cachedSize_ += cacheLine->size();
+        cachedSize_ += cacheLine->size() + sizeof(cacheLine);
         cacheQueue_->push(&cacheLine);
     }
 
@@ -77,11 +101,11 @@ Color PatchCache::totalRadiosity(int destPatch, const DenseVector<Color> &sceneR
     Color rad = cacheLine->totalRadiosity(sceneRadiosity);
 
     // master branche
-    if (this->cacheRawSize() >= maxCacheSize_) {
+    if (maxCacheSize_ > 0 && this->cacheRawSize() >= size_t(maxCacheSize_)) {
         // maxCacheSize exceed --> free the largest cache-line
         const TQueueItem &qi = cacheQueue_->top();
         PatchCacheLine *&topCL = qi.pCacheLine();
-        cachedSize_ -= topCL->size();
+        cachedSize_ -= topCL->size() + sizeof(*topCL);
         delete topCL;
         topCL = 0;
         cacheQueue_->pop();

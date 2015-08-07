@@ -119,6 +119,7 @@ class RadiosityRenderer: public ProgressSubjectMultiStep {
             dest.b *= ratio;
         }
         void computeStep();
+        void computePatch(int p, bool sequential, bool noGL);
 };
 
 #endif // RADIOSITYRENDERER_H
