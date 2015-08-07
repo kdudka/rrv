@@ -265,6 +265,11 @@ void FormFactorEngine::createGLWindow()
     glLoadIdentity();
     gluPerspective(90, (double)EDGE_LENGTH/(double)EDGE_LENGTH, 1e-3, 50);
     glMatrixMode(GL_MODELVIEW);
+
+    int EDGE_1_2 = hemicube_.edge() / 2;
+    int EDGE_2 = hemicube_.edge() * 2;
+    glScissor(EDGE_1_2, EDGE_1_2, EDGE_2, EDGE_2);
+    glEnable(GL_SCISSOR_TEST);
 }
 
 struct vdata {
