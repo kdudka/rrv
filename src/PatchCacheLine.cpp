@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2007 Kamil Dudka <rrv@dudka.cz>
+ * Copyright (C) 2015 Claude Heiland-Allen <claude@mathr.co.uk>
  *
  * This file is part of rrv (Radiosity Renderer and Visualizer).
  *
@@ -19,37 +20,30 @@
 
 #include "PatchCacheLine.h"
 #include "PatchRandomAccessEnumerator.h"
-#include <assert.h>
 
 PatchCacheLine::PatchCacheLine(PatchRandomAccessEnumerator *patchEnumerator, float ffTreshold):
     patchEnumerator_(patchEnumerator),
-    ffTreshold_(ffTreshold)
+    ffTreshold_(ffTreshold),
+    formFactors_(0)
 {
 }
 
-void PatchCacheLine::addPatch(int patch, float formFactor) {
-    assert(patch>=0);
-    assert(patch<patchEnumerator_->count());
-    if (formFactor <= ffTreshold_)
-        return;
-
-    Triangle &t= patchEnumerator_->operator[](patch);
-    Color &color= t.radiosityLast;
-    container_.push_back(TCacheItem(&color, formFactor));
+PatchCacheLine::~PatchCacheLine()
+{
+    if (formFactors_)
+        delete formFactors_;
 }
 
-Color PatchCacheLine::totalRadiosity() {
-    Color radiosity(0.0, 0.0, 0.0);
-    TContainer::iterator iter;
-    for(iter= container_.begin(); iter!= container_.end(); iter++) {
-        TCacheItem &cacheItem = *iter;
-        Color c = *(cacheItem.first);
-        c *= cacheItem.second;
-        radiosity += c;
-    }
-    return radiosity;
+void PatchCacheLine::addPatches(const DenseVector<float> &formFactors) {
+    if (formFactors_)
+        delete formFactors_;
+    formFactors_ = new CompactVector<float>(formFactors, ffTreshold_);
 }
 
-size_t PatchCacheLine::itemCount() {
-    return container_.size();
+Color PatchCacheLine::totalRadiosity(const DenseVector<Color> &sceneRadiosity) const {
+    return formFactors_->dot(sceneRadiosity);
+}
+
+size_t PatchCacheLine::size() const{
+    return formFactors_->size();
 }

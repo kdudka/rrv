@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2007 Kamil Dudka <rrv@dudka.cz>
+ * Copyright (C) 2015 Claude Heiland-Allen <claude@mathr.co.uk>
  *
  * This file is part of rrv (Radiosity Renderer and Visualizer).
  *
@@ -45,6 +46,8 @@ RadiosityRenderer::RadiosityRenderer(
     // Create patch cache
     patchCache_ = new PatchCache(patchEnumerator_, formFactorTreshold, maxCacheSize, hemicube_);
 
+    sceneRadiosity_ = new DenseVector<Color>(patchCount_);
+
     // #ifndef NDEBUG
     std::cout << "--- Count of patch: " << patchCount_ << std::endl;
     std::cout << "--- FormFactor treshold: " << formFactorTreshold << std::endl;
@@ -55,6 +58,7 @@ RadiosityRenderer::RadiosityRenderer(
 RadiosityRenderer::~RadiosityRenderer() {
     delete patchCache_;
     delete patchEnumerator_;
+    delete sceneRadiosity_;
 }
 
 /**
@@ -105,6 +109,7 @@ void RadiosityRenderer::computeStep() {
     for(int i=0; i<patchCount_; i++) {
         Triangle &dest = patch[i];
         dest.radiosityLast = dest.radiosity;
+        (*sceneRadiosity_)[i] = dest.radiosity;
     }
 
     // Compute new step
@@ -114,7 +119,7 @@ void RadiosityRenderer::computeStep() {
         // Compute radiosity
         Triangle &dest = patch[currentPatch_];
         Color &rad = dest.radiosity;
-        rad = patchCache_->totalRadiosity(currentPatch_);
+        rad = patchCache_->totalRadiosity(currentPatch_, *sceneRadiosity_);
         rad *= dest.reflectivity;
         rad += dest.emission;
 

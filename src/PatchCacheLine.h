@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2007 Kamil Dudka <rrv@dudka.cz>
+ * Copyright (C) 2015 Claude Heiland-Allen <claude@mathr.co.uk>
  *
  * This file is part of rrv (Radiosity Renderer and Visualizer).
  *
@@ -28,6 +29,7 @@
  */
 
 #include "Triangle.h"
+#include "LinearAlgebra.h"
 
 #include <cstddef>              // for size_t
 #include <vector>
@@ -45,39 +47,31 @@ class PatchCacheLine {
          * @param ffTreshold Pair of patches with smaller form factor than formFactorTreshold will be ignored.
          */
         PatchCacheLine(PatchRandomAccessEnumerator *patchEnumerator, float ffTreshold);
+        ~PatchCacheLine();
 
         /**
-         * @brief Add patch to cache-line (and save form factor of pair of patches).
-         * @param srcPatch Source patch from a pair of patches.
-         * @param formFactor Form factor of a pair of patches.
+         * @brief Add patches to cache-line.
+         * @param formFactors Source form factor vector for this patch.
          * @note There is no need to specify destination patch, because destination patch is cache-line specific.
+         * @note The input is copied to a CompactVector.
          */
-        void addPatch(int srcPatch, float formFactor);
+        void addPatches(const DenseVector<float> &formFactors);
 
         /**
          * This computation respectes cached form factor for each patch.
          * @brief @return Return radiosity summarized from all patches saved in cache-line.
          */
-        Color totalRadiosity();
+        Color totalRadiosity(const DenseVector<Color> &sceneRadiosity) const;
 
         /**
-         * @brief Return total count of patch saved in cache-line.
+         * @brief Return raw allocation size of cache line contents.
          */
-        size_t itemCount();
-
-        /**
-         * @brief Return raw allocation size of one cache item.
-         */
-        static size_t itemSize() {
-            return sizeof(TCacheItem);
-        }
+        size_t size() const;
 
     private:
         PatchRandomAccessEnumerator *patchEnumerator_;
         float ffTreshold_;
-        typedef std::pair<Color *, float> TCacheItem;
-        typedef std::vector<TCacheItem> TContainer;
-        TContainer container_;
+        CompactVector<float> *formFactors_;
 };
 
 #endif // PATCHCACHELINE_H

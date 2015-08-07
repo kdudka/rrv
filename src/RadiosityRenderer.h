@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2007 Kamil Dudka <rrv@dudka.cz>
+ * Copyright (C) 2015 Claude Heiland-Allen <claude@mathr.co.uk>
  *
  * This file is part of rrv (Radiosity Renderer and Visualizer).
  *
@@ -30,6 +31,7 @@
 #include "Triangle.h"
 #include "ProgressSubjectMultiStep.h"
 #include "FormFactorHemicube.h"
+#include "LinearAlgebra.h"
 
 class PatchSequenceEnumerator;
 class PatchRandomAccessEnumerator;
@@ -51,7 +53,7 @@ class RadiosityRenderer: public ProgressSubjectMultiStep {
          * @param hcNormalize hemicube normalization
          */
         RadiosityRenderer(PatchSequenceEnumerator *patchEnumerator, int stepCount, float formFactorTreshold, long maxCacheSize, int hcEdge = 256, FormFactorHemicube::Mode hcMode = FormFactorHemicube::Cohen1985, bool hcNormalize = true);
-        ~RadiosityRenderer();
+        virtual ~RadiosityRenderer();
 
         /**
          * @brief Return total count of radiosity computation steps.
@@ -98,6 +100,7 @@ class RadiosityRenderer: public ProgressSubjectMultiStep {
         int patchCount_;
         PatchCache *patchCache_;
         FormFactorHemicube hemicube_;
+        DenseVector<Color> *sceneRadiosity_;
 
     private:
         float colorPeak_;

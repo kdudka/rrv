@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2007 Kamil Dudka <rrv@dudka.cz>
+ * Copyright (C) 2015 Claude Heiland-Allen <claude@mathr.co.uk>
  *
  * This file is part of rrv (Radiosity Renderer and Visualizer).
  *
@@ -28,6 +29,7 @@
  */
 
 #include "PatchCacheLine.h"
+#include "LinearAlgebra.h"
 
 #include <vector>
 #include <queue>
@@ -48,26 +50,27 @@ class PatchCache {
          * @param hemicube Form factors.
          * @note Maximum cache size is raw size (estimated). The real cache size can be greater.
          */
-        PatchCache(PatchRandomAccessEnumerator *patchEnumerator, float ffTreshold, long maxCacheSize, const FormFactorHemicube &hemicube);
+        PatchCache(PatchRandomAccessEnumerator *patchEnumerator, float ffTreshold, size_t maxCacheSize, const FormFactorHemicube &hemicube);
         ~PatchCache();
 
         /**
          * This computation respectes form factor for each patch.
          * @brief @return Return radiosity summarized from all patches.
          * @param destPatch Destination patch to compute radiosity for.
+         * @param sceneRadiosity Packed patch colors.
          */
-        Color totalRadiosity(int destPatch);
+        Color totalRadiosity(int destPatch, const DenseVector<Color> &sceneRadiosity);
 
         /**
          * @brief Return current patch cache size.
          * @note This is raw size (estimated). The real cache size can be greater.
          */
-        long int cacheRawSize() const;
+        size_t cacheRawSize() const;
 
     private:
         PatchRandomAccessEnumerator *patchEnumerator_;
         float ffTreshold_;
-        long maxCacheSize_;
+        size_t maxCacheSize_;
         const FormFactorHemicube &hemicube_;
         size_t patchCount_;
         FormFactorEngine *ffe_;
@@ -75,7 +78,7 @@ class PatchCache {
         // Cache container (containing cache-lines)
         typedef std::vector<PatchCacheLine*> TCache;
         TCache *cache_;
-        long int cachedItems_;
+        size_t cachedSize_;
 
         // Priority queue used to optimize memory usage
         class TQueueItem {
@@ -83,8 +86,8 @@ class PatchCache {
             public:
             TQueueItem(PatchCacheLine **cl): cl_(cl) { }
             // Key of priority queue ordering
-            operator int() const {
-                return (*cl_)->itemCount();
+            operator size_t() const {
+                return (*cl_)->size();
             }
             // Return reference to pointer to cache-line
             PatchCacheLine*& pCacheLine() const {

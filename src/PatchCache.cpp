@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2007 Kamil Dudka <rrv@dudka.cz>
+ * Copyright (C) 2015 Claude Heiland-Allen <claude@mathr.co.uk>
  *
  * This file is part of rrv (Radiosity Renderer and Visualizer).
  *
@@ -24,14 +25,14 @@
 PatchCache::PatchCache(
         PatchRandomAccessEnumerator *patchEnumerator,
         float ffTreshold,
-        long maxCacheSize,
+        size_t maxCacheSize,
         const FormFactorHemicube &hemicube
         ):
     patchEnumerator_(patchEnumerator),
     ffTreshold_(ffTreshold),
     maxCacheSize_(maxCacheSize),
     hemicube_(hemicube),
-    cachedItems_(0)
+    cachedSize_(0)
 {
     patchCount_ = patchEnumerator->count();
 
@@ -55,14 +56,11 @@ PatchCache::~PatchCache() {
     delete cache_;
 }
 
-long int PatchCache::cacheRawSize() const {
-    return
-        static_cast<long int>(sizeof(TCache) + sizeof(TQueue)) +
-        static_cast<long int>(sizeof(PatchCacheLine) + sizeof(TQueueItem)) * patchCount_ +
-        static_cast<long int>(PatchCacheLine::itemSize()) *cachedItems_;
+size_t PatchCache::cacheRawSize() const {
+    return cachedSize_;
 }
 
-Color PatchCache::totalRadiosity(int destPatch) {	
+Color PatchCache::totalRadiosity(int destPatch, const DenseVector<Color> &sceneRadiosity) {
     // master branche
     PatchCacheLine *&cacheLine = cache_->operator[](destPatch);
     if (0==cacheLine) {
@@ -71,19 +69,19 @@ Color PatchCache::totalRadiosity(int destPatch) {
         ffe_->fillCacheLine(destPatch, cacheLine);
 
         // Update metadata
-        cachedItems_ += cacheLine->itemCount();
+        cachedSize_ += cacheLine->size();
         cacheQueue_->push(&cacheLine);
     }
 
     // Use cache-line to cumpute total radiosity
-    Color rad = cacheLine->totalRadiosity();
+    Color rad = cacheLine->totalRadiosity(sceneRadiosity);
 
     // master branche
     if (this->cacheRawSize() >= maxCacheSize_) {
         // maxCacheSize exceed --> free the largest cache-line
         const TQueueItem &qi = cacheQueue_->top();
         PatchCacheLine *&topCL = qi.pCacheLine();
-        cachedItems_ -= static_cast<int>(qi);
+        cachedSize_ -= topCL->size();
         delete topCL;
         topCL = 0;
         cacheQueue_->pop();

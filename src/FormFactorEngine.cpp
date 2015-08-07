@@ -57,10 +57,7 @@ void FormFactorEngine::fillCacheLine(int destPatch, PatchCacheLine *cacheLine)
     glXSwapBuffers( dpy, win );
 #endif
 
-    int count = patchEnumerator_->count();
-    for(int iter = 0; iter < count; ++iter)
-        if(ffvec[iter] > 0)
-            cacheLine->addPatch(iter, ffvec[iter]);
+    cacheLine->addPatches(*ffvec);
 }
 
 void FormFactorEngine::getFF()
@@ -78,7 +75,7 @@ void FormFactorEngine::getFF()
     glReadPixels(EDGE_1_2, EDGE_1_2, resW, resH, GL_BGR, GL_UNSIGNED_BYTE, screen);
 
     unsigned count = patchEnumerator_->count();
-    memset(ffvec, 0, sizeof(*ffvec) * count);
+    ffvec->clear(0);
 
     for(w=0;w<EDGE_2;w++)
         for(h=0;h<EDGE_2;h++)
@@ -93,7 +90,7 @@ void FormFactorEngine::getFF()
             //screen[ 3*(w*resH+h) +2] = (unsigned char)(r*ffcoefs[w-128][h-128]);
 
             if(clr < count)
-                ffvec[clr] += hemicube_.ff(w,h);
+                (*ffvec)[clr] += hemicube_.ff(w,h);
         }
 
     //glDrawPixels(resW, resH, GL_BGR, GL_UNSIGNED_BYTE, screen);
@@ -112,7 +109,7 @@ FormFactorEngine::FormFactorEngine (PatchRandomAccessEnumerator *patchEnumerator
     int size=EDGE_2*EDGE_2*3;
     screen = new unsigned char[size];
 
-    ffvec = new double[patchEnumerator_->count()];
+    ffvec = new DenseVector<float>(patchEnumerator_->count());
 }
 
 FormFactorEngine::~FormFactorEngine()
@@ -122,7 +119,7 @@ FormFactorEngine::~FormFactorEngine()
     XCloseDisplay(dpy);
 #endif
     delete[] screen;
-    delete[] ffvec;
+    delete ffvec;
 }
 
 #if defined(__WIN32__) || defined(_WIN32) || defined(__CYGWIN__)

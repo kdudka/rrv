@@ -38,6 +38,7 @@
 #include <GL/glu.h>
 #include "Triangle.h"
 #include "FormFactorHemicube.h"
+#include "LinearAlgebra.h"
 
 using namespace std;
 
@@ -73,7 +74,7 @@ class FormFactorEngine {
         const FormFactorHemicube &hemicube_;
         GLuint vbo_;
         unsigned char *screen;
-        double *ffvec;
+        DenseVector<float> *ffvec;
 
 #if defined(__WIN32__) || defined(_WIN32) || defined(__CYGWIN__)
 #else
