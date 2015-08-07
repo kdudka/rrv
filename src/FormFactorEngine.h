@@ -37,6 +37,7 @@
 #	include <X11/Xlib.h>
 #endif
 
+#include <GL/glew.h>
 #include <GL/glu.h>
 #include "Triangle.h"
 #include "FormFactorHemicube.h"
@@ -73,6 +74,7 @@ class FormFactorEngine {
 
         PatchRandomAccessEnumerator *patchEnumerator_;
         const FormFactorHemicube &hemicube_;
+        GLuint vbo_;
 
 #if defined(__WIN32__) || defined(_WIN32) || defined(__CYGWIN__)
 #else
@@ -80,7 +82,7 @@ class FormFactorEngine {
         Window win;
 #endif
         void createGLWindow();
-
+        void uploadScene();
         void drawScene();
         void renderViewport(const GLint x, const GLint y, const Vertex &c, const Vertex &at, const Vector &up);
         void renderFullScene(int dest);

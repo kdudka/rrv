@@ -110,6 +110,7 @@ add_library(rrv STATIC
     XMLWrapper.cpp
     XMLWriter.cpp)
 target_link_libraries(rrv
+    -lGLEW
     ${OPENGL_LIBRARIES}
     ${GLUT_LIBRARIES}
     ${MINGW_LIBRARIES})

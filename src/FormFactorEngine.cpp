@@ -114,6 +114,7 @@ FormFactorEngine::FormFactorEngine (PatchRandomAccessEnumerator *patchEnumerator
     patchEnumerator_(patchEnumerator), hemicube_(hemicube)
 {
     createGLWindow();
+    uploadScene();
 }
 
 FormFactorEngine::~FormFactorEngine()
@@ -248,6 +249,9 @@ void FormFactorEngine::createGLWindow()
 
     glXMakeCurrent(dpy, win, cx);
 #endif
+
+    glewInit();
+
     // this should be in some event ;-)
     glClearColor(1.0, 1.0, 1.0, 0.0);
     glClearDepth(1.0f);
@@ -262,18 +266,52 @@ void FormFactorEngine::createGLWindow()
     glMatrixMode(GL_MODELVIEW);
 }
 
-void FormFactorEngine::drawScene()
+struct vdata {
+    GLfloat v[3];
+    GLubyte c[4];
+};
+
+void FormFactorEngine::uploadScene()
 {
     PatchRandomAccessEnumerator &patchSet = *patchEnumerator_;
-    glBegin(GL_TRIANGLES);
+    int bytes = 3 * patchSet.count() * sizeof(vdata);
+    vdata *data = (vdata *) malloc(bytes);
     for(unsigned i=0;i< static_cast<unsigned>(patchSet.count());i++)
     {
         Triangle &t = patchSet[i];
-        glColor3ub((i)&0xff, (i>>8)&0xff,(i>>16)&0xff);
         for(int j=0;j<3;j++)
-            glVertex3f(t.vertex[j].x,t.vertex[j].y,t.vertex[j].z);
+        {
+            int k = 3 * i + j;
+            data[k].v[0] = t.vertex[j].x;
+            data[k].v[1] = t.vertex[j].y;
+            data[k].v[2] = t.vertex[j].z;
+            data[k].c[0] = (i)&0xff;
+            data[k].c[1] = (i>>8)&0xff;
+            data[k].c[2] = (i>>16)&0xff;
+            data[k].c[3] = 0xff;
+        }
     }
-    glEnd();
+    glGenBuffers(1, &vbo_);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_);
+    glBufferData(GL_ARRAY_BUFFER, bytes, data, GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    free(data);
+}
+
+void FormFactorEngine::drawScene()
+{
+    PatchRandomAccessEnumerator &patchSet = *patchEnumerator_;
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_);
+    glVertexPointer(3, GL_FLOAT, sizeof(vdata), 0);
+    glEnableClientState(GL_VERTEX_ARRAY);
+#define OFFSET(n) ((void *)(((char *) 0) + (n)))
+    glColorPointer(3, GL_UNSIGNED_BYTE, sizeof(vdata), OFFSET(3 * sizeof(GLfloat)));
+#undef OFFSET
+    glEnableClientState(GL_COLOR_ARRAY);
+    glDrawArrays(GL_TRIANGLES, 0, 3 * patchSet.count());
+    glDisableClientState(GL_COLOR_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 /**
