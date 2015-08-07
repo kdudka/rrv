@@ -150,11 +150,13 @@ int main(int argc, char **argv)
     glfwInit();
     glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-    GLFWwindow *window = glfwCreateWindow(width, height, "rrv3-compute", 0, 0);
+    GLFWwindow *window = glfwCreateWindow(width, height, "rrv-compute-gl3", 0, 0);
+    if (! window)
+        return 1;
     glfwMakeContextCurrent(window);
     glewExperimental = GL_TRUE;
     glewInit();
@@ -180,11 +182,6 @@ int main(int argc, char **argv)
     glBindBuffer(GL_ARRAY_BUFFER, vboPatchData);
     glBufferData(GL_ARRAY_BUFFER, bytes, data, GL_STATIC_DRAW);
     free(data);
-    GLuint vaoPatchData;
-    glGenVertexArrays(1, &vaoPatchData);
-    glBindVertexArray(vaoPatchData);
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
-    glEnableVertexAttribArray(0);
     float *buf = (float *) calloc(1, patchWidth * patchHeight * 3 * sizeof(float));
     GLuint texPatchData[4];
     glGenTextures(4, &texPatchData[0]);
@@ -277,9 +274,9 @@ int main(int argc, char **argv)
     {
         GLuint v = glCreateShader(GL_VERTEX_SHADER);
         const char *vs =
-"#version 330 core\n"
+"#version 130\n"
 "uniform mat4 MVP;\n"
-"layout (location = 0) in vec4 vertex;\n"
+"in vec4 vertex;\n"
 "out float id;\n"
 "void main(void)\n"
 "{\n"
@@ -294,7 +291,7 @@ int main(int argc, char **argv)
         glDeleteShader(v);
         GLuint f = glCreateShader(GL_FRAGMENT_SHADER);
         const char *fs =
-"#version 330 core\n"
+"#version 130\n"
 "uniform sampler2D radiosity;\n"
 "uniform sampler2D formFactor;\n"
 "in float id;\n"
@@ -322,13 +319,19 @@ int main(int argc, char **argv)
         glUniform1i(glGetUniformLocation(prgPatchView, "formFactor"), tidFormFactor);
     }
     GLint uniPatchViewMVP = glGetUniformLocation(prgPatchView, "MVP");
+    GLuint vaoPatchData;
+    glGenVertexArrays(1, &vaoPatchData);
+    glBindVertexArray(vaoPatchData);
+    GLint attVertex = glGetAttribLocation(prgPatchView, "vertex");
+    glVertexAttribPointer(attVertex, 4, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(attVertex);
 
     // per-step radiosity normalization shader
     GLuint prgRadiosityUpdate = glCreateProgram();
     {
         GLuint v = glCreateShader(GL_VERTEX_SHADER);
         const char *vs =
-"#version 330 core\n"
+"#version 130\n"
 "void main(void)\n"
 "{\n"
 "    vec2 p = vec2(1.0, 1.0);\n"
@@ -348,7 +351,7 @@ int main(int argc, char **argv)
         glDeleteShader(v);
         GLuint f = glCreateShader(GL_FRAGMENT_SHADER);
         const char *fs =
-"#version 330 core\n"
+"#version 130\n"
 "uniform sampler2D radiosity;\n"
 "uniform sampler2D reflectivity;\n"
 "uniform sampler2D emission;\n"
