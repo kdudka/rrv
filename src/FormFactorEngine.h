@@ -28,9 +28,6 @@
  * @date 2007-11-17
  */
 
-#include <map>
-#include <vector>
-
 #if defined(__WIN32__) || defined(_WIN32) || defined(__CYGWIN__)
 #	include <windows.h>
 #else
@@ -75,6 +72,8 @@ class FormFactorEngine {
         PatchRandomAccessEnumerator *patchEnumerator_;
         const FormFactorHemicube &hemicube_;
         GLuint vbo_;
+        unsigned char *screen;
+        double *ffvec;
 
 #if defined(__WIN32__) || defined(_WIN32) || defined(__CYGWIN__)
 #else
@@ -86,7 +85,7 @@ class FormFactorEngine {
         void drawScene();
         void renderViewport(const GLint x, const GLint y, const Vertex &c, const Vertex &at, const Vector &up);
         void renderFullScene(int dest);
-        map<unsigned,double> *getFF();
+        void getFF();
 
     public:
         /**
