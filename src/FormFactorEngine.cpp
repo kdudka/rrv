@@ -70,7 +70,10 @@ map<unsigned,double> *FormFactorEngine::getFF()
 {
     map<unsigned,double> *ffmap = new map<unsigned,double>();
 
-    unsigned resW = 3 * hemicube_.edge();
+    unsigned EDGE_1_2 = hemicube_.edge() / 2;
+    unsigned EDGE_2 = hemicube_.edge() * 2;
+
+    unsigned resW = EDGE_2;
     unsigned resH = resW;
 
     int size=resW*resH*3;
@@ -81,12 +84,10 @@ map<unsigned,double> *FormFactorEngine::getFF()
 
     unsigned char r,g,b;
 
-    glReadPixels(0, 0, resW, resH, GL_BGR, GL_UNSIGNED_BYTE, screen);
+    glReadPixels(EDGE_1_2, EDGE_1_2, resW, resH, GL_BGR, GL_UNSIGNED_BYTE, screen);
 
-    unsigned EDGE_1_2 = hemicube_.edge() / 2;
-    unsigned EDGE_5_2 = EDGE_1_2 + 2 * hemicube_.edge();
-    for(w=EDGE_1_2;w<EDGE_5_2;w++)
-        for(h=EDGE_1_2;h<EDGE_5_2;h++)
+    for(w=0;w<EDGE_2;w++)
+        for(h=0;h<EDGE_2;h++)
         {
             b = screen[ 3*(w*resH+h) +0];
             g = screen[ 3*(w*resH+h) +1];
@@ -97,7 +98,7 @@ map<unsigned,double> *FormFactorEngine::getFF()
             //screen[ 3*(w*resH+h) +1] = (unsigned char)(g*ffcoefs[w-128][h-128]);
             //screen[ 3*(w*resH+h) +2] = (unsigned char)(r*ffcoefs[w-128][h-128]);
 
-            ((*ffmap)[clr]) += hemicube_.ff(w-EDGE_1_2,h-EDGE_1_2);
+            ((*ffmap)[clr]) += hemicube_.ff(w,h);
         }
 
     //glDrawPixels(resW, resH, GL_BGR, GL_UNSIGNED_BYTE, screen);
