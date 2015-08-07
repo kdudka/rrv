@@ -53,6 +53,12 @@ void FormFactorEngine::fillCacheLine(int destPatch, PatchCacheLine *cacheLine)
     renderFullScene(destPatch);
     map<unsigned,double> *ffmap = getFF();
 
+    // only due to doublebuffering
+#if defined(__WIN32__) || defined(_WIN32) || defined(__CYGWIN__)
+#else
+    glXSwapBuffers( dpy, win );
+#endif
+
     map<unsigned,double>::iterator iter;
     for( iter = ffmap->begin(); iter != ffmap->end(); iter++ ) {
         if(iter->first != 0xffffff)
@@ -270,6 +276,8 @@ void FormFactorEngine::createGLWindow()
     int EDGE_2 = hemicube_.edge() * 2;
     glScissor(EDGE_1_2, EDGE_1_2, EDGE_2, EDGE_2);
     glEnable(GL_SCISSOR_TEST);
+
+    glReadBuffer(GL_BACK);
 }
 
 struct vdata {
@@ -387,13 +395,4 @@ void FormFactorEngine::renderFullScene(int dest)
 
     // right side
     renderViewport(EDGE_2, EDGE_1, v.c, atD, v.vctA);
-
-    // render
-    glFlush();
-
-    // only due to doublebuffering
-#if defined(__WIN32__) || defined(_WIN32) || defined(__CYGWIN__)
-#else
-    glXSwapBuffers( dpy, win );
-#endif
 }
