@@ -18,6 +18,10 @@
 project(rrv CXX C)
 cmake_minimum_required(VERSION 2.6)
 
+# find -lGLEW and -lX11 using pkg-config
+include(FindPkgConfig)
+pkg_check_modules(GLEW glew x11)
+
 # Check OpenGL availability
 include(FindOpenGL)
 if(NOT OPENGL_FOUND)
@@ -111,7 +115,7 @@ add_library(rrv STATIC
     XMLWrapper.cpp
     XMLWriter.cpp)
 target_link_libraries(rrv
-    -lGLEW
+    ${GLEW_LIBRARIES}
     ${OPENGL_LIBRARIES}
     ${GLUT_LIBRARIES}
     ${MINGW_LIBRARIES})
