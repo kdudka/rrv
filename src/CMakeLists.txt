@@ -22,6 +22,22 @@ cmake_minimum_required(VERSION 2.6)
 include(FindPkgConfig)
 pkg_check_modules(GLEW glew x11)
 
+# check for -lglfw and <glm/glm.hpp> and initialize BUILD_GL3 accordingly
+set(BUILD_GL3 0)
+pkg_check_modules(GLFW glfw3)
+if(GLFW_FOUND)
+    include(CheckIncludeFileCXX)
+    CHECK_INCLUDE_FILE_CXX(glm/glm.hpp GLM_FOUND)
+    if(GLM_FOUND)
+        set(BUILD_GL3 1)
+    else()
+        message(WARNING
+            "not building rrv-compute-gl3 because <glm/glm.hpp> was not found")
+    endif()
+else()
+    message(WARNING "not building rrv-compute-gl3 because glfw was not found")
+endif()
+
 # Check OpenGL availability
 include(FindOpenGL)
 if(NOT OPENGL_FOUND)
@@ -127,10 +143,14 @@ add_executable(rrv-compute
     Visualizer.cpp)
 target_link_libraries(rrv-compute rrv -fopenmp)
 
-# Executable binary rrv-compute-gl3
-add_executable(rrv-compute-gl3
-    rrv-compute-gl3.cpp)
-target_link_libraries(rrv-compute-gl3 rrv -lGLEW -lglfw -fopenmp)
+if(${BUILD_GL3})
+    # Executable binary rrv-compute-gl3
+    add_executable(rrv-compute-gl3 rrv-compute-gl3.cpp)
+    target_link_libraries(rrv-compute-gl3 rrv
+        ${GLEW_LIBRARIES}
+        ${GLFW_LIBRARIES}
+        -fopenmp)
+endif()
 
 # Executable binary rrv-visualize
 add_executable(rrv-visualize
