@@ -78,7 +78,6 @@ macro(ADD_CXX_OPT opt_name opt)
 endmacro()
 
 # tweak warnings
-ADD_CXX_OPT("STD_CXX_98" "-std=c++98")
 ADD_CXX_OPT("PEDANTIC"   "-pedantic")
 ADD_CXX_OPT("W_ALL"      "-Wall")
 ADD_CXX_OPT("W_EXTRA"    "-Wextra")
