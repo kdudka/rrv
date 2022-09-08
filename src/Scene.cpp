@@ -45,7 +45,7 @@ void Scene::load (std::string fileName )
 #endif
         xmlW.loadFile( fileName );						// Load file
     }
-    catch(XMLException xe)
+    catch(const XMLException &xe)
     {
         fprintf( stderr, "ERROR Scene::load(): %s\n", xe.what() );
         exit(0); // TODO: ???

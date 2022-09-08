@@ -67,7 +67,7 @@ Triangle TriangleEntity::triangleFromXMLNode( XMLNode* from )
         {
             tmpTr.vertex[i] = TriangleEntity::vertexFromXMLNode( &tmpVertex );
         }
-        catch( XMLException )	
+        catch(const XMLException &)
         {	// if not then throw exception with message
             std::ostringstream oss;
             oss << "vertex " << i+1 << " isn't presented ";
@@ -167,7 +167,7 @@ void TriangleEntity::impl_deserialize (XMLNode *from ) {
                 std::cerr << "WARNING: not recognized node name \"" << tagName << "\" in triangleset named " << getName() << std::endl;
             }
         }
-        catch(XMLException e)
+        catch(const XMLException &e)
         {
             std::ostringstream oss;
             oss << "Error: in triangleset " << "named " << getName() << " " << " in triangle " << tNum << " ";
