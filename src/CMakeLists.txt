@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with rrv.  If not, see <http://www.gnu.org/licenses/>.
 
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.6...3.10)
 project(rrv CXX C)
 
 # find -lGLEW and -lX11 using pkg-config
