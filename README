@@ -26,6 +26,12 @@
         ./scene/        input scenes (examples)
         ./src           source codes
 
+    Build dependencies:
+        On Fedora 42, the following command installs the build dependencies:
+        ```
+        dnf install cmake {freeglut,glew,glfw,glm}-devel gcc-c++ make
+        ```
+
     Install instructions:
         You can make API documentation by command 'make' in directory
         ./doc/api (requires Doxygen).
