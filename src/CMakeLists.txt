@@ -22,6 +22,9 @@ project(rrv CXX C)
 include(FindPkgConfig)
 pkg_check_modules(GLEW glew x11)
 
+# explicitly set OpenGL_GL_PREFERENCE to eliminate a warning
+set(OpenGL_GL_PREFERENCE "LEGACY")
+
 # check for -lglfw and <glm/glm.hpp> and initialize BUILD_GL3 accordingly
 set(BUILD_GL3 0)
 pkg_check_modules(GLFW glfw3)
